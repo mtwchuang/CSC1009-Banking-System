@@ -1,11 +1,18 @@
 package Model.Transaction;
 
-import java.util.UUID;
-
 public class BalanceTransfer extends Transaction{
+    private String transactionTargetBankAccID;
 
-    
-    public BalanceTransfer(UUID transactionSrcBankAccID, short transactionSrcBankAccBranch){
-        super(transactionSrcBankAccID, transactionSrcBankAccBranch);
+    public BalanceTransfer(String transactionSrcBankAccID){
+        super(transactionSrcBankAccID);
+    }
+
+    public String getTransactionTargetBankAccID(){
+        return transactionTargetBankAccID;
+    }
+
+    public void setTransactionTargetBankAccID(String transactionSrcBankAccID){
+        this.transactionTargetBankAccID = transactionSrcBankAccID;
+        updated();
     }
 }

@@ -19,10 +19,12 @@ public abstract class Transaction {
     private boolean transactionExecuted;
     private boolean transactionOverseas;
 
-    private UUID transactionSrcBankAccID;
-    private short transactionSrcBankAccBranch;
+    private double transactionBankAccInitialAmount;
+    private double transactionBankAccFinalAmount;
 
-    public Transaction(UUID transactionSrcBankAccID, short transactionSrcBankAccBranch){
+    private String transactionBankAccID;
+
+    public Transaction(String transactionBankAccID){
         this.createdBy = Global.sessionUserID;
         this.createdAt = System.currentTimeMillis();
         this.updatedBy = Global.sessionUserID;
@@ -31,8 +33,7 @@ public abstract class Transaction {
         this.transactionID = UUID.randomUUID();
         this.transactionExecuted = false;
 
-        this.transactionSrcBankAccID = transactionSrcBankAccID;
-        this.transactionSrcBankAccBranch = transactionSrcBankAccBranch;
+        this.transactionBankAccID = transactionBankAccID;
     }
 
     public UUID getCreatedBy(){
@@ -67,11 +68,15 @@ public abstract class Transaction {
         return transactionDescription;
     }
 
-    public UUID getTransactionSrcBankAccID(){
-        return transactionSrcBankAccID;
+    public double getTransactionBankAccInitialAmount(){
+        return transactionBankAccInitialAmount;
     }
-    public short getTransactionSrcBankAccBranch(){
-        return transactionSrcBankAccBranch;
+    public double getTransactionBankAccFinalAmount(){
+        return transactionBankAccFinalAmount;
+    }
+
+    public String getTransactionSrcBankAccID(){
+        return transactionBankAccID;
     }
 
     public void setTransactionID(UUID transactionID){
@@ -91,6 +96,15 @@ public abstract class Transaction {
     }
     public void settransactionOverseas(boolean transactionOverseas){
         this.transactionOverseas = transactionOverseas;
+    }
+
+    public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount){
+        this.transactionBankAccInitialAmount = transactionBankAccInitialAmount;
+        updated();
+    }
+    public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount){
+        this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
+        updated();
     }
 
     public boolean isTransactionExecuted(){

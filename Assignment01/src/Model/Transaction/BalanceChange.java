@@ -1,16 +1,14 @@
 package Model.Transaction;
 
-import java.util.UUID;
-
 public class BalanceChange extends Transaction{
-    private boolean executedOnAtm;
+    private boolean executedOnAtm = false;
     private String AtmID;
 
-    private boolean executedOnPurchase;
-    private String merchantID;
+    private boolean executedOnPurchase = false;
+    private String merchantName;
 
-    public BalanceChange(UUID transactionSrcBankAccID, short transactionSrcBankAccBranch){
-        super(transactionSrcBankAccID, transactionSrcBankAccBranch);
+    public BalanceChange(String transactionSrcBankAccID){
+        super(transactionSrcBankAccID);
     }
 
     public boolean isExecutedOnAtm() {
@@ -20,24 +18,22 @@ public class BalanceChange extends Transaction{
         return AtmID;
     }
 
-    public String getMerchantID() {
-        return merchantID;
-    }
     public boolean isExecutedOnPurchase() {
         return executedOnPurchase;
     }
+    public String getMerchantName() {
+        return merchantName;
+    }
 
     public void setAtmID(String atmID) {
-        AtmID = atmID;
-    }
-    public void setExecutedOnAtm(boolean executedOnAtm) {
-        this.executedOnAtm = executedOnAtm;
+        this.AtmID = atmID;
+        this.executedOnAtm = true;
+        updated();
     }
     
-    public void setExecutedOnPurchase(boolean executedOnPurchase) {
-        this.executedOnPurchase = executedOnPurchase;
-    }
-    public void setMerchantID(String merchantID) {
-        this.merchantID = merchantID;
+    public void setMerchantName(String merchantName) {
+        this.merchantName = merchantName;
+        this.executedOnPurchase = true;
+        updated();
     }
 }
