@@ -6,16 +6,20 @@ import Model.UserAccount.UserAccount;
 import ModelView.Global;
 
 public class Main {
-    public static void main(String[] args) throws Exception {
-        System.out.println("SessionID: " + Global.sessionUserID.toString());
+    public static void main(String[] args) throws Exception 
+    {
+        View.Login page = new View.Login();
+        page.test1();
 
-        System.out.print("\033[H\033[2J");
+        // System.out.println("SessionID: " + Global.sessionUserID.toString());
 
-        IUserAccount temp = new UserAccount();
-        System.out.println(
-            "newAccID: " + temp.getUserID().toString() + "\n" +
-            "createdBy: " + temp.getCreatedBy().toString() + "\n" + 
-            "createdAt: " + new Date(temp.getCreatedAt()));
+        // System.out.print("\033[H\033[2J");
+
+        // IUserAccount temp = new UserAccount();
+        // System.out.println(
+        //     "newAccID: " + temp.getUserID().toString() + "\n" +
+        //     "createdBy: " + temp.getCreatedBy().toString() + "\n" + 
+        //     "createdAt: " + new Date(temp.getCreatedAt()));
 
         
     }
