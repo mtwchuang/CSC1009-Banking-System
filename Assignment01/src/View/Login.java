@@ -31,8 +31,8 @@ public class Login
 
             // check against previously defined credentials???
             // call out logical function from ModelView UserAccount_ModelView which will return integers for outputs
-            // int authStatus = passChecking();
-            int authStatus = 0; //temporary for now
+            short authStatus = ViewLogin_login();
+            // int authStatus = 1; //temporary for now
             switch(authStatus)
             {
                 case(0):
@@ -42,7 +42,7 @@ public class Login
                 }
                 case(1):
                 {
-                    System.out.println("Wrong password entererd, please try again.");
+                    System.out.println("Wrong username or password entered");
                     loginFlag= true;
                     break;
                 }
