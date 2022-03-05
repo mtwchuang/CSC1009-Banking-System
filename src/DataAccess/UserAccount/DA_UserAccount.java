@@ -7,7 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.UserAccount.M_IUserAccount;
+import Model.UserAccount.*;
 import ModelView.Global;
 
 public class DA_UserAccount {
@@ -57,6 +57,7 @@ public class DA_UserAccount {
         M_IUserAccount targetAccount = null;
 
         try{
+            System.out.println(Global.dbUserAccount);
             br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
             //Skip first line; header line
             br.readLine();
@@ -67,7 +68,7 @@ public class DA_UserAccount {
                 
                 if(dataSegments[6] == userName){
                     //Data mapping
-                    Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
+                    M_UserAccount currentAccount = new M_UserAccount();
 
                     currentAccount.setCreatedBy(dataSegments[0]);
                     currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
@@ -142,6 +143,6 @@ public class DA_UserAccount {
     private String getDynamicDbPath(){
         File dynamicDir = new File("");
         String localDir = dynamicDir.getAbsolutePath();
-        return localDir + "\\data";
+        return localDir;
     }
 }
