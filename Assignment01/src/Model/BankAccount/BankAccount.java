@@ -6,13 +6,13 @@ import java.util.UUID;
 import ModelView.Global;
 
 public class BankAccount implements IBankAccount{
-    private UUID createdBy;
+    private String createdBy;
     private long createdAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private long updatedAt;
 
-    private UUID bankAccID;
-    private UUID bankAccHolderID;
+    private String bankAccID;
+    private String bankAccHolderID;
     private short bankAccType;
     private short bankAccStatus;
     private String bankAccBranch;
@@ -23,33 +23,33 @@ public class BankAccount implements IBankAccount{
 
     private List<Long> bankAccTransactions;
 
-    public BankAccount(UUID bankAccHolderID){
+    public BankAccount(String bankAccHolderID){
         this.createdBy = Global.sessionUserID;
         this.createdAt = System.currentTimeMillis();
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
 
-        this.bankAccID = UUID.randomUUID();
+        this.bankAccID = UUID.randomUUID().toString();
         this.bankAccHolderID = bankAccHolderID;
     }
 
-    public UUID getCreatedBy(){
+    public String getCreatedBy(){
         return createdBy;
     }
     public long getCreatedAt(){
         return createdAt;
     }
-    public UUID getUpdatedBy(){
+    public String getUpdatedBy(){
         return updatedBy;
     }
     public long getUpdatedAt(){
         return updatedAt;
     }
 
-    public UUID getBankAccID(){
+    public String getBankAccID(){
         return bankAccID;
     }
-    public UUID getBankAccHolderID(){
+    public String getBankAccHolderID(){
         return bankAccHolderID;
     }
     public short getBankAccType(){
@@ -77,7 +77,7 @@ public class BankAccount implements IBankAccount{
         return bankAccTransactions;
     }
 
-    public void setBankAccHolderID(UUID bankAccHolderID){
+    public void setBankAccHolderID(String bankAccHolderID){
         this.bankAccHolderID = bankAccHolderID;
         updated();
     }

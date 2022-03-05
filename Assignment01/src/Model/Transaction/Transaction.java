@@ -5,14 +5,14 @@ import java.util.UUID;
 import ModelView.Global;
 
 public abstract class Transaction {
-    private UUID createdBy;
+    private String createdBy;
     private long createdAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private long updatedAt;
-    private UUID executedBy;
+    private String executedBy;
     private long executedAt;
 
-    private UUID transactionID;
+    private String transactionID;
     private short transactionType;
     private double transactionAmount;
     private String transactionDescription;
@@ -30,32 +30,32 @@ public abstract class Transaction {
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
 
-        this.transactionID = UUID.randomUUID();
+        this.transactionID = UUID.randomUUID().toString();
         this.transactionExecuted = false;
 
         this.transactionBankAccID = transactionBankAccID;
     }
 
-    public UUID getCreatedBy(){
+    public String getCreatedBy(){
         return createdBy;
     }
     public long getCreatedAt(){
         return createdAt;
     }
-    public UUID getUpdatedBy(){
+    public String getUpdatedBy(){
         return updatedBy;
     }
     public long getUpdatedAt(){
         return updatedAt;
     }
-    public UUID getExecutedBy(){
+    public String getExecutedBy(){
         return executedBy;
     }
     public long getExecutedAt(){
         return executedAt;
     }
    
-    public UUID getTransactionID(){
+    public String getTransactionID(){
         return transactionID;
     }
     public short getTransactionType(){
@@ -79,10 +79,6 @@ public abstract class Transaction {
         return transactionBankAccID;
     }
 
-    public void setTransactionID(UUID transactionID){
-        this.transactionID = transactionID;
-        updated();
-    }
     public void setTransactionType(short transactionType){
         this.transactionType = transactionType;
         updated();

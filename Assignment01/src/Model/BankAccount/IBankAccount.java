@@ -1,14 +1,13 @@
 package Model.BankAccount;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface IBankAccount {
-    public UUID getCreatedBy();
+    public String getCreatedBy();
     public long getCreatedAt();
-    public UUID getUpdatedBy();
+    public String getUpdatedBy();
     public long getUpdatedAt();
-    public UUID getBankAccID();
+    public String getBankAccID();
     public short getBankAccType();
     public short getBankAccStatus();
     public String getBankAccBranch();
