@@ -1,5 +1,5 @@
 package DataAccess.BankAccount;
 
-public class BankAccount {
+public class DA_BankAccount {
     
 }
