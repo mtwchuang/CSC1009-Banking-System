@@ -31,7 +31,7 @@ public class Login
 
             // check against previously defined credentials???
             // call out logical function from ModelView UserAccount_ModelView which will return integers for outputs
-            short authStatus = ViewLogin_login();
+            short authStatus = ModelView.ViewLogin_login();
             // int authStatus = 1; //temporary for now
             switch(authStatus)
             {
@@ -56,6 +56,5 @@ public class Login
     public void UserActions()
     {
         // check what user wants to do?
-
     }
 }
