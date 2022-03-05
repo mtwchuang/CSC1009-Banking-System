@@ -64,6 +64,7 @@ public class V_Login
                     }
                 }
             }
+            // call local isContinue() to check if user wants to continue
             loginFlag = isContinue(loginFlag);
         }
         System.out.println("Thank you for using our service! Have a nice day!");
