@@ -81,11 +81,9 @@ public abstract class Transaction {
 
     public void setTransactionType(short transactionType){
         this.transactionType = transactionType;
-        updated();
     }
     public void setTransactionAmount(double transactionAmount){
         this.transactionAmount = transactionAmount;
-        updated();
     }
     public void setTransactionDescription(String transactionDescription){
         this.transactionDescription = transactionDescription;
@@ -96,11 +94,9 @@ public abstract class Transaction {
 
     public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount){
         this.transactionBankAccInitialAmount = transactionBankAccInitialAmount;
-        updated();
     }
     public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount){
         this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
-        updated();
     }
 
     public boolean isTransactionExecuted(){
@@ -114,10 +110,9 @@ public abstract class Transaction {
         this.transactionExecuted = true;
         this.executedBy = Global.sessionUserID;
         this.executedAt = System.currentTimeMillis();
-        updated();
     }
 
-    protected void updated(){
+    public void updated(){
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
     }

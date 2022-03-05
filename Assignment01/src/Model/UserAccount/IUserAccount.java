@@ -7,6 +7,7 @@ public interface IUserAccount {
     public long getCreatedAt();
     public String getUpdatedBy();
     public long getUpdatedAt();
+    
     public String getUserID();
     public short getUserType();
     public String getUserName();
@@ -25,4 +26,6 @@ public interface IUserAccount {
     public void setUserAddress(String userAddress);
     public void setUserPhoneNumber(long userPhoneNumber);
     public void setUserBankAccounts(List<Long> userBankAccounts);
+
+    public void updated();
 }

@@ -72,40 +72,48 @@ public class UserAccount implements IUserAccount{
         return this.userBankAccounts;
     }
 
+    public void setCreatedBy(String createdBy){
+        this.createdBy = createdBy;
+    }
+    public void setCreatedAt(long createdAt){
+        this.createdAt = createdAt;
+    }
+    public void setUpdatedBy(String updatedBy){
+        this.updatedBy = updatedBy;
+    }
+    public void setUpdatedAt(long updatedAt){
+        this.updatedAt = updatedAt;
+    }
+
+    public void setUserID(String userID){
+        this.userID = userID;
+    }
     public void setUserAccType(short userType){
         this.userType = userType;
-        updated();
     }
     public void setUserName(String userName){
         this.userName = userName;
-        updated();
     }
     public void setUserPassword(String userPassword){
         this.userPassword = userPassword;
-        updated();
     }
     public void setUserFirstName(String userFirstName){
         this.userFirstName = userFirstName;
-        updated();
     }
     public void setUserLastName(String userLastName){
         this.userLastName = userLastName;
-        updated();
     }
     public void setUserAddress(String userAddress) {
         this.userAddress = userAddress;
-        updated();
     }
     public void setUserPhoneNumber(long userPhoneNumber){
         this.userPhoneNumber = userPhoneNumber;
-        updated();
     }
     public void setUserBankAccounts(List<Long> userBankAccounts){
         this.userBankAccounts = userBankAccounts;
-        updated();
     }
 
-    protected void updated(){
+    public void updated(){
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
     }
