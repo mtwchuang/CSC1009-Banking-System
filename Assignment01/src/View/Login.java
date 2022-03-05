@@ -55,6 +55,6 @@ public class Login
 
     public void UserActions()
     {
-        // check what user wants to do?
+        System.out.print("hi");
     }
 }
