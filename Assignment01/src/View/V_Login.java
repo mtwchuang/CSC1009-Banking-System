@@ -6,6 +6,7 @@ public class V_Login
     Scanner input = new Scanner(System.in);
     public void Authentication() throws Exception
     {
+        System.out.println("Welcome user!");
         boolean loginFlag = true; 
         while(loginFlag==true)
         {
@@ -30,23 +31,24 @@ public class V_Login
                 loginFlag = true;
             }
 
-            // check against previously defined credentials???
-            // call out logical function from ModelView UserAccount_ModelView which will return integers for outputs
-            short authStatus = new MV_UserAccount().ViewLogin_login(loginUser, intCheck);
-            // int authStatus = 1; //temporary for now
+            // call out VL_checkAcct() from MV_UserAccount in layer ModelView to check against stored credentials
+            short authStatus = new MV_UserAccount().VLogin_checkAcct(loginUser, intCheck);
             switch(authStatus)
             {
+                // authentication success
                 case(0):
                 {
                     System.out.println("Welcome back to your account");
                     // call out to new overview method?
                 }
+                // wrong username
                 case(1):
                 {
                     System.out.println("Wrong username or password entered");
                     loginFlag= true;
                     break;
                 }
+                // wrong password
                 case(2):
                 {
                     System.out.println("Wrong username or password entered");
@@ -54,14 +56,28 @@ public class V_Login
                     break;
                 }
             }
-            // check if user still wants to continue or break
-            // need implementations
-        }
-    }
-        
+            // ask user if want to continue or break
+            boolean choiceLoop = true;
+            if(loginFlag==true)
+            {
+                while(choiceLoop==true)
+                {
+                    choiceLoop = false;
+                    System.out.print("Do you still want to continue? Y/N");
+                    String contChoice = input.nextLine();
+                    if(contChoice=="N")
+                    {
+                        loginFlag = false;
+                    }
+                    else if(contChoice!="Y")
+                    {
+                        System.out.println("Your entered something besides Y/N. Please try again");
+                        choiceLoop=true;
+                    }
+                }
 
-    public void UserActions()
-    {
-        System.out.print("hi");
+            }
+        }
+        System.out.println("Thank you for using our service! Have a nice day!");
     }
 }
