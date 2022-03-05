@@ -5,56 +5,57 @@ import java.util.UUID;
 import ModelView.Global;
 
 public abstract class Transaction {
-    private UUID createdBy;
+    private String createdBy;
     private long createdAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private long updatedAt;
-    private UUID executedBy;
+    private String executedBy;
     private long executedAt;
 
-    private UUID transactionID;
+    private String transactionID;
     private short transactionType;
     private double transactionAmount;
     private String transactionDescription;
     private boolean transactionExecuted;
     private boolean transactionOverseas;
 
-    private UUID transactionSrcBankAccID;
-    private short transactionSrcBankAccBranch;
+    private double transactionBankAccInitialAmount;
+    private double transactionBankAccFinalAmount;
 
-    public Transaction(UUID transactionSrcBankAccID, short transactionSrcBankAccBranch){
+    private String transactionBankAccID;
+
+    public Transaction(String transactionBankAccID){
         this.createdBy = Global.sessionUserID;
         this.createdAt = System.currentTimeMillis();
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
 
-        this.transactionID = UUID.randomUUID();
+        this.transactionID = UUID.randomUUID().toString();
         this.transactionExecuted = false;
 
-        this.transactionSrcBankAccID = transactionSrcBankAccID;
-        this.transactionSrcBankAccBranch = transactionSrcBankAccBranch;
+        this.transactionBankAccID = transactionBankAccID;
     }
 
-    public UUID getCreatedBy(){
+    public String getCreatedBy(){
         return createdBy;
     }
     public long getCreatedAt(){
         return createdAt;
     }
-    public UUID getUpdatedBy(){
+    public String getUpdatedBy(){
         return updatedBy;
     }
     public long getUpdatedAt(){
         return updatedAt;
     }
-    public UUID getExecutedBy(){
+    public String getExecutedBy(){
         return executedBy;
     }
     public long getExecutedAt(){
         return executedAt;
     }
    
-    public UUID getTransactionID(){
+    public String getTransactionID(){
         return transactionID;
     }
     public short getTransactionType(){
@@ -67,17 +68,17 @@ public abstract class Transaction {
         return transactionDescription;
     }
 
-    public UUID getTransactionSrcBankAccID(){
-        return transactionSrcBankAccID;
+    public double getTransactionBankAccInitialAmount(){
+        return transactionBankAccInitialAmount;
     }
-    public short getTransactionSrcBankAccBranch(){
-        return transactionSrcBankAccBranch;
+    public double getTransactionBankAccFinalAmount(){
+        return transactionBankAccFinalAmount;
     }
 
-    public void setTransactionID(UUID transactionID){
-        this.transactionID = transactionID;
-        updated();
+    public String getTransactionSrcBankAccID(){
+        return transactionBankAccID;
     }
+
     public void setTransactionType(short transactionType){
         this.transactionType = transactionType;
         updated();
@@ -91,6 +92,15 @@ public abstract class Transaction {
     }
     public void settransactionOverseas(boolean transactionOverseas){
         this.transactionOverseas = transactionOverseas;
+    }
+
+    public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount){
+        this.transactionBankAccInitialAmount = transactionBankAccInitialAmount;
+        updated();
+    }
+    public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount){
+        this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
+        updated();
     }
 
     public boolean isTransactionExecuted(){

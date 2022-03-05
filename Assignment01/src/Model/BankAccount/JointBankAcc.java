@@ -1,19 +1,17 @@
 package Model.BankAccount;
 
-import java.util.UUID;
-
 public class JointBankAcc extends BankAccount{
-    private UUID bankAccSubHolderID;
+    private String bankAccSubHolderID;
 
-    public JointBankAcc(UUID bankAccHolderID){
+    public JointBankAcc(String bankAccHolderID){
         super(bankAccHolderID);
     }
 
-    public UUID getBankAccSubHolderID(){
+    public String getBankAccSubHolderID(){
         return bankAccSubHolderID;
     }
 
-    public void setBankAccSubHolderID(UUID bankAccSubHolderID){
+    public void setBankAccSubHolderID(String bankAccSubHolderID){
         this.bankAccSubHolderID = bankAccSubHolderID;
         updated();
     }

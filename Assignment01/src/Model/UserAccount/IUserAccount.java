@@ -1,14 +1,13 @@
 package Model.UserAccount;
 
 import java.util.List;
-import java.util.UUID;
 
 public interface IUserAccount {
-    public UUID getCreatedBy();
+    public String getCreatedBy();
     public long getCreatedAt();
-    public UUID getUpdatedBy();
+    public String getUpdatedBy();
     public long getUpdatedAt();
-    public UUID getUserID();
+    public String getUserID();
     public short getUserType();
     public String getUserName();
     public String getUserPassword();
@@ -25,6 +24,5 @@ public interface IUserAccount {
     public void setUserLastName(String userLastName);
     public void setUserAddress(String userAddress);
     public void setUserPhoneNumber(long userPhoneNumber);
-    public void setUserAccID(UUID userAccID);
     public void setUserBankAccounts(List<Long> userBankAccounts);
 }

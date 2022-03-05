@@ -1,36 +1,35 @@
 package Model.BankAccount;
 
 import java.util.List;
-import java.util.UUID;
 
 public class CorporateBankAcc extends BankAccount{
-    private List<UUID> bankAccSubHolderIDs;
-    private List<UUID> bankAccTransactOnlyIDs;
-    private List<UUID> bankAccDepositOnlyIDs;
+    private List<String> bankAccSubHolderIDs;
+    private List<String> bankAccTransactOnlyIDs;
+    private List<String> bankAccDepositOnlyIDs;
 
-    public CorporateBankAcc(UUID bankAccHolderID){
+    public CorporateBankAcc(String bankAccHolderID){
         super(bankAccHolderID);
     }
 
-    public List<UUID> getBankAccTransactOnlyIDs(){
+    public List<String> getBankAccTransactOnlyIDs(){
         return bankAccTransactOnlyIDs;
     }
-    public List<UUID> getBankAccSubHolderIDs(){
+    public List<String> getBankAccSubHolderIDs(){
         return bankAccSubHolderIDs;
     }
-    public List<UUID> getBankAccDepositOnlyIDs(){
+    public List<String> getBankAccDepositOnlyIDs(){
         return bankAccDepositOnlyIDs;
     }
 
-    public void setBankAccSubHolderID(List<UUID> backAccSubHolderIDs){
+    public void setBankAccSubHolderID(List<String> backAccSubHolderIDs){
         this.bankAccSubHolderIDs = backAccSubHolderIDs;
         updated();
     }
-    public void setBankAccTransactOnlyIDs(List<UUID> bankAccTransactOnlyIDs){
+    public void setBankAccTransactOnlyIDs(List<String> bankAccTransactOnlyIDs){
         this.bankAccTransactOnlyIDs = bankAccTransactOnlyIDs;
         updated();
     }
-    public void setBankAccDepositOnlyIDs(List<UUID> bankAccDepositOnlyIDs){
+    public void setBankAccDepositOnlyIDs(List<String> bankAccDepositOnlyIDs){
         this.bankAccDepositOnlyIDs = bankAccDepositOnlyIDs;
         updated();
     }

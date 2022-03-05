@@ -6,12 +6,12 @@ import java.util.UUID;
 import ModelView.Global;
 
 public class UserAccount implements IUserAccount{
-    private UUID createdBy;
+    private String createdBy;
     private long createdAt;
-    private UUID updatedBy;
+    private String updatedBy;
     private long updatedAt;
 
-    private UUID userID;
+    private String userID;
     private short userType;
     private String userName;
     private String userPassword;
@@ -28,23 +28,23 @@ public class UserAccount implements IUserAccount{
         this.updatedBy = Global.sessionUserID;
         this.updatedAt = System.currentTimeMillis();
 
-        this.userID = UUID.randomUUID();
+        this.userID = UUID.randomUUID().toString();
     }
 
-    public UUID getCreatedBy(){
+    public String getCreatedBy(){
         return createdBy;
     }
     public long getCreatedAt(){
         return createdAt;
     }
-    public UUID getUpdatedBy(){
+    public String getUpdatedBy(){
         return updatedBy;
     }
     public long getUpdatedAt(){
         return updatedAt;
     }
 
-    public UUID getUserID(){
+    public String getUserID(){
         return userID;
     }
     public short getUserType(){
@@ -98,10 +98,6 @@ public class UserAccount implements IUserAccount{
     }
     public void setUserPhoneNumber(long userPhoneNumber){
         this.userPhoneNumber = userPhoneNumber;
-        updated();
-    }
-    public void setUserAccID(UUID userID){
-        this.userID = userID;
         updated();
     }
     public void setUserBankAccounts(List<Long> userBankAccounts){
