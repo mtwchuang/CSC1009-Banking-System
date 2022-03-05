@@ -1,5 +1,5 @@
 package ModelView.BankAccount;
 
-public class BankAccount {
+public class MV_BankAccount {
     
 }

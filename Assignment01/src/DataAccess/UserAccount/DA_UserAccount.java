@@ -7,12 +7,12 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.UserAccount.IUserAccount;
+import Model.UserAccount.M_IUserAccount;
 import ModelView.Global;
 
-public class UserAccount {
-    public List<IUserAccount> dbUserAccounts_GetAll() throws IOException{
-        List<IUserAccount> userAccounts = new ArrayList<IUserAccount>();
+public class DA_UserAccount {
+    public List<M_IUserAccount> dbUserAccounts_GetAll() throws IOException{
+        List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
         String line;
         BufferedReader br = null;
@@ -26,7 +26,7 @@ public class UserAccount {
                 String[] dataSegments = line.split(",");
 
                 //Data mapping
-                Model.UserAccount.UserAccount currentAccount = new Model.UserAccount.UserAccount();
+                Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
 
                 currentAccount.setCreatedBy(dataSegments[0]);
                 currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
@@ -42,7 +42,7 @@ public class UserAccount {
                 currentAccount.setUserAddress(dataSegments[10]);
                 currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
 
-                userAccounts.add((IUserAccount)currentAccount);
+                userAccounts.add((M_IUserAccount)currentAccount);
             }
         }
         finally{
@@ -51,10 +51,10 @@ public class UserAccount {
         
         return userAccounts;
     }
-    public IUserAccount dbUserAccounts_GetByUserName(String userName) throws IOException{
+    public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws IOException{
         String line;
         BufferedReader br = null;
-        IUserAccount targetAccount = null;
+        M_IUserAccount targetAccount = null;
 
         try{
             br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
@@ -67,7 +67,7 @@ public class UserAccount {
                 
                 if(dataSegments[6] == userName){
                     //Data mapping
-                    Model.UserAccount.UserAccount currentAccount = new Model.UserAccount.UserAccount();
+                    Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
 
                     currentAccount.setCreatedBy(dataSegments[0]);
                     currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
@@ -83,21 +83,22 @@ public class UserAccount {
                     currentAccount.setUserAddress(dataSegments[10]);
                     currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
 
-                    targetAccount = (IUserAccount)currentAccount;
+                    targetAccount = (M_IUserAccount)currentAccount;
                     break;
                 }
             }
-        }
-        finally{
             br.close();
         }
-        
+        catch(Exception e)
+        {
+            throw e;
+        }
         return targetAccount;
     }
-    public IUserAccount dbUserAccounts_GetByUserID(String userID) throws IOException{
+    public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws IOException{
         String line;
         BufferedReader br = null;
-        IUserAccount targetAccount = null;
+        M_IUserAccount targetAccount = null;
 
         try{
             br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
@@ -110,7 +111,7 @@ public class UserAccount {
                 
                 if(dataSegments[4] == userID){
                     //Data mapping
-                    Model.UserAccount.UserAccount currentAccount = new Model.UserAccount.UserAccount();
+                    Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
 
                     currentAccount.setCreatedBy(dataSegments[0]);
                     currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
@@ -126,7 +127,7 @@ public class UserAccount {
                     currentAccount.setUserAddress(dataSegments[10]);
                     currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
 
-                    targetAccount = (IUserAccount)currentAccount;
+                    targetAccount = (M_IUserAccount)currentAccount;
                     break;
                 }
             }

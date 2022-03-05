@@ -1,5 +1,5 @@
 package ModelView.Transaction;
 
-public class Transaction {
+public class MV_Transaction {
     
 }
