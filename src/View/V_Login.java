@@ -1,6 +1,9 @@
 package View;
-import ModelView.UserAccount.MV_UserAccount;
+
 import java.util.Scanner;
+
+import ModelView.UserAccount.MV_UserAccount;
+
 public class V_Login 
 {
     Scanner input = new Scanner(System.in);
@@ -59,7 +62,6 @@ public class V_Login
         }
     }
         
-
     public void UserActions()
     {
         System.out.print("hi");
