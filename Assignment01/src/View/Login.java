@@ -1,9 +1,10 @@
 package View;
+import ModelView.UserAccount.UserAccount;
 import java.util.Scanner;
 public class Login 
 {
     Scanner input = new Scanner(System.in);
-    public void Authentication()
+    public void Authentication() throws Exception
     {
         boolean loginFlag = true; 
         while(loginFlag==true)
@@ -31,7 +32,7 @@ public class Login
 
             // check against previously defined credentials???
             // call out logical function from ModelView UserAccount_ModelView which will return integers for outputs
-            short authStatus = ModelView.ViewLogin_login();
+            short authStatus = new UserAccount().ViewLogin_login(loginUser, intCheck);
             // int authStatus = 1; //temporary for now
             switch(authStatus)
             {
