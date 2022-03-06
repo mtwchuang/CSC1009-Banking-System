@@ -57,7 +57,6 @@ public class DA_UserAccount {
         M_IUserAccount targetAccount = null;
 
         try{
-            System.out.println(Global.dbUserAccount);
             br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
             //Skip first line; header line
             br.readLine();
