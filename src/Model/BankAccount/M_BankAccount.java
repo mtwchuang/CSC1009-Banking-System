@@ -5,7 +5,7 @@ import java.util.UUID;
 
 import ModelView.Global;
 
-public class M_BankAccount implements M_IBankAccount{
+public class M_BankAccount{
     private String createdBy;
     private long createdAt;
     private String updatedBy;
@@ -15,10 +15,9 @@ public class M_BankAccount implements M_IBankAccount{
     private String bankAccHolderID;
     private short bankAccType;
     private short bankAccStatus;
-    private String bankAccBranch;
-    private short bankAccBalance;
-    private short bankAccTransactionLimit;
-    private double bankAccInterestRate;
+    private int bankAccBranch;
+    private double bankAccBalance;
+    private double bankAccTransactionLimit;
     private double bankAccMinBalance;
 
     private List<Long> bankAccTransactions;
@@ -33,85 +32,88 @@ public class M_BankAccount implements M_IBankAccount{
         this.bankAccHolderID = bankAccHolderID;
     }
 
-    public String getCreatedBy(){
+    public String getCreatedBy() {
         return createdBy;
     }
-    public long getCreatedAt(){
+    public long getCreatedAt() {
         return createdAt;
     }
-    public String getUpdatedBy(){
+    public String getUpdatedBy() {
         return updatedBy;
     }
-    public long getUpdatedAt(){
+    public long getUpdatedAt() {
         return updatedAt;
     }
 
-    public String getBankAccID(){
+    public String getBankAccID() {
         return bankAccID;
     }
-    public String getBankAccHolderID(){
+    public String getBankAccHolderID() {
         return bankAccHolderID;
     }
-    public short getBankAccType(){
+    public short getBankAccType() {
         return bankAccType;
     }
-    public short getBankAccStatus(){
+    public short getBankAccStatus() {
         return bankAccStatus;
     }
-    public String getBankAccBranch(){
+    public int getBankAccBranch() {
         return bankAccBranch;
     }
-    public short getBankAccBalance(){
+    public double getBankAccBalance() {
         return bankAccBalance;
     }
-    public short getBankAccTransactionLimit(){
+    public double getBankAccTransactionLimit() {
         return bankAccTransactionLimit;
     }
-    public double getBankAccInterestRate(){
-        return bankAccInterestRate;
-    }
-    public double getBankAccMinBalance(){
+    public double getBankAccMinBalance() {
         return bankAccMinBalance;
     }
-    public List<Long> getBankAccTransactions(){
+    
+    public List<Long> getBankAccTransactions() {
         return bankAccTransactions;
     }
 
-    public void setBankAccHolderID(String bankAccHolderID){
+    public void setCreatedBy(String createdBy) {
+        this.createdBy = createdBy;
+    }
+    public void setCreatedAt(long createdAt) {
+        this.createdAt = createdAt;
+    }
+    public void setUpdatedBy(String updatedBy) {
+        this.updatedBy = updatedBy;
+    }
+    public void setUpdatedAt(long updatedAt) {
+        this.updatedAt = updatedAt;
+    }
+
+    public void setBankAccID(String bankAccID) {
+        this.bankAccID = bankAccID;
+    }
+    public void setBankAccHolderID(String bankAccHolderID) {
         this.bankAccHolderID = bankAccHolderID;
-        updated();
     }
-    public void setBankAccType(short bankAccType){
+    public void setBankAccType(short bankAccType) {
         this.bankAccType = bankAccType;
-        updated();
     }
-    public void setBankAccStatus(short bankAccStatus){
+    public void setBankAccStatus(short bankAccStatus) {
         this.bankAccStatus = bankAccStatus;
-        updated();
     }
-    public void setBankAccBranch(String bankAccBranch){
+    public void setBankAccBranch(int bankAccBranch) {
         this.bankAccBranch = bankAccBranch;
-        updated();
     }
-    public void setBankAccBalance(short bankAccBalance){
+    public void setBankAccBalance(double bankAccBalance) {
         this.bankAccBalance = bankAccBalance;
-        updated();
     }
-    public void setBankAccTransactionLimit(short bankAccTransactionLimit){
+    public void setBankAccTransactionLimit(double bankAccTransactionLimit) {
         this.bankAccTransactionLimit = bankAccTransactionLimit;
-        updated();
     }
-    public void setBankAccInterestRate(double bankAccInterestRate){
-        this.bankAccInterestRate = bankAccInterestRate;
-        updated();
-    }
-    public void setBankAccMinBalance(double bankAccMinBalance){
+    public void setBankAccMinBalance(double bankAccMinBalance) {
         this.bankAccMinBalance = bankAccMinBalance;
-        updated();
     }
-    public void setBankAccTransactions(List<Long> bankAccTransactions){
+    
+    public void setBankAccTransactions(List<Long> bankAccTransactions) {
         this.bankAccTransactions = bankAccTransactions;
-        updated();
     }
 
     protected void updated(){

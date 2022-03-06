@@ -11,7 +11,7 @@ public interface M_IUserAccount {
     public String getUserID();
     public short getUserType();
     public String getUserName();
-    public String getUserPassword();
+    public byte[] getUserPassword();
     public String getUserFirstName();
     public String getUserLastName();
     public String getUserAddress();
@@ -20,7 +20,7 @@ public interface M_IUserAccount {
     
     public void setUserAccType(short userAccType);
     public void setUserName(String userName);
-    public void setUserPassword(String userPassword);
+    public void setUserPassword(byte[] userPassword);
     public void setUserFirstName(String userFirstName);
     public void setUserLastName(String userLastName);
     public void setUserAddress(String userAddress);

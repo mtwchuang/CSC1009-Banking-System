@@ -14,7 +14,7 @@ public class M_UserAccount implements M_IUserAccount{
     private String userID;
     private short userType;
     private String userName;
-    private String userPassword;
+    private byte[] userPassword;
     private String userFirstName;
     private String userLastName;
     private String userAddress;
@@ -53,7 +53,7 @@ public class M_UserAccount implements M_IUserAccount{
     public String getUserName(){
         return userName;
     }
-    public String getUserPassword(){
+    public byte[] getUserPassword(){
         return userPassword;
     }
     public String getUserFirstName(){
@@ -94,7 +94,7 @@ public class M_UserAccount implements M_IUserAccount{
     public void setUserName(String userName){
         this.userName = userName;
     }
-    public void setUserPassword(String userPassword){
+    public void setUserPassword(byte[] userPassword){
         this.userPassword = userPassword;
     }
     public void setUserFirstName(String userFirstName){

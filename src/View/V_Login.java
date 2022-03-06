@@ -14,44 +14,45 @@ public class V_Login
         while(loginFlag==true)
         {
             loginFlag = false;
-            // take in username and password
+            //Take in username and password
             System.out.print("Enter in login username: ");
             String loginUser = input.nextLine();
-            // ATM password integers
+            //ATM password integers
             System.out.print("Enter in login password: ");
             String loginPass = input.nextLine();
             int intCheck = 0;
-            // statement to check if parameter is are numerics
+            //Statement to check if parameter is are numerics
             try
             {
                 intCheck = Integer.parseInt(loginPass);
             }
             catch(Exception e)
             {
-                // Function to clear page
+                //Function to clear page
                 System.out.print("\033[H\033[2J");
                 System.out.println("Error, String detected, only int allowed");
                 loginFlag = true;
             }
 
             // call out VL_checkAcct() from MV_UserAccount in layer ModelView to check against stored credentials
-            short authStatus = new MV_UserAccount().VLogin_checkAcct(loginUser, intCheck);
+            MV_UserAccount test = new MV_UserAccount();
+            short authStatus = test.VLogin_checkAcct(loginUser, intCheck);
             switch(authStatus)
             {
-                // authentication success
+                //Authentication success
                 case(0):
                 {
                     System.out.println("Welcome back to your account");
-                    // call out to new overview method?
+                    break;
                 }
-                // wrong username
+                //Wrong username
                 case(1):
                 {
                     System.out.println("Wrong username or password entered");
                     loginFlag= true;
                     break;
                 }
-                // wrong password
+                //Wrong password
                 case(2):
                 {
                     System.out.println("Wrong username or password entered");
@@ -59,7 +60,7 @@ public class V_Login
                     break;
                 }
             }
-            // ask user if want to continue or break
+            //Ask user if want to continue or break
             boolean choiceLoop = true;
             if(loginFlag==true)
             {

@@ -1,7 +1,12 @@
 package ModelView.UserAccount;
+
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
-// import DataAccess.UserAccount.UserAccount;
+import java.util.Arrays;
+
+import Model.UserAccount.M_IUserAccount;
+import DataAccess.UserAccount.DA_UserAccount;
+
 public class MV_UserAccount {
 
     public short VLogin_checkAcct(String userName, int userPassword) throws Exception
@@ -12,44 +17,43 @@ public class MV_UserAccount {
         //  2: Invalid password
         try
         {
-            // instantiate class and call method dbUserAccounts_GetByUserName() from library DataAccess.UserAccount.UserAccount()
-            Model.UserAccount.M_IUserAccount testAcct =  
-            new DataAccess.UserAccount.DA_UserAccount().dbUserAccounts_GetByUserName(userName);
+            //Instantiate class and call method dbUserAccounts_GetByUserName() from library DataAccess.UserAccount.UserAccount()
+            DA_UserAccount userAccountDB = new DA_UserAccount();
+            M_IUserAccount testAcct = userAccountDB.dbUserAccounts_GetByUserName(userName);
 
-            // if testAcct is null, account does not exists, return error 1
-            if(testAcct==null) return 1;
+            //If testAcct is null, account does not exists, return error 1
+            if(testAcct == null) return 1;
 
-            // call local password hashing method
-            String hashedPass = passwordHashing(userPassword);
+            //Acquire hashed format of input password
+            byte[] hashedPass = passwordHashing(userPassword);
 
-            // check if password is not equal to stored password
-            if(testAcct.getUserPassword()!=hashedPass) return 2;
+            //Check if input password tallies with db record
+            if(Arrays.equals(testAcct.getUserPassword(), hashedPass)) return 2;
         }
         catch(Exception e)
         {
-            //Fatal Program Error
+            //Encountered fatal program error
             throw e;
         }
 
         return 0;
     }
-    // double hashing in SHA-256 and MD5 for password
-    private String passwordHashing(int userPassword)
+    
+    //Double layered hashing
+    private byte[] passwordHashing(int userPassword)
     {
-        String hashedPassword="";
+        byte[] hashedPassword = null;
+        String targetString = userPassword + "";
+
         try
         {
-            // convert int password to string and hashes it in "SHA-256" format
-            String targetString = userPassword+"";
+            //Convert int password to string and hashes it in "SHA-256" format
             MessageDigest sha265Hash = MessageDigest.getInstance("SHA-256");
-            byte[] hashLayer01 = sha265Hash.digest(targetString.getBytes(StandardCharsets.UTF_8));
+            hashedPassword = sha265Hash.digest(targetString.getBytes(StandardCharsets.UTF_8));
     
-            // takes byte output and hashes it again in "MD5" format
+            //Takes byte output and hashes it again in "MD5" format
             MessageDigest md5Hash = MessageDigest.getInstance("MD5");
-            byte[] hashLayer02 = md5Hash.digest(hashLayer01);
-
-            // converts byte output back into String
-            hashedPassword = new String(hashLayer02,StandardCharsets.UTF_8);
+            hashedPassword = md5Hash.digest(hashedPassword);
         }
         catch(Exception e)
         {

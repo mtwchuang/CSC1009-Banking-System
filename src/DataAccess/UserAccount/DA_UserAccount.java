@@ -2,48 +2,67 @@ package DataAccess.UserAccount;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileReader;
-import java.io.IOException;
+import java.io.ObjectInputStream;
 import java.util.ArrayList;
 import java.util.List;
 
-import Model.UserAccount.*;
+import Model.UserAccount.M_IUserAccount;
+import Model.UserAccount.M_UserAccount;
+import Model.UserAccount.M_UserAccountLogin;
+
 import ModelView.Global;
 
 public class DA_UserAccount {
-    public List<M_IUserAccount> dbUserAccounts_GetAll() throws IOException{
+    //M_UserAccount
+    //  00: createdBy - String
+    //  01: createdAt - long
+    //  02: updatedBy - String
+    //  03: updatedAt - long
+    //  04: userID - String
+    //  05: userType - short
+    //  06: userName - String
+    //  07: userFirstName - String
+    //  08: userLastName - String
+    //  09: userAddress - String
+    //  10: userPhoneNumber - long
+
+    public List<M_IUserAccount> dbUserAccounts_GetAll() throws Exception{
         List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
         String line;
         BufferedReader br = null;
         try{
-            br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
+            br = new BufferedReader(new FileReader(Global.dbUserAccounts));
             //Skip first line; header line
             br.readLine();
 
             line = br.readLine();
             while(line != null){
-                String[] dataSegments = line.split(",");
+                String[] dataSegments = line.split("\\|");
 
                 //Data mapping
-                Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
+                M_UserAccount currentAccount = new M_UserAccount();
 
                 currentAccount.setCreatedBy(dataSegments[0]);
                 currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
                 currentAccount.setUpdatedBy(dataSegments[2]);
                 currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-
+                
                 currentAccount.setUserID(dataSegments[4]);
                 currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
                 currentAccount.setUserName(dataSegments[6]);
-                currentAccount.setUserPassword(dataSegments[7]);
-                currentAccount.setUserFirstName(dataSegments[8]);
-                currentAccount.setUserLastName(dataSegments[9]);
-                currentAccount.setUserAddress(dataSegments[10]);
-                currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
+                currentAccount.setUserFirstName(dataSegments[7]);
+                currentAccount.setUserLastName(dataSegments[8]);
+                currentAccount.setUserAddress(dataSegments[9]);
+                currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
+
+                currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
 
                 userAccounts.add((M_IUserAccount)currentAccount);
             }
+            line = br.readLine();
         }
         finally{
             br.close();
@@ -51,21 +70,34 @@ public class DA_UserAccount {
         
         return userAccounts;
     }
-    public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws IOException{
+
+    private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
         String line;
         BufferedReader br = null;
         M_IUserAccount targetAccount = null;
+        boolean targetFound = false;
 
         try{
-            br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
+            br = new BufferedReader(new FileReader(Global.dbUserAccounts));
             //Skip first line; header line
             br.readLine();
 
             line = br.readLine();
             while(line != null){
-                String[] dataSegments = line.split(",");
+                String[] dataSegments = line.split("\\|");
                 
-                if(dataSegments[6] == userName){
+                switch(inputCase){
+                    //Search by userID
+                    case 1:
+                        targetFound = (dataSegments[4].equals(input));
+                        break;
+                    //Search by userName
+                    case 2:
+                        targetFound = (dataSegments[6].equals(input));
+                        break;
+                }
+
+                if(targetFound){
                     //Data mapping
                     M_UserAccount currentAccount = new M_UserAccount();
 
@@ -73,75 +105,56 @@ public class DA_UserAccount {
                     currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
                     currentAccount.setUpdatedBy(dataSegments[2]);
                     currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-
+                    
                     currentAccount.setUserID(dataSegments[4]);
                     currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
                     currentAccount.setUserName(dataSegments[6]);
-                    currentAccount.setUserPassword(dataSegments[7]);
-                    currentAccount.setUserFirstName(dataSegments[8]);
-                    currentAccount.setUserLastName(dataSegments[9]);
-                    currentAccount.setUserAddress(dataSegments[10]);
-                    currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
+                    currentAccount.setUserFirstName(dataSegments[7]);
+                    currentAccount.setUserLastName(dataSegments[8]);
+                    currentAccount.setUserAddress(dataSegments[9]);
+                    currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
+
+                    currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
 
                     targetAccount = (M_IUserAccount)currentAccount;
                     break;
                 }
-            }
-            br.close();
-        }
-        catch(Exception e)
-        {
-            throw e;
-        }
-        return targetAccount;
-    }
-    public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws IOException{
-        String line;
-        BufferedReader br = null;
-        M_IUserAccount targetAccount = null;
-
-        try{
-            br = new BufferedReader(new FileReader(getDynamicDbPath() + Global.dbUserAccount));
-            //Skip first line; header line
-            br.readLine();
-
-            line = br.readLine();
-            while(line != null){
-                String[] dataSegments = line.split(",");
-                
-                if(dataSegments[4] == userID){
-                    //Data mapping
-                    Model.UserAccount.M_UserAccount currentAccount = new Model.UserAccount.M_UserAccount();
-
-                    currentAccount.setCreatedBy(dataSegments[0]);
-                    currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
-                    currentAccount.setUpdatedBy(dataSegments[2]);
-                    currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-
-                    currentAccount.setUserID(dataSegments[4]);
-                    currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
-                    currentAccount.setUserName(dataSegments[6]);
-                    currentAccount.setUserPassword(dataSegments[7]);
-                    currentAccount.setUserFirstName(dataSegments[8]);
-                    currentAccount.setUserLastName(dataSegments[9]);
-                    currentAccount.setUserAddress(dataSegments[10]);
-                    currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[11]));
-
-                    targetAccount = (M_IUserAccount)currentAccount;
-                    break;
-                }
+                line = br.readLine();
             }
         }
         finally{
             br.close();
         }
-        
         return targetAccount;
     }
+    public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws Exception{
+        return dbUserAccounts_GetOne(1, userID);
+    }
+    public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws Exception{
+        return dbUserAccounts_GetOne(2, userName);
+    }
 
-    private String getDynamicDbPath(){
-        File dynamicDir = new File("");
-        String localDir = dynamicDir.getAbsolutePath();
-        return localDir;
+    private byte[] dbUserAccounts_GetUserPassword(String userID) throws Exception{
+        byte[] password = null;
+
+        File dbAccountLogins = new File(Global.dbUserAccountLogins);
+        String[] accountLogins = dbAccountLogins.list();
+
+        for(String loginEntry : accountLogins){
+            if(loginEntry.equals(userID)){
+                String temp = Global.dbUserAccountLogins + "\\" + loginEntry;
+
+                FileInputStream fileInputStream = new FileInputStream(
+                    Global.dbUserAccountLogins + "\\" + loginEntry);
+                ObjectInputStream objectInputStream = new ObjectInputStream(
+                    fileInputStream);
+                    
+                M_UserAccountLogin targetLogin = (M_UserAccountLogin) objectInputStream.readObject();
+                password = targetLogin.getUserPassword();
+                objectInputStream.close();
+                break;
+            }
+        }
+        return password;
     }
 }
