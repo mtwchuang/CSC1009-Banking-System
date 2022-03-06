@@ -142,8 +142,6 @@ public class DA_UserAccount {
 
         for(String loginEntry : accountLogins){
             if(loginEntry.equals(userID)){
-                String temp = Global.dbUserAccountLogins + "\\" + loginEntry;
-
                 FileInputStream fileInputStream = new FileInputStream(
                     Global.dbUserAccountLogins + "\\" + loginEntry);
                 ObjectInputStream objectInputStream = new ObjectInputStream(

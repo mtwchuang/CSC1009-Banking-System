@@ -1,5 +1,7 @@
 package View;
 
+import java.util.Scanner;
+
 public class V_Overview 
 {
     Scanner input = new Scanner(System.in);
