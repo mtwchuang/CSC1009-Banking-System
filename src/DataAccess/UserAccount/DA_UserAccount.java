@@ -11,7 +11,6 @@ import java.util.List;
 import Model.UserAccount.M_IUserAccount;
 import Model.UserAccount.M_UserAccount;
 import Model.UserAccount.M_UserAccountLogin;
-
 import ModelView.Global;
 
 public class DA_UserAccount {

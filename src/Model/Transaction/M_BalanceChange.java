@@ -7,8 +7,8 @@ public class M_BalanceChange extends M_Transaction{
     private boolean executedOnPurchase = false;
     private String merchantName;
 
-    public M_BalanceChange(String transactionSrcBankAccID){
-        super(transactionSrcBankAccID);
+    public M_BalanceChange(boolean creatingNew){
+        super(creatingNew);
     }
 
     public boolean isExecutedOnAtm() {

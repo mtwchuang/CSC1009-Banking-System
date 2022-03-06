@@ -23,12 +23,16 @@ public class M_UserAccount implements M_IUserAccount{
     private List<Long> userBankAccounts;
 
     public M_UserAccount(){
-        this.createdBy = Global.sessionUserID;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedBy = Global.sessionUserID;
-        this.updatedAt = System.currentTimeMillis();
-
-        this.userID = UUID.randomUUID().toString();
+    }
+    public M_UserAccount(boolean creatingNew){
+        if(creatingNew){
+            this.createdBy = Global.sessionUser.getUserID();
+            this.createdAt = System.currentTimeMillis();
+            this.updatedBy = Global.sessionUser.getUserID();
+            this.updatedAt = System.currentTimeMillis();
+    
+            this.userID = UUID.randomUUID().toString();
+        }
     }
 
     public String getCreatedBy(){
@@ -114,7 +118,7 @@ public class M_UserAccount implements M_IUserAccount{
     }
 
     public void updated(){
-        this.updatedBy = Global.sessionUserID;
+        this.updatedBy = Global.sessionUser.getUserID();
         this.updatedAt = System.currentTimeMillis();
     }
 }

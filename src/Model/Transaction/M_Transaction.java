@@ -18,22 +18,23 @@ public abstract class M_Transaction {
     private String transactionDescription;
     private boolean transactionExecuted;
     private boolean transactionOverseas;
-
+    
     private double transactionBankAccInitialAmount;
     private double transactionBankAccFinalAmount;
-
     private String transactionBankAccID;
 
-    public M_Transaction(String transactionBankAccID){
-        this.createdBy = Global.sessionUserID;
-        this.createdAt = System.currentTimeMillis();
-        this.updatedBy = Global.sessionUserID;
-        this.updatedAt = System.currentTimeMillis();
-
-        this.transactionID = UUID.randomUUID().toString();
-        this.transactionExecuted = false;
-
-        this.transactionBankAccID = transactionBankAccID;
+    public M_Transaction(boolean creatingNew){
+        if(creatingNew){
+            this.createdBy = Global.sessionUser.getUserID();
+            this.createdAt = System.currentTimeMillis();
+            this.updatedBy = Global.sessionUser.getUserID();
+            this.updatedAt = System.currentTimeMillis();
+    
+            this.transactionID = UUID.randomUUID().toString();
+            this.transactionExecuted = false;
+    
+            this.transactionBankAccID = "";
+        }
     }
 
     public String getCreatedBy(){
@@ -74,7 +75,6 @@ public abstract class M_Transaction {
     public double getTransactionBankAccFinalAmount(){
         return transactionBankAccFinalAmount;
     }
-
     public String getTransactionSrcBankAccID(){
         return transactionBankAccID;
     }
@@ -98,6 +98,9 @@ public abstract class M_Transaction {
     public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount){
         this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
     }
+    public void setTransactionSrcBankAccID(String transactionBankAccID){
+        this.transactionBankAccID = transactionBankAccID;
+    }
 
     public boolean isTransactionExecuted(){
         return transactionExecuted;
@@ -108,12 +111,12 @@ public abstract class M_Transaction {
    
     public void executeTransaction(){
         this.transactionExecuted = true;
-        this.executedBy = Global.sessionUserID;
+        this.executedBy = Global.sessionUser.getUserID();
         this.executedAt = System.currentTimeMillis();
     }
 
     public void updated(){
-        this.updatedBy = Global.sessionUserID;
+        this.updatedBy = Global.sessionUser.getUserID();
         this.updatedAt = System.currentTimeMillis();
     }
 }

@@ -23,9 +23,9 @@ public class M_BankAccount{
     private List<Long> bankAccTransactions;
 
     public M_BankAccount(String bankAccHolderID){
-        this.createdBy = Global.sessionUserID;
+        this.createdBy = Global.sessionUser.getUserID();
         this.createdAt = System.currentTimeMillis();
-        this.updatedBy = Global.sessionUserID;
+        this.updatedBy = Global.sessionUser.getUserID();
         this.updatedAt = System.currentTimeMillis();
 
         this.bankAccID = UUID.randomUUID().toString();
@@ -117,7 +117,7 @@ public class M_BankAccount{
     }
 
     protected void updated(){
-        this.updatedBy = Global.sessionUserID;
+        this.updatedBy = Global.sessionUser.getUserID();
         this.updatedAt = System.currentTimeMillis();
     }
 }

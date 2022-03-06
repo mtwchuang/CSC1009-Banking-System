@@ -5,11 +5,12 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 
 import Model.UserAccount.M_IUserAccount;
+import ModelView.Global;
 import DataAccess.UserAccount.DA_UserAccount;
 
 public class MV_UserAccount {
 
-    public short VLogin_checkAcct(String userName, int userPassword) throws Exception
+    public short VLogin_checkAcc(String userName, String userPassword) throws Exception
     {
         //Status Codes:
         //  0: Ok
@@ -17,18 +18,22 @@ public class MV_UserAccount {
         //  2: Invalid password
         try
         {
-            //Instantiate class and call method dbUserAccounts_GetByUserName() from library DataAccess.UserAccount.UserAccount()
-            DA_UserAccount userAccountDB = new DA_UserAccount();
-            M_IUserAccount testAcct = userAccountDB.dbUserAccounts_GetByUserName(userName);
+            DA_UserAccount userAccDA = new DA_UserAccount();
 
-            //If testAcct is null, account does not exists, return error 1
-            if(testAcct == null) return 1;
+            //Retrive UserAccount with corresponding userName
+            M_IUserAccount targetAcc = userAccDA.dbUserAccounts_GetByUserName(userName);
 
-            //Acquire hashed format of input password
+            //Null detected; userName does not exist, return status code 1
+            if(targetAcc == null) return 1;
+
+            //Acquire hashed format of userPassword
             byte[] hashedPass = passwordHashing(userPassword);
 
-            //Check if input password tallies with db record
-            if(Arrays.equals(testAcct.getUserPassword(), hashedPass)) return 2;
+            //Detect if userPassword does not tally with DB side, return status code 2
+            if(!Arrays.equals(targetAcc.getUserPassword(), hashedPass)) return 2;
+
+            //Successful login, put targetAcc in session storage
+            Global.sessionUser = targetAcc;
         }
         catch(Exception e)
         {
@@ -36,20 +41,19 @@ public class MV_UserAccount {
             throw e;
         }
 
+        //Successful login, return status code 0
         return 0;
     }
     
     //Double layered hashing
-    private byte[] passwordHashing(int userPassword)
+    private byte[] passwordHashing(String userPassword)
     {
         byte[] hashedPassword = null;
-        String targetString = userPassword + "";
-
         try
         {
             //Convert int password to string and hashes it in "SHA-256" format
             MessageDigest sha265Hash = MessageDigest.getInstance("SHA-256");
-            hashedPassword = sha265Hash.digest(targetString.getBytes(StandardCharsets.UTF_8));
+            hashedPassword = sha265Hash.digest(userPassword.getBytes(StandardCharsets.UTF_8));
     
             //Takes byte output and hashes it again in "MD5" format
             MessageDigest md5Hash = MessageDigest.getInstance("MD5");

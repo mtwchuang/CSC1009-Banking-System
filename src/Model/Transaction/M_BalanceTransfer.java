@@ -3,8 +3,8 @@ package Model.Transaction;
 public class M_BalanceTransfer extends M_Transaction{
     private String transactionTargetBankAccID;
 
-    public M_BalanceTransfer(String transactionSrcBankAccID){
-        super(transactionSrcBankAccID);
+    public M_BalanceTransfer(boolean creatingNew){
+        super(creatingNew);
     }
 
     public String getTransactionTargetBankAccID(){
