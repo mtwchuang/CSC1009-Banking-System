@@ -15,7 +15,6 @@ public interface M_IBankAccount{
     public double getBankAccMinBalance();
     public String[] getBankAccTransactions();
 
-
     public void setBankAccType(short bankAccType);
     public void setBankAccStatus(short bankAccStatus);
     public void setBankAccBalance(double bankAccBalance);
@@ -23,7 +22,4 @@ public interface M_IBankAccount{
     public void setBankAccMinBalance(double bankAccMinBalance);
     public void setBankAccTransactions(String[] bankAccTransactions);
     public void updated();
-
-
-
 }

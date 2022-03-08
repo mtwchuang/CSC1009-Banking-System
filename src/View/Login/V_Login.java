@@ -56,7 +56,8 @@ public class V_Login
 						}
 
 						//Page navigation after logging in
-						V_ViewManager.redirect("index");
+						V_ViewManager.redirect("useraccindex");
+						
 						break;
 					}
 					//Invalid login credentials
