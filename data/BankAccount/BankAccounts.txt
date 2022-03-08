@@ -1,2 +1,2 @@
-﻿createdBy|createdAt|updatedBy|updatedAt|bankAccID|bankAccHolderID|bankAccType|bankAccStatus|bankAccBranch|bankAccBalance|bankAccTransactionLimit|bankAccMinBalance
-9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|420-0093109751-001|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|0|1|1000000|2000000|200
+﻿createdBy|createdAt|updatedBy|updatedAt|bankAccID|bankAccHolderID|bankAccType|bankAccStatus|bankAccBalance|bankAccTransactionLimit|bankAccMinBalance|bankAccSubHolderIDs|bankAccTransactOnlyIDs
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|0093109751-1001|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|0|1000000|2000000|200||

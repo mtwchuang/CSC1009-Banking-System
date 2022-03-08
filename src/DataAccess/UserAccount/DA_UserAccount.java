@@ -11,147 +11,153 @@ import java.util.List;
 import Model.UserAccount.M_IUserAccount;
 import Model.UserAccount.M_UserAccount;
 import Model.UserAccount.M_UserAccountLogin;
-import ModelView.Global;
+import ModelView.MV_Global;
 
 public class DA_UserAccount {
-    //M_UserAccount
-    //  00: createdBy - String
-    //  01: createdAt - long
-    //  02: updatedBy - String
-    //  03: updatedAt - long
-    //  04: userID - String
-    //  05: userType - short
-    //  06: userName - String
-    //  07: userFirstName - String
-    //  08: userLastName - String
-    //  09: userAddress - String
-    //  10: userPhoneNumber - long
+	//M_UserAccount
+	//  00: createdBy - String
+	//  01: createdAt - long
+	//  02: updatedBy - String
+	//  03: updatedAt - long
+	//  04: userID - String
+	//  05: userType - short
+	//  06: userName - String
+	//  07: userFirstName - String
+	//  08: userLastName - String
+	//  09: userAddress - String
+	//  10: userPhoneNumber - long
+	//	11: userBankAccounts - Collection
 
-    public List<M_IUserAccount> dbUserAccounts_GetAll() throws Exception{
-        List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
+	public List<M_IUserAccount> dbUserAccounts_GetAll() throws Exception{
+		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
-        String line;
-        BufferedReader br = null;
-        try{
-            br = new BufferedReader(new FileReader(Global.dbUserAccounts));
-            //Skip first line; header line
-            br.readLine();
+		String line;
+		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(MV_Global.dbUserAccounts));
+			//Skip first line; header line
+			br.readLine();
 
-            line = br.readLine();
-            while(line != null){
-                String[] dataSegments = line.split("\\|");
+			line = br.readLine();
+			while(line != null){
+				String[] dataSegments = line.split("\\|");
 
-                //Data mapping
-                M_UserAccount currentAccount = new M_UserAccount();
+				//Data mapping
+				M_UserAccount currentAccount = new M_UserAccount();
 
-                currentAccount.setCreatedBy(dataSegments[0]);
-                currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
-                currentAccount.setUpdatedBy(dataSegments[2]);
-                currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-                
-                currentAccount.setUserID(dataSegments[4]);
-                currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
-                currentAccount.setUserName(dataSegments[6]);
-                currentAccount.setUserFirstName(dataSegments[7]);
-                currentAccount.setUserLastName(dataSegments[8]);
-                currentAccount.setUserAddress(dataSegments[9]);
-                currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
+				currentAccount.setCreatedBy(dataSegments[0]);
+				currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
+				currentAccount.setUpdatedBy(dataSegments[2]);
+				currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
+				
+				currentAccount.setUserID(dataSegments[4]);
+				currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
+				currentAccount.setUserName(dataSegments[6]);
+				currentAccount.setUserFirstName(dataSegments[7]);
+				currentAccount.setUserLastName(dataSegments[8]);
+				currentAccount.setUserAddress(dataSegments[9]);
+				currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
 
-                currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
+				currentAccount.setUserBankAccounts(dataSegments[11].split("&"));
 
-                userAccounts.add((M_IUserAccount)currentAccount);
-            }
-            line = br.readLine();
-        }
-        finally{
-            br.close();
-        }
-        
-        return userAccounts;
-    }
+				currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
 
-    private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
-        String line;
-        BufferedReader br = null;
-        M_IUserAccount targetAccount = null;
-        boolean targetFound = false;
+				userAccounts.add((M_IUserAccount)currentAccount);
+			}
+			line = br.readLine();
+		}
+		finally{
+			br.close();
+		}
+		
+		return userAccounts;
+	}
 
-        try{
-            br = new BufferedReader(new FileReader(Global.dbUserAccounts));
-            //Skip first line; header line
-            br.readLine();
+	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
+		String line;
+		BufferedReader br = null;
+		M_IUserAccount targetAccount = null;
+		boolean targetFound = false;
 
-            line = br.readLine();
-            while(line != null){
-                String[] dataSegments = line.split("\\|");
-                
-                switch(inputCase){
-                    //Search by userID
-                    case 1:
-                        targetFound = (dataSegments[4].equals(input));
-                        break;
-                    //Search by userName
-                    case 2:
-                        targetFound = (dataSegments[6].equals(input));
-                        break;
-                }
+		try{
+			br = new BufferedReader(new FileReader(MV_Global.dbUserAccounts));
+			//Skip first line; header line
+			br.readLine();
 
-                if(targetFound){
-                    //Data mapping
-                    M_UserAccount currentAccount = new M_UserAccount();
+			line = br.readLine();
+			while(line != null){
+				String[] dataSegments = line.split("\\|");
+				
+				switch(inputCase){
+					//Search by userID
+					case 1:
+						targetFound = (dataSegments[4].equals(input));
+						break;
+					//Search by userName
+					case 2:
+						targetFound = (dataSegments[6].equals(input));
+						break;
+				}
 
-                    currentAccount.setCreatedBy(dataSegments[0]);
-                    currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
-                    currentAccount.setUpdatedBy(dataSegments[2]);
-                    currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-                    
-                    currentAccount.setUserID(dataSegments[4]);
-                    currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
-                    currentAccount.setUserName(dataSegments[6]);
-                    currentAccount.setUserFirstName(dataSegments[7]);
-                    currentAccount.setUserLastName(dataSegments[8]);
-                    currentAccount.setUserAddress(dataSegments[9]);
-                    currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
+				if(targetFound){
+					//Data mapping
+					M_UserAccount currentAccount = new M_UserAccount();
 
-                    currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
+					currentAccount.setCreatedBy(dataSegments[0]);
+					currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
+					currentAccount.setUpdatedBy(dataSegments[2]);
+					currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
+					
+					currentAccount.setUserID(dataSegments[4]);
+					currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
+					currentAccount.setUserName(dataSegments[6]);
+					currentAccount.setUserFirstName(dataSegments[7]);
+					currentAccount.setUserLastName(dataSegments[8]);
+					currentAccount.setUserAddress(dataSegments[9]);
+					currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
 
-                    targetAccount = (M_IUserAccount)currentAccount;
-                    break;
-                }
-                line = br.readLine();
-            }
-        }
-        finally{
-            br.close();
-        }
-        return targetAccount;
-    }
-    public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws Exception{
-        return dbUserAccounts_GetOne(1, userID);
-    }
-    public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws Exception{
-        return dbUserAccounts_GetOne(2, userName);
-    }
+					currentAccount.setUserBankAccounts(dataSegments[11].split("&"));
 
-    private byte[] dbUserAccounts_GetUserPassword(String userID) throws Exception{
-        byte[] password = null;
+					currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
 
-        File dbAccountLogins = new File(Global.dbUserAccountLogins);
-        String[] accountLogins = dbAccountLogins.list();
+					targetAccount = (M_IUserAccount)currentAccount;
+					break;
+				}
+				line = br.readLine();
+			}
+		}
+		finally{
+			br.close();
+		}
+		return targetAccount;
+	}
+	public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws Exception{
+		return dbUserAccounts_GetOne(1, userID);
+	}
+	public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws Exception{
+		return dbUserAccounts_GetOne(2, userName);
+	}
 
-        for(String loginEntry : accountLogins){
-            if(loginEntry.equals(userID)){
-                FileInputStream fileInputStream = new FileInputStream(
-                    Global.dbUserAccountLogins + "\\" + loginEntry);
-                ObjectInputStream objectInputStream = new ObjectInputStream(
-                    fileInputStream);
-                    
-                M_UserAccountLogin targetLogin = (M_UserAccountLogin) objectInputStream.readObject();
-                password = targetLogin.getUserPassword();
-                objectInputStream.close();
-                break;
-            }
-        }
-        return password;
-    }
+	private byte[] dbUserAccounts_GetUserPassword(String userID) throws Exception{
+		byte[] password = null;
+
+		File dbAccountLogins = new File(MV_Global.dbUserAccountLogins);
+		String[] accountLogins = dbAccountLogins.list();
+
+		for(String loginEntry : accountLogins){
+			if(loginEntry.equals(userID)){
+				FileInputStream fileInputStream = new FileInputStream(
+					MV_Global.dbUserAccountLogins + "\\" + loginEntry);
+				ObjectInputStream objectInputStream = new ObjectInputStream(
+					fileInputStream);
+					
+				M_UserAccountLogin targetLogin = (M_UserAccountLogin) objectInputStream.readObject();
+				password = targetLogin.getUserPassword();
+				objectInputStream.close();
+				break;
+			}
+		}
+		return password;
+	}
+	
 }

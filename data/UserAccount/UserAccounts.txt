@@ -1,2 +1,2 @@
-﻿createdBy|createdAt|updatedBy|updatedAt|userID|userType|userName|userPassword|userFirstName|userLastName|userAddress|userPhoneNumber
-9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|10|admin|McShittyPants|Michael|Kentucky fried chicken|62353535
+﻿createdBy|createdAt|updatedBy|updatedAt|userID|userType|userName|userPassword|userFirstName|userLastName|userAddress|userPhoneNumber|userBankAccounts
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|10|admin|McShittyPants|Michael|Kentucky fried chicken|62353535|0093109751-1001

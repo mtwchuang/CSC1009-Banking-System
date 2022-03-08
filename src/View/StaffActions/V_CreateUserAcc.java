@@ -1,5 +1,5 @@
-package View.Staff;
+package View.StaffActions;
 
 public class V_CreateUserAcc {
-    
+	
 }

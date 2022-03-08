@@ -1,9 +1,8 @@
 package Model.UserAccount;
 
-import java.util.List;
 import java.util.UUID;
 
-import ModelView.Global;
+import ModelView.MV_Global;
 
 public class M_UserAccount implements M_IUserAccount{
     private String createdBy;
@@ -20,15 +19,15 @@ public class M_UserAccount implements M_IUserAccount{
     private String userAddress;
     private long userPhoneNumber;
 
-    private List<Long> userBankAccounts;
+    private String[] userBankAccounts;
 
     public M_UserAccount(){
     }
     public M_UserAccount(boolean creatingNew){
         if(creatingNew){
-            this.createdBy = Global.sessionUser.getUserID();
+            this.createdBy = MV_Global.sessionUser.getUserID();
             this.createdAt = System.currentTimeMillis();
-            this.updatedBy = Global.sessionUser.getUserID();
+            this.updatedBy = MV_Global.sessionUser.getUserID();
             this.updatedAt = System.currentTimeMillis();
     
             this.userID = UUID.randomUUID().toString();
@@ -72,7 +71,8 @@ public class M_UserAccount implements M_IUserAccount{
     public long getUserPhoneNumber(){
         return userPhoneNumber;
     }
-    public List<Long> getUserBankAccounts(){
+    
+    public String[] getUserBankAccounts(){
         return this.userBankAccounts;
     }
 
@@ -113,12 +113,12 @@ public class M_UserAccount implements M_IUserAccount{
     public void setUserPhoneNumber(long userPhoneNumber){
         this.userPhoneNumber = userPhoneNumber;
     }
-    public void setUserBankAccounts(List<Long> userBankAccounts){
+    public void setUserBankAccounts(String[] userBankAccounts){
         this.userBankAccounts = userBankAccounts;
     }
 
     public void updated(){
-        this.updatedBy = Global.sessionUser.getUserID();
+        this.updatedBy = MV_Global.sessionUser.getUserID();
         this.updatedAt = System.currentTimeMillis();
     }
 }

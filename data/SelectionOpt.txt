@@ -1,1 +1,1 @@
-BankBranch|001-Singapore,CityHall|002-Singapore,Bishan|003-Singapore,Jurong 
+BankBranch|1001-Singapore,CityHall|1002-Singapore,Bishan|1003-Singapore,Jurong|2001-Japan,Tokyo|2002-Japan,Kyoto|3001-Australia,Sydney|3002-Australia,Adelaide4001-Taiwan,Tapei

@@ -1,5 +1,7 @@
+import View.V_ViewManager;
+
 public class Main {
-    public static void main(String[] args) throws Exception {
-        new View.V_Login().run();
-    }
+	public static void main(String[] args){
+		V_ViewManager.redirect("login");
+	}
 }
