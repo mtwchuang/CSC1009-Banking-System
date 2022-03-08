@@ -18,9 +18,7 @@ public interface M_IBankAccount{
 
     public void setBankAccType(short bankAccType);
     public void setBankAccStatus(short bankAccStatus);
-    public void setBankAccBalance(double bankAccBalance);
     public void setBankAccTransactionLimit(double bankAccTransactionLimit);
-    public void setBankAccMinBalance(double bankAccMinBalance);
     public void setBankAccTransactions(String[] bankAccTransactions);
     public void updated();
 
