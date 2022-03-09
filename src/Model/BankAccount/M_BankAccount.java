@@ -23,9 +23,9 @@ public class M_BankAccount implements M_IBankAccount{
 	public M_BankAccount(){
 	}
 	public M_BankAccount(String bankAccHolderID){
-		this.createdBy = MV_Global.sessionUser.getUserID();
+		this.createdBy = MV_Global.sessionUserAcc.getUserID();
 		this.createdAt = System.currentTimeMillis();
-		this.updatedBy = MV_Global.sessionUser.getUserID();
+		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
 		this.updatedAt = System.currentTimeMillis();
 
 		this.bankAccID = UUID.randomUUID().toString();
@@ -109,7 +109,7 @@ public class M_BankAccount implements M_IBankAccount{
 	}
 
 	public void updated(){
-		this.updatedBy = MV_Global.sessionUser.getUserID();
+		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
 		this.updatedAt = System.currentTimeMillis();
 	}
 }

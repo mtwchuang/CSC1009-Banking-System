@@ -5,6 +5,7 @@ import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
+import Model.BankAccount.M_IBankAccount;
 import Model.UserAccount.M_IUserAccount;
 
 public class MV_Global {
@@ -15,7 +16,8 @@ public class MV_Global {
     public static Stack<String> pageDir = new Stack<String>();
 
 	//Session storage
-	public static M_IUserAccount sessionUser;
+	public static M_IUserAccount sessionUserAcc;
+	public static M_IBankAccount sessionBankAcc;
 
 	//Database path config
 	public static String dbUserAccounts = getDynamicDbPath() + "\\data\\UserAccount\\UserAccounts.txt";
@@ -31,5 +33,11 @@ public class MV_Global {
 	//Program-global delay function
 	public static void wait(int seconds) throws Exception{
 		TimeUnit.SECONDS.sleep((long) seconds);
+	}
+
+	//Clear session data
+	public static void clearSession(){
+		sessionUserAcc = null;
+		sessionBankAcc = null;
 	}
 }

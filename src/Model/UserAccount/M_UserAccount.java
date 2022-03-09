@@ -25,9 +25,9 @@ public class M_UserAccount implements M_IUserAccount{
     }
     public M_UserAccount(boolean creatingNew){
         if(creatingNew){
-            this.createdBy = MV_Global.sessionUser.getUserID();
+            this.createdBy = MV_Global.sessionUserAcc.getUserID();
             this.createdAt = System.currentTimeMillis();
-            this.updatedBy = MV_Global.sessionUser.getUserID();
+            this.updatedBy = MV_Global.sessionUserAcc.getUserID();
             this.updatedAt = System.currentTimeMillis();
     
             this.userID = UUID.randomUUID().toString();
@@ -118,7 +118,7 @@ public class M_UserAccount implements M_IUserAccount{
     }
 
     public void updated(){
-        this.updatedBy = MV_Global.sessionUser.getUserID();
+        this.updatedBy = MV_Global.sessionUserAcc.getUserID();
         this.updatedAt = System.currentTimeMillis();
     }
 }

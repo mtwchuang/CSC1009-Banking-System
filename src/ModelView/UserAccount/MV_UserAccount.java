@@ -17,6 +17,7 @@ public class MV_UserAccount {
 		//  2: Invalid password
 		try
 		{
+			//Variable declaration
 			DA_UserAccount userAccDA = new DA_UserAccount();
 
 			//Retrive UserAccount with corresponding userName
@@ -31,8 +32,8 @@ public class MV_UserAccount {
 			//Detect if userPassword does not tally with DB side, return status code 2
 			if(!Arrays.equals(targetAcc.getUserPassword(), hashedPass)) return 2;
 
-			//Successful login, put targetAcc in session storage
-			MV_Global.sessionUser = targetAcc;
+			//Successful login, load targetAcc into session storage
+			MV_Global.sessionUserAcc = targetAcc;
 		}
 		catch(Exception e)
 		{

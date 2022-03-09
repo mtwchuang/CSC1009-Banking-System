@@ -25,9 +25,9 @@ public abstract class M_Transaction {
 
 	public M_Transaction(boolean creatingNew){
 		if(creatingNew){
-			this.createdBy = MV_Global.sessionUser.getUserID();
+			this.createdBy = MV_Global.sessionUserAcc.getUserID();
 			this.createdAt = System.currentTimeMillis();
-			this.updatedBy = MV_Global.sessionUser.getUserID();
+			this.updatedBy = MV_Global.sessionUserAcc.getUserID();
 			this.updatedAt = System.currentTimeMillis();
 	
 			this.transactionID = UUID.randomUUID().toString();
@@ -111,12 +111,12 @@ public abstract class M_Transaction {
    
 	public void executeTransaction(){
 		this.transactionExecuted = true;
-		this.executedBy = MV_Global.sessionUser.getUserID();
+		this.executedBy = MV_Global.sessionUserAcc.getUserID();
 		this.executedAt = System.currentTimeMillis();
 	}
 
 	public void updated(){
-		this.updatedBy = MV_Global.sessionUser.getUserID();
+		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
 		this.updatedAt = System.currentTimeMillis();
 	}
 }

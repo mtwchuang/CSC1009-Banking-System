@@ -13,6 +13,7 @@ public class V_Login
 		short authenticationStatus, i;
 		String inputUsername, inputPassword;
 
+		//Infinite loop to simulate ATM's embedded OS
 		while(true){
 			validationFlag = true;
 
@@ -58,6 +59,9 @@ public class V_Login
 						//Page navigation after logging in
 						V_ViewManager.redirect("useraccindex");
 						
+						//Clear session data after logging out
+						MV_Global.clearSession();
+
 						break;
 					}
 					//Invalid login credentials
@@ -100,8 +104,5 @@ public class V_Login
 		System.out.println("================================================================================\n");
 
 		System.out.println("Login to get started...\n");
-	}
-
-	public class run {
 	}
 }
