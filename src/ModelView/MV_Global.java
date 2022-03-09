@@ -12,7 +12,7 @@ public class MV_Global {
 	public static Scanner input = new Scanner(System.in);
 
 	//Stack to keep track of user page navigation
-    public static Stack<String> pageDir = new Stack<String>(); 
+    public static Stack<String> pageDir = new Stack<String>();
 
 	//Session storage
 	public static M_IUserAccount sessionUser;
@@ -23,7 +23,7 @@ public class MV_Global {
 	public static String dbBankAccounts = getDynamicDbPath() + "\\data\\BankAccount\\BankAccounts.txt";
 	public static String dbBalanceChanges = getDynamicDbPath() + "\\data\\Transaction\\BalanceChanges.txt";
 	public static String dbBalanceTranfers = getDynamicDbPath() + "\\data\\Transaction\\BalanceTransfers.txt";
-	public static String selectionOpt = getDynamicDbPath() + "\\data\\SelectionOpt.txt";
+	public static String dbSelectionOpt = getDynamicDbPath() + "\\data\\SelectionOpt.txt";
 	private static String getDynamicDbPath(){
 		return new File("").getAbsolutePath();
 	}

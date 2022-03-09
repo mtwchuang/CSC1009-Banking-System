@@ -1,1 +1,3 @@
+BankAccIndexActions|0-Deposit Balance|1-Withdraw Balance|2-View Transactions|3-Transfer Balance
+BankAccIndexActionsAdmin|45-Create User|46-Create Account
 BankBranch|1001-Singapore,CityHall|1002-Singapore,Bishan|1003-Singapore,Jurong|2001-Japan,Tokyo|2002-Japan,Kyoto|3001-Australia,Sydney|3002-Australia,Adelaide4001-Taiwan,Tapei

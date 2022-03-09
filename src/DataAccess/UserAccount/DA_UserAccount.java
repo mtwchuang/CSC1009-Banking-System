@@ -32,6 +32,7 @@ public class DA_UserAccount {
 		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
 		String line;
+		String[] dataSegments;
 		BufferedReader br = null;
 		try{
 			br = new BufferedReader(new FileReader(MV_Global.dbUserAccounts));
@@ -40,7 +41,7 @@ public class DA_UserAccount {
 
 			line = br.readLine();
 			while(line != null){
-				String[] dataSegments = line.split("\\|");
+				dataSegments = line.split("\\|");
 
 				//Data mapping
 				M_UserAccount currentAccount = new M_UserAccount();
@@ -75,6 +76,7 @@ public class DA_UserAccount {
 
 	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
 		String line;
+		String[] dataSegments;
 		BufferedReader br = null;
 		M_IUserAccount targetAccount = null;
 		boolean targetFound = false;
@@ -86,7 +88,7 @@ public class DA_UserAccount {
 
 			line = br.readLine();
 			while(line != null){
-				String[] dataSegments = line.split("\\|");
+				dataSegments = line.split("\\|");
 				
 				switch(inputCase){
 					//Search by userID
@@ -159,5 +161,4 @@ public class DA_UserAccount {
 		}
 		return password;
 	}
-	
 }
