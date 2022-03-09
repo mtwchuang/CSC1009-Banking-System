@@ -1,6 +1,6 @@
 package Model.Transaction;
 
-public class M_BalanceChange extends M_Transaction{
+public class M_BalanceChange extends M_Transaction implements M_IBalanceChange{
 	private boolean executedOnAtm = false;
 	private String AtmID;
 

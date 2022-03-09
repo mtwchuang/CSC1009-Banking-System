@@ -1,6 +1,6 @@
 package Model.Transaction;
 
-public class M_BalanceTransfer extends M_Transaction{
+public class M_BalanceTransfer extends M_Transaction implements M_IBalanceTransfer{
 	private String transactionTargetBankAccID;
 
 	public M_BalanceTransfer(boolean creatingNew){
