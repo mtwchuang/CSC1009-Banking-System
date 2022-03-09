@@ -28,7 +28,7 @@ public class V_ViewManager{
         }
     }
 
-    private static void clearPage(){
+    public static void clearPage(){
         //Clear screen
         System.out.print("\033[H\033[2J");
     }
