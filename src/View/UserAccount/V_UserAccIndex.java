@@ -1,4 +1,4 @@
-package View.Index;
+package View.UserAccount;
 
 import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;

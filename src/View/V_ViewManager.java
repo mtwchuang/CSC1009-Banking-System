@@ -13,11 +13,15 @@ public class V_ViewManager{
                     break;
                 case "useraccindex":
                     MV_Global.pageDir.push("useraccindex");
-                    new View.Index.V_UserAccIndex().run();
+                    new View.UserAccount.V_UserAccIndex().run();
                     break;
                 case "bankaccindex":
                     MV_Global.pageDir.push("bankaccindex");
-                    new View.Index.V_BankAccIndex().run();
+                    new View.BankAccount.V_BankAccIndex().run();
+                    break;
+                case "logout":
+                    MV_Global.pageDir.push("logout");
+                    new View.Login.V_Logout().run();
                     break;
                 default:
                     throw new Exception("Navigation invalid page");

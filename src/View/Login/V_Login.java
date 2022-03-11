@@ -58,7 +58,10 @@ public class V_Login
 
 						//Page navigation after logging in
 						V_ViewManager.redirect("useraccindex");
-						
+
+						//Redirect to logout page
+						V_ViewManager.redirect("logout");
+
 						//Clear session data after logging out
 						MV_Global.clearSession();
 
