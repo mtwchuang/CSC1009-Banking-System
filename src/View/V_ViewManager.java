@@ -3,32 +3,40 @@ package View;
 import ModelView.MV_Global;
 
 public class V_ViewManager{
-    public static void redirect(String page){
+    public static boolean redirect(String page){
         clearPage();
         try{
             switch(page.toLowerCase()){
+                case "back":
+                    MV_Global.pageDir.pop();
+                    return redirect(MV_Global.pageDir.peek());
+
                 case "login":
                     MV_Global.pageDir.push("login");
                     new View.Login.V_Login().run();
-                    break;
+                    return true;
+
                 case "useraccindex":
                     MV_Global.pageDir.push("useraccindex");
                     new View.UserAccount.V_UserAccIndex().run();
-                    break;
+                    return true;
+
                 case "bankaccindex":
                     MV_Global.pageDir.push("bankaccindex");
-                    new View.BankAccount.V_BankAccIndex().run();
-                    break;
+                    return new View.BankAccount.V_BankAccIndex().run();
+
                 case "logout":
-                    MV_Global.pageDir.push("logout");
+                    while(!MV_Global.pageDir.empty())
+                        MV_Global.pageDir.pop();
                     new View.Login.V_Logout().run();
-                    break;
+                    return true;
+                    
                 default:
                     throw new Exception("Navigation invalid page");
             }
         }
         catch(Exception e){
-            new View.V_Error().run(e);
+            return new View.V_Error().run(e);
         }
     }
 

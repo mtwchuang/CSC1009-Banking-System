@@ -1,11 +1,11 @@
 package View.Login;
 
 import ModelView.MV_Global;
-import View.V_ViewManager;
 
 public class V_Logout {
     public void run() throws Exception{
-        V_ViewManager.clearPage();
+        //Clear session data after logging out
+        MV_Global.clearSession();
 
         System.out.println("\n===============================================================================");
         System.out.println("88888888888 888                        888                                     ");
@@ -18,13 +18,8 @@ public class V_Logout {
         System.out.println("========================================================= 888 =================");
         System.out.println("                                                     Y8b d88P                  ");
         System.out.println("                                                      \"Y88P\"                   ");
-        System.out.println("");
+        System.out.println("\nLogging out...");
 
-
-        System.out.print("Logging out");
-        for(int i = 0; i < 3; i++){
-            MV_Global.wait(1);
-            System.out.print(".");
-        }
+        MV_Global.wait(3000);
     }
 }

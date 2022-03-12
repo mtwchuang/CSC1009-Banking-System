@@ -9,28 +9,33 @@ public class V_Login
 {
 	public void run() throws Exception
 	{
+		boolean ahShit = false;
+
 		boolean validationFlag;
-		short authenticationStatus, i;
+		short authenticationStatus = 0;
 		String inputUsername, inputPassword;
 
-		//Infinite loop to simulate ATM's embedded OS
+		//Infinite loop to simulate ATM's embedded OS's continuous runtime
 		while(true){
 			validationFlag = true;
 
 			//Clear screen
-			System.out.print("\033[H\033[2J");
+			V_ViewManager.clearPage();
 
 			//Print bank logo
 			this.logo();
 			
 			//Intake username
 			System.out.print("Username: ");
-			inputUsername = MV_Global.input.nextLine();
+			if(ahShit) inputUsername = "admin";
+			else inputUsername = MV_Global.input.nextLine();
 
 			//Intake password
-			inputPassword = new String(System.console().readPassword("Password: "));
+			if(ahShit) inputPassword = "000000";
+			else inputPassword = new String(System.console().readPassword("Password: "));
 			System.out.println("");
 
+			System.out.print("Loading... "); 
 			//Password validation; check if input is integer
 			try
 			{
@@ -44,17 +49,18 @@ public class V_Login
 			//Call out VL_checkAcct() from MV_UserAccount in layer ModelView to check against stored credentials
 			if(validationFlag)
 			{
+				//Fetch session user data
 				authenticationStatus = new MV_UserAccount().VLogin_checkAcc(inputUsername, inputPassword);
+
+				//Check authenticationStatus
 				switch(authenticationStatus)
 				{
 					//Authentication success
 					case(0):
 					{
-						System.out.print("Login successful. Loading");
-						for(i = 0; i < 3; i++){
-							MV_Global.wait(1);
-							System.out.print(".");
-						}
+						//Show user login success
+						System.out.println("Login successful.");
+						MV_Global.waitSuccess();
 
 						//Page navigation after logging in
 						V_ViewManager.redirect("useraccindex");
@@ -62,32 +68,24 @@ public class V_Login
 						//Redirect to logout page
 						V_ViewManager.redirect("logout");
 
-						//Clear session data after logging out
-						MV_Global.clearSession();
-
 						break;
 					}
 					//Invalid login credentials
 					default:
 					{
-						System.out.println("Invalid username or password.\n");
-						System.out.print("Login page resetting");
-						for(i = 0; i < 3; i++){
-							MV_Global.wait(1);
-							System.out.print(".");
-						}
+						System.out.println("Invalid username or password.");
+						MV_Global.waitError();
 						break;
 					}
 				}
 			}
+			//Invalid login input
 			else{
-				System.out.println("Invalid username or password.\n");
-				System.out.print("Login page resetting");
-				for(i = 0; i < 3; i++){
-					MV_Global.wait(1);
-					System.out.print(".");
-				}
+				System.out.print("Invalid username or password.");
+				MV_Global.waitSuccess();
 			}
+
+			V_ViewManager.clearPage();
 		}
 	}
 

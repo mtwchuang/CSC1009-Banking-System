@@ -25,15 +25,21 @@ public class MV_Global {
 	public static String dbBankAccounts = getDynamicDbPath() + "\\data\\BankAccount\\BankAccounts.txt";
 	public static String dbBalanceChanges = getDynamicDbPath() + "\\data\\Transaction\\BalanceChanges.txt";
 	public static String dbBalanceTranfers = getDynamicDbPath() + "\\data\\Transaction\\BalanceTransfers.txt";
-	public static String dbSelectionOpt = getDynamicDbPath() + "\\data\\SelectionOpt.txt";
+	public static String dbSettings = getDynamicDbPath() + "\\data\\Settings.txt";
 	private static String getDynamicDbPath(){
 		return new File("").getAbsolutePath();
 	}
 	
-	//Program-global delay function
-	public static void wait(int seconds) throws Exception{
-		TimeUnit.SECONDS.sleep((long) seconds);
+	//ATM config
+	//[Country]-[ATM_ID]
+	public static final String atmID = "01-6969";
+
+	//Program-global delay functions; for user experience and readability
+	public static void wait(int milliseconds) throws Exception{
+		TimeUnit.MILLISECONDS.sleep((long) milliseconds);
 	}
+	public static void waitSuccess() throws Exception{wait(1000);}
+	public static void waitError() throws Exception{wait(1000);}
 
 	//Clear session data
 	public static void clearSession(){

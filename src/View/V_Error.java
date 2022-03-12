@@ -1,7 +1,7 @@
 package View;
 
 public class V_Error {
-    public void run(Exception e){
+    public boolean run(Exception e){
         System.out.println("");
         System.out.println(".#..#..#..######..#####...#####....####...#####...#..#..#.");
         System.out.println("..#.#.#...##......##..##..##..##..##..##..##..##...#.#.#..");
@@ -20,5 +20,7 @@ public class V_Error {
         System.out.println("");
         
         System.exit(0);
+
+        return true;
     }
 }

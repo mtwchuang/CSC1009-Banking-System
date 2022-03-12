@@ -5,23 +5,19 @@ import java.io.FileReader;
 
 import ModelView.MV_Global;
 
-public class DA_SelectionOpt{
+public class DA_Settings{
     public String[] dbSelectionOpt_GetByKey(String key) throws Exception{
         String line;
         String[] dataSegments = null;
         BufferedReader br = null;
-        boolean foundTarget = false;
 
         try{
-            br = new BufferedReader(new FileReader(MV_Global.dbSelectionOpt));
-            //Skip first line; header line
-            br.readLine();
+            br = new BufferedReader(new FileReader(MV_Global.dbSettings));
     
             line = br.readLine();
-            while(line != null && !foundTarget){
+            while(line != null){
                 dataSegments = line.split("\\|");
-                if(dataSegments[0].toLowerCase().equals(key.toLowerCase())) 
-                    foundTarget = true;
+                if(dataSegments[0].toLowerCase().equals(key.toLowerCase())) break;
                 else line = br.readLine();
             }
         }

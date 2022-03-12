@@ -1,0 +1,11 @@
+BankAccWithdrawOptSG|a055-Withdraw S$ 10-10|a055-Withdraw S$ 20-20|a055-Withdraw S$ 50-50|a055-Withdraw S$ 100-100
+BankAccWithdrawOptJP|a056-Withdraw 1000 ¥-1000|a056-Withdraw 2000 ¥-2000|a056-Withdraw 5000 ¥-5000|a056-Withdraw 10000 ¥-10000
+BankAccWithdrawOptUS|a057-Withdraw US$ 10-10|a057-Withdraw US$ 20-20|a057-Withdraw US$ 50-50|a057-Withdraw US$ 100-100
+BankAccActions|b131-Withdraw Other Amounts|b132-Deposit Balance|b133-View Transactions|b134-Transfer Balance|
+BankAccOwnerActions|c961-View Balance|c962-Change Settings
+BankAccAdminActions|z420-Make It Rain|z421-Delete Balance|z422-Transfer to Nobody|z423-Transfer to Nobody(Overseas)
+BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020201-Japan,Tokyo,Fushimi|020202-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
+BankCountry|01-Singapore|02-Japan|03-US
+CurrencyRate|1-1|2-87.09|3-0.74
+TimeZone|1-P-8|2-P-9|3-N-5
+OverseasTransactionCharge|0.03
