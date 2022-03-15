@@ -1,5 +1,6 @@
 package Model.Transaction;
-// interface for M_Transaction.java
+// Interface for M_Transaction
+// Parent interface of M_IBalanceChange and M_IBalanceTransfer
 public interface M_ITransaction 
 {
     // getters for private variables
