@@ -28,7 +28,7 @@ public class DA_UserAccount {
 	//  10: userPhoneNumber - long
 	//	11: userBankAccounts - Collection
 
-	public List<M_IUserAccount> dbUserAccounts_GetAll() throws Exception{
+	public M_IUserAccount[] dbUserAccounts_GetAll() throws Exception{
 		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
 		String line;
@@ -71,7 +71,10 @@ public class DA_UserAccount {
 			br.close();
 		}
 		
-		return userAccounts;
+		M_IUserAccount[] userAccountsArr = new M_IUserAccount[userAccounts.size()];
+		for(int i = 0; i < userAccountsArr.length; i++)
+			userAccountsArr[i] = userAccounts.get(i);
+		return userAccountsArr;
 	}
 
 	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{

@@ -92,7 +92,11 @@ public class MV_BankAccount{
         if(MV_Global.sessionUserAcc.getUserType() > 3) 
             if(owner) actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccAdminActions")));
 
-        return (String[])actions.toArray();
+        String[] temp = new String[actions.size()];
+        for(int i = 0; i < actions.size(); i++)
+            temp[i] = actions.get(i);
+    
+        return temp;
     }
     //  Process bank acc actions
     public short VBankAccIndex_executeBankAccActions(String actionCode, String... params){
@@ -179,8 +183,8 @@ public class MV_BankAccount{
         return getBankAccCountryCode(bankAccID).equals(MV_Global.atmID.split("-")[1]);
     }
 
-    private int[] denominationCal(double amount){
-        String[] availableDenominations = MV_Global.availableNotes[0];
-        
-    }
+    //private int[] denominationCal(double amount){
+    //    String[] availableDenominations = MV_Global.availableNotes[0];
+    //    
+    //}
 }

@@ -7,7 +7,7 @@ TimeZone|01-P-8|02-P-9|03-N-5
 //
 //ATM Settings
 AtmID|4206969-01
-AtmNotes|100|100|100|20
+AtmNotesQty|100|100|100|20|0|0|1
 //
 //Overseas Transaction Settings
 CurrencyRate|01-1|02-87.09|03-0.74

@@ -62,7 +62,7 @@ public class MV_Global {
         //Fetch settings from settings file
         try{
             MV_Global.atmID = settingsDA.dbSettings_GetByKey("AtmID")[0];
-            countryCode = MV_Global.atmID.split("-")[1].substring(0,3);
+            countryCode = MV_Global.atmID.split("-")[1];
 
             switch(countryCode){
                 case "02":
@@ -76,7 +76,7 @@ public class MV_Global {
                     break;
             }
             
-            notesCount = settingsDA.dbSettings_GetByKey("AtmNotes");
+            notesCount = settingsDA.dbSettings_GetByKey("AtmNotesQty");
         }
         //Invalid settings file
         catch(Exception e){
@@ -97,6 +97,12 @@ public class MV_Global {
 
             availableNotes.add(new int[]{currentDenomination, currentDenominationCount});
         }
-        return (int[][]) availableNotes.toArray();
+
+        int[][] temp = new int[availableNotes.size()][2];
+        for(int i = 0; i < availableNotes.size(); i++){
+            temp[i][0] = availableNotes.get(i)[0];
+            temp[i][1] = availableNotes.get(i)[1];
+        }
+        return temp;
     }
 }
