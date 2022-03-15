@@ -10,8 +10,10 @@ import DataAccess.UserAccount.DA_UserAccount;
 
 public class MV_UserAccount {
 
+    //Logic functions for V_Login
+	//	Login function
 	public short VLogin_checkAcc(String userName, String userPassword) throws Exception{
-		//Status Codes:
+		//Status csodes:
 		//  0: Ok
 		//  1: Invalid username
 		//  2: Invalid password

@@ -1,10 +1,13 @@
 package ModelView;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Scanner;
 import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
+import DataAccess.DA_Settings;
 import Model.BankAccount.M_IBankAccount;
 import Model.UserAccount.M_IUserAccount;
 
@@ -31,8 +34,9 @@ public class MV_Global {
 	}
 	
 	//ATM config
-	//[Country]-[ATM_ID]
-	public static final String atmID = "01-6969";
+	//[ATM_ID]-[Country]
+	public static String atmID;
+	public static String[][] availableNotes;
 
 	//Program-global delay functions; for user experience and readability
 	public static void wait(int milliseconds) throws Exception{
@@ -46,4 +50,53 @@ public class MV_Global {
 		sessionUserAcc = null;
 		sessionBankAcc = null;
 	}
+
+	//Load Atm config into MV_Global
+    public static int[][] initailizeAtmConfig(){
+        String countryCode;
+        int currentDenomination, currentDenominationCount;
+        String[] notesDenominations = null, notesCount = null;
+        List<int[]> availableNotes = new ArrayList<int[]>();
+		DA_Settings settingsDA = new DataAccess.DA_Settings();
+
+        //Fetch settings from settings file
+        try{
+            MV_Global.atmID = settingsDA.dbSettings_GetByKey("AtmID")[0];
+            countryCode = MV_Global.atmID.split("-")[1].substring(0,3);
+
+            switch(countryCode){
+                case "02":
+                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationJP");
+                    break;
+                case "03":
+                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationUS");
+                    break;
+                default:
+                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationSG");
+                    break;
+            }
+            
+            notesCount = settingsDA.dbSettings_GetByKey("AtmNotes");
+        }
+        //Invalid settings file
+        catch(Exception e){
+            System.out.println("Unable to initialize ATM configurations...\nProgram terminating");
+            System.exit(0);
+        }
+
+        for(int i = 0; i < notesDenominations.length; i++){
+            currentDenomination = Integer.parseInt(notesDenominations[i]);
+
+            try{
+                String temp = notesCount[i];
+                currentDenominationCount = Integer.parseInt(temp);
+            }
+            catch(IndexOutOfBoundsException ioobe){
+                currentDenominationCount = 0;
+            }
+
+            availableNotes.add(new int[]{currentDenomination, currentDenominationCount});
+        }
+        return (int[][]) availableNotes.toArray();
+    }
 }

@@ -2,11 +2,13 @@ package DataAccess;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
+import java.util.Arrays;
 
 import ModelView.MV_Global;
 
 public class DA_Settings{
-    public String[] dbSelectionOpt_GetByKey(String key) throws Exception{
+    //Retrive settings by key
+    public String[] dbSettings_GetByKey(String key) throws Exception{
         String line;
         String[] dataSegments = null;
         BufferedReader br = null;
@@ -16,14 +18,16 @@ public class DA_Settings{
     
             line = br.readLine();
             while(line != null){
-                dataSegments = line.split("\\|");
-                if(dataSegments[0].toLowerCase().equals(key.toLowerCase())) break;
-                else line = br.readLine();
+                if(!line.contains("//")){
+                    dataSegments = line.split("\\|");
+                    if(dataSegments[0].toLowerCase().equals(key.toLowerCase())) break;
+                }
+                line = br.readLine();
             }
         }
         finally{
             br.close();
         }
-        return dataSegments;
+        return  Arrays.copyOfRange(dataSegments, 1, dataSegments.length);
     }
 }
