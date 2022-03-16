@@ -1,17 +1,18 @@
 package Model.Transaction;
 
 import java.util.UUID;
-
 import ModelView.MV_Global;
 
-public abstract class M_Transaction {
+public abstract class M_Transaction implements M_ITransaction
+{
+	// fields for audit checking
 	private String createdBy;
 	private long createdAt;
 	private String updatedBy;
 	private long updatedAt;
-	private String executedBy;
-	private long executedAt;
-
+	// private String executedBy;
+	// private long executedAt;
+	// fields for general transaction
 	private String transactionID;
 	private short transactionType;
 	private double transactionAmount;
@@ -49,12 +50,12 @@ public abstract class M_Transaction {
 	public long getUpdatedAt(){
 		return updatedAt;
 	}
-	public String getExecutedBy(){
-		return executedBy;
-	}
-	public long getExecutedAt(){
-		return executedAt;
-	}
+	// public String getExecutedBy(){
+	// 	return executedBy;
+	// }
+	// public long getExecutedAt(){
+	// 	return executedAt;
+	// }
    
 	public String getTransactionID(){
 		return transactionID;
@@ -109,11 +110,11 @@ public abstract class M_Transaction {
 		return transactionOverseas;
 	}
    
-	public void executeTransaction(){
-		this.transactionExecuted = true;
-		this.executedBy = MV_Global.sessionUserAcc.getUserID();
-		this.executedAt = System.currentTimeMillis();
-	}
+	// public void executeTransaction(){
+	// 	this.transactionExecuted = true;
+	// 	this.executedBy = MV_Global.sessionUserAcc.getUserID();
+	// 	this.executedAt = System.currentTimeMillis();
+	// }
 
 	public void updated(){
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
