@@ -8,8 +8,8 @@ public interface M_ITransaction
 	public long getCreatedAt();
 	public String getUpdatedBy();
 	public long getUpdatedAt();
-	public String getExecutedBy();
-	public long getExecutedAt();
+	// public String getExecutedBy();
+	// public long getExecutedAt();
 	public String getTransactionID();
 	public short getTransactionType();
 	public double getTransactionAmount();
@@ -28,6 +28,6 @@ public interface M_ITransaction
 	public boolean isTransactionExecuted();
 	public boolean isTransactionOverseas();
     // other methods
-	public void executeTransaction();
+	// public void executeTransaction();
 	public void updated();
 }
