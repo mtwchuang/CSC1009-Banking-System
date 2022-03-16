@@ -1,0 +1,9 @@
+Interfaces for M_Transaction
+Parent interface - M_ITransaction
+Child Interface - M_IBalanceChange
+Child Interface - M_IBalanceTransfer
+
+Classes for M_Transaction
+Abstract Parent Class - M_Transaction
+Child Class - M_BalanceChange
+Child Class - M_BalanceTransfer
