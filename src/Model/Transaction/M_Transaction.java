@@ -2,7 +2,11 @@ package Model.Transaction;
 
 import java.util.UUID;
 import ModelView.MV_Global;
-
+/*	Changes logs
+	Removed fields and relevant methods for executedBy and executedAt
+	Added set methods for fields related to audit checking, transactionID and 
+	transactionExecuted
+*/
 public abstract class M_Transaction implements M_ITransaction
 {
 	// fields for audit checking
@@ -80,6 +84,24 @@ public abstract class M_Transaction implements M_ITransaction
 		return transactionBankAccID;
 	}
 
+	// setter methods for audits
+	public void setCreatedBy(String createdBy){
+        this.createdBy = createdBy;
+    }
+    public void setCreatedAt(long createdAt){
+        this.createdAt = createdAt;
+    }
+    public void setUpdatedBy(String updatedBy){
+        this.updatedBy = updatedBy;
+    }
+    public void setUpdatedAt(long updatedAt){
+        this.updatedAt = updatedAt;
+    }
+	// setter methods for transaction details
+	public void setTransactionID(String transactionID)
+	{
+		this.transactionID = transactionID;
+	}
 	public void setTransactionType(short transactionType){
 		this.transactionType = transactionType;
 	}
@@ -89,7 +111,10 @@ public abstract class M_Transaction implements M_ITransaction
 	public void setTransactionDescription(String transactionDescription){
 		this.transactionDescription = transactionDescription;
 	}
-	public void settransactionOverseas(boolean transactionOverseas){
+	public void setTransactionExecuted(boolean transactionExecuted){
+		this.transactionExecuted = transactionExecuted;
+	}
+	public void setTransactionOverseas(boolean transactionOverseas){
 		this.transactionOverseas = transactionOverseas;
 	}
 

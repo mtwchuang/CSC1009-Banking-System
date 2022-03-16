@@ -21,7 +21,7 @@ public interface M_ITransaction
 	public void setTransactionType(short transactionType);
 	public void setTransactionAmount(double transactionAmount);
 	public void setTransactionDescription(String transactionDescription);
-	public void settransactionOverseas(boolean transactionOverseas);
+	public void setTransactionOverseas(boolean transactionOverseas);
 	public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount);
 	public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount);
 	public void setTransactionSrcBankAccID(String transactionBankAccID);
