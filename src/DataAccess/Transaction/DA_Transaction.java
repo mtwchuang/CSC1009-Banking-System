@@ -1,6 +1,7 @@
 package DataAccess.Transaction;
 // import packages from model transactions
 import java.io.BufferedReader;
+import java.io.PrintWriter;
 import java.io.FileReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -470,9 +471,43 @@ public class DA_Transaction
     /********************************************************************/
     /*UPDATE (WRITE) FUNCTIONS FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
     /********************************************************************/
-    // unimplemented Balance Change write method
-    public short dbBalanceChange_Update(M_IBalanceChange balanceChange)
+    // public function to rewrite balance change records + inputbalchange record, returns an error message if any
+    public short dbBalanceChange_Update(M_IBalanceChange inputBalChange) throws Exception
     {
+        String line = null;
+        BufferedReader br = null;
+        PrintWriter writer = null;
+        try
+        {
+            br = new BufferedReader(new FileReader(MV_Global.dbBalanceChanges));
+            // line starts off with header
+            line = br.readLine();
+            String newBalanceChange = "";
+            while(line!=null)
+            {
+                newBalanceChange+=line+"\n";
+                line = br.readLine();
+            }
+            // append values of inputBalChange into newBalanceChange and separate by delimiters
+            newBalanceChange+=(inputBalChange.getCreatedBy()+"|"+inputBalChange.getCreatedAt()+
+                "|"+inputBalChange.getUpdatedBy()+"|"+inputBalChange.getUpdatedBy()+"|"+inputBalChange.getTransactionDescription()+
+                "|"+inputBalChange.getTransactionType()+"|"+inputBalChange.getTransactionAmount()+"|"+inputBalChange.getTransactionDescription()+
+                "|"+inputBalChange.isTransactionExecuted()+"|"+inputBalChange.isTransactionOverseas()+"|"+inputBalChange.getTransactionSrcBankAccID()+
+                "|"+inputBalChange.isExecutedOnAtm()+"|"+inputBalChange.getAtmID()+"|"+inputBalChange.isExecutedOnPurchase());
+
+            writer = new PrintWriter(MV_Global.dbBalanceChanges);
+            writer.print(newBalanceChange);
+        }
+        catch(Exception e)
+        {
+            return -1; // not sure if this is correct
+        }
+        finally
+        {
+            br.close();
+            writer.flush();
+            writer.close();
+        }
         return 0;
     }
     // unimplemented Balance Transfer write method
@@ -485,5 +520,13 @@ public class DA_Transaction
     /***************************************************************/
     /*DELETE FUNCTIONS BY FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
     /***************************************************************/
+
+    
+    // public static void main(String[] args) throws Exception
+    // {
+    //     M_BalanceChange bc1 = new M_BalanceChange(false);
+    //     DA_Transaction da1 = new DA_Transaction();
+    //     da1.dbBalanceChange_Update((M_IBalanceChange) bc1);
+    // }
 
 }
