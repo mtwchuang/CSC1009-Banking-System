@@ -26,7 +26,7 @@ public class V_BankAccIndex
 			//Print available actions
 			System.out.println("Opt\tAction");
 			System.out.println("---------------------------------------------------------------------");
-			for(int i = 1; i < bankAccActions.length; i++){
+			for(int i = 0; i < bankAccActions.length; i++){
 				String[] subData = bankAccActions[i].split(("-"));
 				System.out.println("[" + i + "]\t" + subData[1]);
 			}

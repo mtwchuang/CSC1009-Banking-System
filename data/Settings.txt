@@ -6,7 +6,7 @@ BankCountry|01-Singapore|02-Japan|03-US
 TimeZone|01-P-8|02-P-9|03-N-5
 //
 //ATM Settings
-AtmID|4206969-01
+AtmID|4206969-03
 AtmNotesQty|100|100|100|20|0|0|1
 //
 //Overseas Transaction Settings

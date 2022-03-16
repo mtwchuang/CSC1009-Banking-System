@@ -46,7 +46,7 @@ public class MV_BankAccount{
         boolean owner = false;
 
         //Get withdraw options
-        switch(MV_Global.atmID.split("-")[0]){
+        switch(MV_Global.atmID.split("-")[1]){
             case "02": //Japan
                 actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccWithdrawOptJP")));
                 break;

@@ -10,8 +10,6 @@ public class DA_Transaction
 	 01: createdAt - long
 	 02: updatedBy - String
 	 03: updatedAt - long
-     04: executedBy - String
-     05: executedAt - long
     fields for general transaction records
      06: transactionID - String
      07: transactionType - short
