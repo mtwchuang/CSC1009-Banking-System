@@ -174,6 +174,7 @@ public class DA_Transaction
         }
         return balanceTransfers;
     }
+    
     // private function to return one balance change
     private M_IBalanceChange dbBalanceChange_GetOne(int inputcase, String input) throws Exception
     {
@@ -320,16 +321,37 @@ public class DA_Transaction
         }
         return balanceChanges;
     }
-    // public function to return transactions by transactionID
+    
+    // public function to return balance change by transactionID
     public M_IBalanceChange dbBalanceChange_GetByTransID(String transID) throws Exception
     {
         return dbBalanceChange_GetOne(4, transID);
     }
-    // public function to return transactions by bankAcct
-    // observing the method in DA_Bankaccount, why is your return type M_IBankAccount, an interface? Not a class type?
-    //
+    // public function to return multiple balance changes by userid
+    public M_IBalanceChange[] dbBalanceChange_GetByUserID(String userID) throws Exception
+    {
+        return dbBalanceChange_GetMultiple(0, userID);
+    }
+    // public function to return multiple balance changes by bankid
+    public M_IBalanceChange[] dbBalanceChange_GetByBankID(String bankID) throws Exception
+    {
+        return dbBalanceChange_GetMultiple(10, bankID);
+    }
 
-
-    /* public function to return transaction by corporateID */
+    // public function to return balance transfer by transactionID
+    public M_IBalanceTransfer dbBalanceTransfer_GetByTransID(String transID) throws Exception
+    {
+        return dbBalanceTransfer_GetOne(4, transID);
+    }
+    // public function to return multiple balance transfers by userid
+    public M_IBalanceTransfer[] dbBalanceTransfer_GetByUserID(String userID) throws Exception
+    {
+        return dbBalanceTransfer_GetMultiple(0, userID);
+    }
+    // public function to return multiple balance transfers by bankid
+    public M_IBalanceTransfer[] dbBalanceTransfer_GetByBankID(String bankID) throws Exception
+    {
+        return dbBalanceTransfer_GetMultiple(10, bankID);
+    }    
 
 }
