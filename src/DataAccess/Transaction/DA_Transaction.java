@@ -510,9 +510,43 @@ public class DA_Transaction
         }
         return 0;
     }
-    // unimplemented Balance Transfer write method
-    public short dbBalanceTransfer_Update(M_IBalanceTransfer balanceTransfer)
+    // public function to rewrite balance transfer records + inputbaltransfer record, returns an error message if any
+    public short dbBalanceTransfer_Update(M_IBalanceTransfer inputBalTransfer) throws Exception
     {
+        String line = null;
+        BufferedReader br = null;
+        PrintWriter writer = null;
+        try
+        {
+            br = new BufferedReader(new FileReader(MV_Global.dbBalanceTransfers));
+            // line starts off with header
+            line = br.readLine();
+            String newBalanceTransfer = "";
+            while(line!=null)
+            {
+                newBalanceTransfer+=line+"\n";
+                line = br.readLine();
+            }
+            // append values of inputBalTransfer into newBalanceTransfer and separate by delimiters
+            newBalanceTransfer+=(inputBalTransfer.getCreatedBy()+"|"+inputBalTransfer.getCreatedAt()+
+                "|"+inputBalTransfer.getUpdatedBy()+"|"+inputBalTransfer.getUpdatedBy()+"|"+inputBalTransfer.getTransactionDescription()+
+                "|"+inputBalTransfer.getTransactionType()+"|"+inputBalTransfer.getTransactionAmount()+"|"+inputBalTransfer.getTransactionDescription()+
+                "|"+inputBalTransfer.isTransactionExecuted()+"|"+inputBalTransfer.isTransactionOverseas()+"|"+inputBalTransfer.getTransactionSrcBankAccID()+
+                "|"+inputBalTransfer.getTransactionTargetBankAccID());
+
+            writer = new PrintWriter(MV_Global.dbBalanceTransfers);
+            writer.print(newBalanceTransfer);
+        }
+        catch(Exception e)
+        {
+            return -1; // not sure if this is correct
+        }
+        finally
+        {
+            br.close();
+            writer.flush();
+            writer.close();
+        }
         return 0;
     }
     
@@ -520,13 +554,15 @@ public class DA_Transaction
     /***************************************************************/
     /*DELETE FUNCTIONS BY FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
     /***************************************************************/
-
     
+
     // public static void main(String[] args) throws Exception
     // {
-    //     M_BalanceChange bc1 = new M_BalanceChange(false);
+    //     // M_BalanceChange bc1 = new M_BalanceChange(false);
+    //     M_BalanceTransfer bf1 = new M_BalanceTransfer(false);
     //     DA_Transaction da1 = new DA_Transaction();
-    //     da1.dbBalanceChange_Update((M_IBalanceChange) bc1);
+    //     // da1.dbBalanceChange_Update((M_IBalanceChange) bc1);
+    //     da1.dbBalanceTransfer_Update((M_IBalanceTransfer) bf1);
     // }
 
 }
