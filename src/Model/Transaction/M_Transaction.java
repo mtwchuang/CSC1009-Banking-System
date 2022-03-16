@@ -14,8 +14,6 @@ public abstract class M_Transaction implements M_ITransaction
 	private long createdAt;
 	private String updatedBy;
 	private long updatedAt;
-	// private String executedBy;
-	// private long executedAt;
 	// fields for general transaction
 	private String transactionID;
 	private short transactionType;
@@ -23,13 +21,16 @@ public abstract class M_Transaction implements M_ITransaction
 	private String transactionDescription;
 	private boolean transactionExecuted;
 	private boolean transactionOverseas;
-	
+	private String transactionBankAccID;
+	// unimplemented fields
 	private double transactionBankAccInitialAmount;
 	private double transactionBankAccFinalAmount;
-	private String transactionBankAccID;
 
-	public M_Transaction(boolean creatingNew){
-		if(creatingNew){
+	public M_Transaction(boolean creatingNew)
+	{
+		// asks if this is a new transaction that is being created
+		if(creatingNew)
+		{
 			this.createdBy = MV_Global.sessionUserAcc.getUserID();
 			this.createdAt = System.currentTimeMillis();
 			this.updatedBy = MV_Global.sessionUserAcc.getUserID();
@@ -42,6 +43,7 @@ public abstract class M_Transaction implements M_ITransaction
 		}
 	}
 
+	//getters methods for audits
 	public String getCreatedBy(){
 		return createdBy;
 	}
@@ -54,13 +56,7 @@ public abstract class M_Transaction implements M_ITransaction
 	public long getUpdatedAt(){
 		return updatedAt;
 	}
-	// public String getExecutedBy(){
-	// 	return executedBy;
-	// }
-	// public long getExecutedAt(){
-	// 	return executedAt;
-	// }
-   
+	// getter methods for transaction details
 	public String getTransactionID(){
 		return transactionID;
 	}
@@ -73,15 +69,21 @@ public abstract class M_Transaction implements M_ITransaction
 	public String getTransactionDescription(){
 		return transactionDescription;
 	}
+	public boolean isTransactionExecuted(){
+		return transactionExecuted;
+	}
+	public boolean isTransactionOverseas(){
+		return transactionOverseas;
+	}
+	public String getTransactionSrcBankAccID(){
+		return transactionBankAccID;
+	}
 
 	public double getTransactionBankAccInitialAmount(){
 		return transactionBankAccInitialAmount;
 	}
 	public double getTransactionBankAccFinalAmount(){
 		return transactionBankAccFinalAmount;
-	}
-	public String getTransactionSrcBankAccID(){
-		return transactionBankAccID;
 	}
 
 	// setter methods for audits
@@ -117,6 +119,9 @@ public abstract class M_Transaction implements M_ITransaction
 	public void setTransactionOverseas(boolean transactionOverseas){
 		this.transactionOverseas = transactionOverseas;
 	}
+	public void setTransactionSrcBankAccID(String transactionBankAccID){
+		this.transactionBankAccID = transactionBankAccID;
+	}
 
 	public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount){
 		this.transactionBankAccInitialAmount = transactionBankAccInitialAmount;
@@ -124,22 +129,6 @@ public abstract class M_Transaction implements M_ITransaction
 	public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount){
 		this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
 	}
-	public void setTransactionSrcBankAccID(String transactionBankAccID){
-		this.transactionBankAccID = transactionBankAccID;
-	}
-
-	public boolean isTransactionExecuted(){
-		return transactionExecuted;
-	}
-	public boolean isTransactionOverseas(){
-		return transactionOverseas;
-	}
-   
-	// public void executeTransaction(){
-	// 	this.transactionExecuted = true;
-	// 	this.executedBy = MV_Global.sessionUserAcc.getUserID();
-	// 	this.executedAt = System.currentTimeMillis();
-	// }
 
 	public void updated(){
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();

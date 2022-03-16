@@ -9,7 +9,8 @@ public class M_BalanceChange extends M_Transaction implements M_IBalanceChange
 	private String AtmID;
 	private boolean executedOnPurchase = false;
 
-	public M_BalanceChange(boolean creatingNew){
+	public M_BalanceChange(boolean creatingNew)
+	{
 		super(creatingNew);
 	}
 	// balance check getters

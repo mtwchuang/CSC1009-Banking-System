@@ -8,26 +8,25 @@ public interface M_ITransaction
 	public long getCreatedAt();
 	public String getUpdatedBy();
 	public long getUpdatedAt();
-	// public String getExecutedBy();
-	// public long getExecutedAt();
 	public String getTransactionID();
 	public short getTransactionType();
 	public double getTransactionAmount();
 	public String getTransactionDescription();
+	public boolean isTransactionExecuted();
+	public boolean isTransactionOverseas();
+	public String getTransactionSrcBankAccID();
+
 	public double getTransactionBankAccInitialAmount();
 	public double getTransactionBankAccFinalAmount();
-	public String getTransactionSrcBankAccID();
+
     // setters for private variables
-	public void setTransactionType(short transactionType);
-	public void setTransactionAmount(double transactionAmount);
-	public void setTransactionDescription(String transactionDescription);
+	// public void setTransactionType(short transactionType); (should non-modifiable)
+	// public void setTransactionAmount(double transactionAmount); (should non-modifiable)
+	// public void setTransactionDescription(String transactionDescription); (should non-modifiable)
 	public void setTransactionOverseas(boolean transactionOverseas);
 	public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount);
 	public void setTransactionBankAccFinalAmount(double transactionBankAccFinalAmount);
-	public void setTransactionSrcBankAccID(String transactionBankAccID);
-	public boolean isTransactionExecuted();
-	public boolean isTransactionOverseas();
+	// public void setTransactionSrcBankAccID(String transactionBankAccID); (should non-modifiable)
     // other methods
-	// public void executeTransaction();
 	public void updated();
 }

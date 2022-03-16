@@ -7,31 +7,34 @@ import java.util.List;
 
 import Model.Transaction.*;
 import ModelView.MV_Global;
-// fields "merchantID", "executedBy", "executedAt" omitted
 public class DA_Transaction 
 {
-    /* fields within M_BalanceChange.java / M_BalanceTransfer.java
-    fields for audit tracking 
-	 00: createdBy - String
-	 01: createdAt - long
-	 02: updatedBy - String
-	 03: updatedAt - long
-    fields for general transaction records
-     04: transactionID - String
-     05: transactionType - short
-     06: transactionAmount - double
-     07: transactionDescription - String
-     08: transactionExecuted - boolean
-     09: transactionOverseas - boolean
-     10: transactionBankAccID - String
-    specific fields for M_BalanceChange.java
-     11: executedOnAtm - boolean
-     12: AtmID - String
-     13: executedOnPurchase - boolean 
-     specific fields for M_BalanceTransfer.java
-     11: transactionTargetAccID - String 
-    */
-     
+    /********************************************************&*****/
+    /* fields within M_BalanceChange.java / M_BalanceTransfer.java*/
+    /**************************************************************/
+    // fields for audit tracking 
+    //     00: createdBy - String
+    //     01: createdAt - long
+    //     02: updatedBy - String
+    //     03: updatedAt - long
+    // fields for general transaction records
+    //     04: transactionID - String
+    //     05: transactionType - short
+    //     06: transactionAmount - double
+    //     07: transactionDescription - String
+    //     08: transactionExecuted - boolean
+    //     09: transactionOverseas - boolean
+    //     10: transactionBankAccID - String
+    // specific fields for M_BalanceChange.java
+    //     11: executedOnAtm - boolean
+    //     12: AtmID - String
+    //     13: executedOnPurchase - boolean 
+    // specific fields for M_BalanceTransfer.java
+    //     11: transactionTargetAccID - String 
+    
+    /*********************************************************/
+    /*GET FUNCTIONS FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
+    /*********************************************************/
     // private function to return one balance transfer
     private M_IBalanceTransfer dbBalanceTransfer_GetOne(int inputcase, String input) throws Exception
     {
@@ -337,6 +340,62 @@ public class DA_Transaction
     {
         return dbBalanceChange_GetMultiple(10, bankID);
     }
+    // public function to return all balance changes
+    public M_IBalanceChange[] dbBalanceChange_GetAll() throws Exception
+    {
+        // create a temporary collection list that can stores values dynamically
+        List<M_IBalanceChange> tempBalanceChanges = new ArrayList<M_IBalanceChange>();
+        String line;
+		String[] dataSegments;
+		BufferedReader br = null;
+        try
+        {
+            br = new BufferedReader(new FileReader(MV_Global.dbBalanceChanges));
+			//Skip first line; header line
+			br.readLine();
+            line = br.readLine();
+            // transverse through balance change file while current line is not empty
+            while(line!=null)
+            {
+                // split into records based on delimiter
+                dataSegments = line.split("\\|");
+                // instantiate object in model layer, temporary object so parameter false
+                M_BalanceChange currentBalanceChange = new M_BalanceChange(false);
+                // call methods to insert data into object
+                currentBalanceChange.setCreatedBy(dataSegments[0]);
+                currentBalanceChange.setCreatedAt(Long.parseLong(dataSegments[1]));
+                currentBalanceChange.setUpdatedBy(dataSegments[2]);
+                currentBalanceChange.setUpdatedAt(Long.parseLong(dataSegments[3]));
+
+                currentBalanceChange.setTransactionID(dataSegments[4]);
+                currentBalanceChange.setTransactionType(Short.parseShort(dataSegments[5]));
+                currentBalanceChange.setTransactionAmount(Double.parseDouble(dataSegments[6]));
+                currentBalanceChange.setTransactionDescription(dataSegments[7]);
+                currentBalanceChange.setTransactionExecuted(Boolean.parseBoolean(dataSegments[8]));
+                currentBalanceChange.setTransactionOverseas(Boolean.parseBoolean(dataSegments[9]));
+                currentBalanceChange.setTransactionSrcBankAccID(dataSegments[10]);
+
+                currentBalanceChange.setExecutedOnAtm(Boolean.parseBoolean(dataSegments[11]));
+                currentBalanceChange.setAtmID(dataSegments[12]);
+                currentBalanceChange.setExecutedOnPurchase(Boolean.parseBoolean(dataSegments[13]));
+                // add current balance change record to arraylist tempBalanceChanges
+                tempBalanceChanges.add((M_IBalanceChange) currentBalanceChange);
+                line = br.readLine();
+            }            
+        }   
+        finally
+        {
+            br.close();
+        }
+        // instantiate a balance change array 
+        M_IBalanceChange[] balanceChanges = new M_IBalanceChange[tempBalanceChanges.size()];
+        // convert collections arraylist back into an array for M_IBalanceChanges
+        for(int i = 0; i<tempBalanceChanges.size(); i++)
+        {
+            balanceChanges[i] = tempBalanceChanges.get(i);
+        }
+        return balanceChanges;
+    }
 
     // public function to return balance transfer by transactionID
     public M_IBalanceTransfer dbBalanceTransfer_GetByTransID(String transID) throws Exception
@@ -353,5 +412,78 @@ public class DA_Transaction
     {
         return dbBalanceTransfer_GetMultiple(10, bankID);
     }    
+    // public function to return all balance transfers
+    public M_IBalanceTransfer[] dbBalanceTransfer_GetAll() throws Exception
+    {
+        // create a temporary collection list that can stores values dynamically
+        List<M_IBalanceTransfer> tempBalanceTransfers = new ArrayList<M_IBalanceTransfer>();
+        String line;
+		String[] dataSegments;
+		BufferedReader br = null;
+        try
+        {
+            br = new BufferedReader(new FileReader(MV_Global.dbBalanceTransfers));
+			//Skip first line; header line
+			br.readLine();
+            line = br.readLine();
+            // transverse through balance transfer file while current line is not empty
+            while(line!=null)
+            {
+                // split into records based on delimiter
+                dataSegments = line.split("\\|");
+                // instantiate object in model layer, temporary object so parameter false
+                M_BalanceTransfer currentBalanceTransfer = new M_BalanceTransfer(false);
+                // call methods to insert data into object
+                currentBalanceTransfer.setCreatedBy(dataSegments[0]);
+                currentBalanceTransfer.setCreatedAt(Long.parseLong(dataSegments[1]));
+                currentBalanceTransfer.setUpdatedBy(dataSegments[2]);
+                currentBalanceTransfer.setUpdatedAt(Long.parseLong(dataSegments[3]));
+
+                currentBalanceTransfer.setTransactionID(dataSegments[4]);
+                currentBalanceTransfer.setTransactionType(Short.parseShort(dataSegments[5]));
+                currentBalanceTransfer.setTransactionAmount(Double.parseDouble(dataSegments[6]));
+                currentBalanceTransfer.setTransactionDescription(dataSegments[7]);
+                currentBalanceTransfer.setTransactionExecuted(Boolean.parseBoolean(dataSegments[8]));
+                currentBalanceTransfer.setTransactionOverseas(Boolean.parseBoolean(dataSegments[9]));
+                currentBalanceTransfer.setTransactionSrcBankAccID(dataSegments[10]);
+
+                currentBalanceTransfer.setTransactionTargetBankAccID(dataSegments[11]);
+                // add current balance change record to arraylist tempBalanceTransfer
+                tempBalanceTransfers.add((M_IBalanceTransfer) currentBalanceTransfer);
+                line = br.readLine();
+            }            
+        }   
+        finally
+        {
+            br.close();
+        }
+        // instantiate a balance change array 
+        M_IBalanceTransfer[] balanceTransfers = new M_IBalanceTransfer[tempBalanceTransfers.size()];
+        // convert collections arraylist back into an array for M_IBalanceTransfer
+        for(int i = 0; i<tempBalanceTransfers.size(); i++)
+        {
+            balanceTransfers[i] = tempBalanceTransfers.get(i);
+        }
+        return balanceTransfers;
+    }
+
+    /********************************************************************/
+    /*UPDATE (WRITE) FUNCTIONS FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
+    /********************************************************************/
+    // unimplemented Balance Change write method
+    public short dbBalanceChange_Update(M_IBalanceChange balanceChange)
+    {
+        return 0;
+    }
+    // unimplemented Balance Transfer write method
+    public short dbBalanceTransfer_Update(M_IBalanceTransfer balanceTransfer)
+    {
+        return 0;
+    }
+    
+
+    /***************************************************************/
+    /*DELETE FUNCTIONS BY FOR BALANCE CHANGES AND BALANCE TRANSFERS*/
+    /***************************************************************/
 
 }
