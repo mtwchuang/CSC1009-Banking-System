@@ -1,9 +1,32 @@
+Data Fields for M_Transaction
+fields for audits
+00: createdBy - String
+01: createdAt - long
+02: updatedBy - String
+03: updatedAt - long
+fields for general transaction records
+04: transactionID - String
+05: transactionType - short
+06: transactionAmount - double
+07: transactionDescription - String
+08: transactionExecuted - boolean
+09: transactionOverseas - boolean
+10: transactionBankAccID - String
+
+specific fields for M_BalanceChange.java
+11: executedOnAtm - boolean
+12: AtmID - String
+13: executedOnPurchase - boolean 
+
+specific fields for M_BalanceTransfer.java
+11: transactionTargetAccID - String 
+
 Interfaces for M_Transaction
 Parent interface - M_ITransaction
-Child Interface - M_IBalanceChange
-Child Interface - M_IBalanceTransfer
+Child Interface - M_IBalanceChange extends M_ITransaction
+Child Interface - M_IBalanceTransfer extends M_ITransaction
 
 Classes for M_Transaction
-Abstract Parent Class - M_Transaction
-Child Class - M_BalanceChange
-Child Class - M_BalanceTransfer
+Abstract Parent Class - M_Transaction implemenets M_ITransaction
+Child Class - M_BalanceChange extends M_Transaction, implemenets M_IBalanceChange
+Child Class - M_BalanceTransfer extends M_Transaction, implements M_IBalanceTransfer

@@ -27,14 +27,14 @@ public class MV_Global {
 	public static String dbUserAccountLogins = getDynamicDbPath() + "\\data\\UserAccount\\UserAccountLogins";
 	public static String dbBankAccounts = getDynamicDbPath() + "\\data\\BankAccount\\BankAccounts.txt";
 	public static String dbBalanceChanges = getDynamicDbPath() + "\\data\\Transaction\\BalanceChanges.txt";
-	public static String dbBalanceTranfers = getDynamicDbPath() + "\\data\\Transaction\\BalanceTransfers.txt";
+	public static String dbBalanceTransfers = getDynamicDbPath() + "\\data\\Transaction\\BalanceTransfers.txt";
 	public static String dbSettings = getDynamicDbPath() + "\\data\\Settings.txt";
 	private static String getDynamicDbPath(){
 		return new File("").getAbsolutePath();
 	}
 	
 	//ATM config
-	//[ATM_ID]-[Country]
+	//[ATM_ID]-[Country]db
 	public static String atmID;
 	public static String[][] availableNotes;
 

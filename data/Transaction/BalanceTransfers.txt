@@ -1,0 +1,1 @@
+createdBy|createdAt|updatedBy|updatedAt|transactionID|transactionType|transactionAmount|transactionDescription|transactionExecuted|transactionOverseas|transactionSrcBankAccID|transactionsTargetBankAccID
