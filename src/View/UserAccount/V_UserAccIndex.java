@@ -64,7 +64,7 @@ public class V_UserAccIndex
 			}
 			//Invalid input
 			catch(Exception e){
-				System.out.println("Invalid selection.");
+				System.out.println("Invalid input.");
 				MV_Global.waitError();
 			}
 

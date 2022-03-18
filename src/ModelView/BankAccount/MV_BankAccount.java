@@ -98,40 +98,9 @@ public class MV_BankAccount{
     
         return temp;
     }
-    //  Process bank acc actions
-    public short VBankAccIndex_executeBankAccActions(String actionCode, String... params){
-        short statusCode = 0;
-        switch(actionCode){
-            case "a0551": //Withdraw SG - S$10
-                statusCode = VBankAccIndex_withdraw(isBankAccOverseas(), 10);
-                break;
-            case "a0552": //Withdraw SG - S$20
-                statusCode = VBankAccIndex_withdraw(isBankAccOverseas(), 20);
-                break;
-            case "a0553": //Withdraw SG - S$50
-                statusCode = VBankAccIndex_withdraw(isBankAccOverseas(), 50);
-                break;
-            case "a0554": //Withdraw SG - S$100
-                statusCode = VBankAccIndex_withdraw(isBankAccOverseas(), 100);
-                break;
-
-            case "b131": //Withdraw Other Amounts
-                break;
-            case "b132": //Deposit Balance
-                break;
-            case "b133": //View Transactions
-                break;
-            case "b134": //Transfer Balance
-                break;
-
-            default: //Invalid action input
-                break; 
-        }
-        return statusCode;
-    }
     
     //  Withdraw action
-    public short VBankAccIndex_withdraw(boolean overseas, double withdrawAmt){
+    public short VBankAccIndex_withdraw(double withdrawAmt) throws Exception{
         //Status codes:
 		//  0: Ok
 		//  1: Bank acc insufficient funds
@@ -140,7 +109,24 @@ public class MV_BankAccount{
         //  4: ATM insufficient denomination
         //  5: Transaction error
 
-        
+        if(isBankAccOverseas()){
+            //Country codes, take me home
+            String atmLocality = MV_Global.atmID.split("-")[1];
+            String bankLocality = getBankAccCountryCode();
+
+            //Acquire bank acc balance and bank acc min balance
+            double bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
+            double bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance();
+
+            int[] withdrawnNotes = withdrawDenominationCal(withdrawAmt);
+            if()
+
+            //Convert withdrawAmt to base currency, SGD
+            double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
+            //Convert withdrawAmt from base currency, SGD, to bank acc currency
+            double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
+
+        }
 
         return 0;
     }
@@ -183,8 +169,37 @@ public class MV_BankAccount{
         return getBankAccCountryCode(bankAccID).equals(MV_Global.atmID.split("-")[1]);
     }
 
-    //private int[] denominationCal(double amount){
-    //    String[] availableDenominations = MV_Global.availableNotes[0];
-    //    
-    //}
+    //Convert to base currency; X to SGD
+    public double convertToBaseCurrency(double targetAmt, String countryCode) throws Exception{
+        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+
+        String currencyCountry;
+        double currenyRate;
+        for(String conversionRate: conversionRates){
+            if(conversionRate.split("-")[0].equals(countryCode)){
+                return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
+            }
+        }
+        return 0;
+    }
+    //Convert from base currency; SGD to X
+    public double convertFromBaseCurrency(double targetAmt, String countryCode) throws Exception{
+        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+
+        String currencyCountry;
+        double currenyRate;
+        for(String conversionRate: conversionRates){
+            if(conversionRate.split("-")[0].equals(countryCode)){
+                return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
+            }
+        }
+        return 0;
+    }
+
+    private int[] withdrawDenominationCal(double amount){
+        String[] availableDenominations = MV_Global.availableNotes[0];
+
+        
+        return null;
+    }
 }
