@@ -102,7 +102,7 @@ public class MV_BankAccount{
         return temp;
     }
     
-    //  Withdraw action
+    //Withdraw action
     public int[] VWithdraw_withdraw(double withdrawAmt) throws Exception{
         //Return data:
         //  [0]: Status code
@@ -183,8 +183,16 @@ public class MV_BankAccount{
             bankCurrencyWithdrawAmt = (Math.round(bankCurrencyWithdrawAmt * 100))/100;
 
             //Forecast bank balance after withdrawal
-            double surchargeAmt = (Math.round((bankCurrencyWithdrawAmt * MV_Global.getOverseasTransactionCharge()) * 100))/100;
-            bankAccFutureBal = bankAccBal - bankCurrencyWithdrawAmt - surchargeAmt;
+            //  Split into multi steps due to chances of data loss
+            double surchargeAmt = (bankCurrencyWithdrawAmt * MV_Global.getOverseasTransactionCharge()) * 100;
+            surchargeAmt = Math.round(surchargeAmt);
+            surchargeAmt /= 100;
+            double balanceAftWithdraw = (bankAccBal - bankCurrencyWithdrawAmt) * 100;
+            balanceAftWithdraw = Math.round(balanceAftWithdraw);
+            balanceAftWithdraw /= 100;
+            bankAccFutureBal = (balanceAftWithdraw - surchargeAmt) * 100;
+            bankAccFutureBal = Math.round(bankAccFutureBal);
+            bankAccFutureBal /= 100;
 
             //If bank acc does not have sufficient balance
             if(bankAccFutureBal < 0) return new int[]{1};
@@ -193,17 +201,17 @@ public class MV_BankAccount{
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
-            withdrawalTransaction.setTransactionBankAccFinalAmount((Math.round((bankAccBal - bankCurrencyWithdrawAmt) * 100))/100);
+            withdrawalTransaction.setTransactionBankAccFinalAmount(balanceAftWithdraw);
             withdrawalTransactionFinal = (M_IBalanceChange) withdrawalTransaction;
 
             //Surcharge transaction record
             M_BalanceChange surchargeTransaction = new M_BalanceChange(true);
             surchargeTransaction.setTransactionType((short) 2);
-            surchargeTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
+            surchargeTransaction.setTransactionAmount(surchargeAmt);
             surchargeTransaction.setTransactionDescription(transactionDesc + "[Surcharge]");
             surchargeTransaction.setTransactionOverseas(true);
             surchargeTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
-            surchargeTransaction.setTransactionBankAccInitialAmount((Math.round((bankAccBal - bankCurrencyWithdrawAmt) * 100))/100);
+            surchargeTransaction.setTransactionBankAccInitialAmount(balanceAftWithdraw);
             surchargeTransaction.setTransactionBankAccFinalAmount(bankAccFutureBal);
             surchargeTransaction.executeOnAtm();
             surchargeTransaction.setExecutedOnPurchase(false);
@@ -265,12 +273,42 @@ public class MV_BankAccount{
             }
         }
 
+        //Update session bank data
+        MV_Global.sessionBankAcc.setBankAccBalance(bankAccFutureBal);
+
         //Update ATM note count
         for(int i = 0; i < returnVal.length - 1; i++)
             MV_Global.availableNotes[i][1] -= returnVal[i + 1];
 
         returnVal[0] = 0;
         return returnVal;
+    }
+
+    //[ADMIN] Change balance
+    public short VChangeBal_changeBal(double inputAmt) throws Exception{
+        //Authorization
+        if(MV_Global.sessionUserAcc.getUserType() <= 3) return -1;
+
+        DA_BankAccount bankAccountDA = new DA_BankAccount();
+
+        M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
+        double newBal = currentBankAcc.getBankAccBalance() + inputAmt;
+        currentBankAcc.setBankAccBalance(newBal);
+
+        //Backdoor increament of bank account balance
+        try{
+            //Update bank acc record
+            short daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
+            if(daStatusCode != 0) return daStatusCode;
+        }
+        catch(Exception e){
+            return 1;
+        }
+
+        //Update session bank data
+        MV_Global.sessionBankAcc.setBankAccBalance(newBal);
+
+        return 0;
     }
 
     //Load bankAccID into session
@@ -297,8 +335,8 @@ public class MV_BankAccount{
     }
     public String getBankAccCountryCode(String bankAccID){
         if(bankAccID.equals("%SESSION%")) 
-            return MV_Global.sessionBankAcc.getBankAccID().split("-")[1].substring(0,3);
-        return bankAccID.split("-")[1].substring(0,3);
+            return MV_Global.sessionBankAcc.getBankAccID().split("-")[1].substring(0,2);
+        return bankAccID.split("-")[1].substring(0,2);
     }
 
     //Check if bank acc and ATM are in different countries
@@ -307,8 +345,8 @@ public class MV_BankAccount{
     }
     public boolean isBankAccOverseas(String bankAccID){
         if(bankAccID.equals("%SESSION%"))
-            return getBankAccCountryCode().equals(MV_Global.getAtmID().split("-")[1]);
-        return getBankAccCountryCode(bankAccID).equals(MV_Global.getAtmID().split("-")[1]);
+            return !getBankAccCountryCode().equals(MV_Global.getAtmID().split("-")[1]);
+        return !getBankAccCountryCode(bankAccID).equals(MV_Global.getAtmID().split("-")[1]);
     }
 
     //Convert to base currency; X to SGD

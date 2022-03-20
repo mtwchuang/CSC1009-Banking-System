@@ -71,23 +71,33 @@ public class V_BankAccIndex
 		//		-1: User-triggered cancellation
 		short statusCode = 0;
 		switch(actionCode){
-			case "a0551": //Withdraw SG - S$10
+			case "a0551": //Withdraw 10
 				V_ViewManager.redirect("withdraw", "10");
 				break;
-			case "a0552": //Withdraw SG - S$20
+			case "a0552": //Withdraw 20
 				V_ViewManager.redirect("withdraw", "20");
 				break;
-			case "a0553": //Withdraw SG - S$50
+			case "a0553": //Withdraw 50
 				V_ViewManager.redirect("withdraw", "50");
 				break;
-			case "a0554": //Withdraw SG - S$100
+			case "a0554": //Withdraw 100
 				V_ViewManager.redirect("withdraw", "100");
 				break;
-
-			case "a0561": //Withdraw JP - 1000 yen
+			case "a0555": //Withdraw 1000
+				V_ViewManager.redirect("withdraw", "1000");
+				break;
+			case "a0556": //Withdraw 2000
+				V_ViewManager.redirect("withdraw", "2000");
+				break;
+			case "a0557": //Withdraw 5000
+				V_ViewManager.redirect("withdraw", "5000");
+				break;
+			case "a0558": //Withdraw 10000
+				V_ViewManager.redirect("withdraw", "10000");
 				break;
 
 			case "b131": //Withdraw Other Amounts
+				V_ViewManager.redirect("withdraw", "-1");
 				break;
 			case "b132": //Deposit Balance
 				break;
@@ -97,15 +107,14 @@ public class V_BankAccIndex
 				break;
 
 			//Admin Actions
-			case "z420": //ADMIN Make It Rain
-				break;
-			case "z421": //ADMIN Remove Balance
+			case "z420": //ADMIN Alter Balance
+				V_ViewManager.redirect("ChangeBal");
 				break;
 			case "z422": //ADMIN Transfer to Michael McDoesn'tExist [Local]
 				break;
 			case "z423": //ADMIN Transfer to Michael McDoesn'tExist [Overseas]
 				break;
-			case "z312": //ADMIN Terminate program
+			case "z312": //ADMIN Terminate Program
 				System.exit(0);
 
 

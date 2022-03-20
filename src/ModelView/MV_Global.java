@@ -14,10 +14,14 @@ public class MV_Global {
     //ATM config
 	//[ATM_ID]-[Country]db
 	private static String atmID;
+    private static String[] currencySymbols;
 	public static int[][] availableNotes;
     //Get method to lock values
     public static String getAtmID(){
         return atmID;
+    }
+    public static String[] getCurrencySymbols(){
+        return currencySymbols;
     }
 
     //Bank config
@@ -74,6 +78,8 @@ public class MV_Global {
 
             MV_Global.overseasTransactionCharge = 
                 Double.parseDouble(settingsDA.dbSettings_GetByKey("OverseasTransactionCharge")[0]);
+                
+            MV_Global.currencySymbols = settingsDA.dbSettings_GetByKey("CurrencySymbol");
 
             switch(countryCode){
                 case "02":

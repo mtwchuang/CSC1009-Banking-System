@@ -1,2 +1,2 @@
 ﻿createdBy|createdAt|updatedBy|updatedAt|bankAccID|bankAccHolderID|bankAccType|backAccDescription|bankAccStatus|bankAccBalance|bankAccTransactionLimit|bankAccMinBalance|bankAccSubHolderIDs|bankAccTransactOnlyIDs
-9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1647763863995|0093109751-010101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|The OG bank account|0|999740.0|2000000.0|200.0||
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1647794185609|0093109751-010101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|The OG bank account|0|943.68|2000000.0|200.0||

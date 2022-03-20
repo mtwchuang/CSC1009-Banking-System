@@ -6,7 +6,7 @@ BankCountry|01-Singapore|02-Japan|03-US
 TimeZone|01-P-8|02-P-9|03-N-5
 //
 //ATM Settings
-AtmID|4206969-01
+AtmID|4206969-02
 AtmNotesQty|10|10|10|0|0|0|0
 //
 //Overseas Transaction Settings
@@ -21,8 +21,8 @@ NotesDenominationUS|1|2|5|10|20|50|100
 //
 //Bank Account Actions
 BankAccWithdrawOptSG|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100
-BankAccWithdrawOptJP|a0561-Withdraw JPY 1000|a0562-Withdraw JPY 2000|a0563-Withdraw JPY 5000|a0564-Withdraw JPY 10000
-BankAccWithdrawOptUS|a0571-Withdraw USD 10|a0572-Withdraw USD 20|a0573-Withdraw USD 50|a0574-Withdraw USD 100
+BankAccWithdrawOptJP|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000
+BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100
 BankAccActions|b131-Withdraw Other Amounts|b132-Deposit Balance|b133-View Transactions|b134-Transfer Balance
 BankAccOwnerActions|c961-View Balance|c962-Change Settings
-BankAccAdminActions|z420-[ADMIN] Make It Rain|z421-[ADMIN] Make It Pain|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program
+BankAccAdminActions|z420-[ADMIN] Change Balance|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program

@@ -24,13 +24,9 @@ public class V_ViewManager{
                 case "logout":
                     new View.Login.V_Logout().run();
                     return true;
-                //MakeItRain
-                case "makeitrain":
-                    new View.AdminActions.V_ChangeBal().run(true);
-                    return false;
-                //MakeItRain
-                case "makeitpain":
-                    new View.AdminActions.V_ChangeBal().run(false);
+                //ChangeBal
+                case "changebal":
+                    new View.AdminActions.V_ChangeBal().run();
                     return false;
                 default:
                     throw new Exception("Navigation invalid page");
