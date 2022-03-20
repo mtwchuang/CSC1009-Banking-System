@@ -1,5 +1,7 @@
 package Model.Transaction;
 
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.UUID;
 import ModelView.MV_Global;
 /*	Changes logs
@@ -19,10 +21,8 @@ public abstract class M_Transaction implements M_ITransaction
 	private short transactionType;
 	private double transactionAmount;
 	private String transactionDescription;
-	private boolean transactionExecuted;
 	private boolean transactionOverseas;
-	private String transactionBankAccID;
-	// unimplemented fields
+	private String transactionSrcBankAccID;
 	private double transactionBankAccInitialAmount;
 	private double transactionBankAccFinalAmount;
 
@@ -31,15 +31,16 @@ public abstract class M_Transaction implements M_ITransaction
 		// asks if this is a new transaction that is being created
 		if(creatingNew)
 		{
+			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+			
 			this.createdBy = MV_Global.sessionUserAcc.getUserID();
-			this.createdAt = System.currentTimeMillis();
+			this.createdAt = cal.getTimeInMillis();
 			this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-			this.updatedAt = System.currentTimeMillis();
+			this.updatedAt = cal.getTimeInMillis();
 	
 			this.transactionID = UUID.randomUUID().toString();
-			this.transactionExecuted = false;
 	
-			this.transactionBankAccID = "";
+			this.transactionSrcBankAccID = MV_Global.sessionBankAcc.getBankAccID();
 		}
 	}
 
@@ -69,16 +70,12 @@ public abstract class M_Transaction implements M_ITransaction
 	public String getTransactionDescription(){
 		return transactionDescription;
 	}
-	public boolean isTransactionExecuted(){
-		return transactionExecuted;
-	}
 	public boolean isTransactionOverseas(){
 		return transactionOverseas;
 	}
 	public String getTransactionSrcBankAccID(){
-		return transactionBankAccID;
+		return transactionSrcBankAccID;
 	}
-
 	public double getTransactionBankAccInitialAmount(){
 		return transactionBankAccInitialAmount;
 	}
@@ -113,16 +110,12 @@ public abstract class M_Transaction implements M_ITransaction
 	public void setTransactionDescription(String transactionDescription){
 		this.transactionDescription = transactionDescription;
 	}
-	public void setTransactionExecuted(boolean transactionExecuted){
-		this.transactionExecuted = transactionExecuted;
-	}
 	public void setTransactionOverseas(boolean transactionOverseas){
 		this.transactionOverseas = transactionOverseas;
 	}
-	public void setTransactionSrcBankAccID(String transactionBankAccID){
-		this.transactionBankAccID = transactionBankAccID;
+	public void setTransactionSrcBankAccID(String transactionSrcBankAccID){
+		this.transactionSrcBankAccID = transactionSrcBankAccID;
 	}
-
 	public void setTransactionBankAccInitialAmount(double transactionBankAccInitialAmount){
 		this.transactionBankAccInitialAmount = transactionBankAccInitialAmount;
 	}
@@ -131,7 +124,8 @@ public abstract class M_Transaction implements M_ITransaction
 	}
 
 	public void updated(){
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = System.currentTimeMillis();
+		this.updatedAt = cal.getTimeInMillis();
 	}
 }

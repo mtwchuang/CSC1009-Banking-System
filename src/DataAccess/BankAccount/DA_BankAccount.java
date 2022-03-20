@@ -1,7 +1,14 @@
 package DataAccess.BankAccount;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
+import java.io.FileWriter;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 
 import Model.BankAccount.M_BankAccount;
 import Model.BankAccount.M_CorporateBankAcc;
@@ -13,22 +20,29 @@ import ModelView.MV_Global;
 
 public class DA_BankAccount {
 	//M_BankAccount
-	//  00: createdBy - String
-	//  01: createdAt - long
-	//  02: updatedBy - String
-	//  03: updatedAt - long
-	//  04: bankAccID - String
-	//  05: bankAccHolderID - String
-	//  06: bankAccType - short
+	//	00: createdBy - String
+	//	01: createdAt - long
+	//	02: updatedBy - String
+	//	03: updatedAt - long
+	//	04: bankAccID - String
+	//	05: bankAccHolderID - String
+	//	06: bankAccType - short
+	//		Case 00: Normal bank acc
+	//		Case 01: Joint bank acc
+	//		Case 02: Corperate bank acc
 	//	07: bankAccDescription - String
-	//  08: bankAccStatus - short
-	//  09: bankAccBalance - double
-	//  10: bankAccTransactionLimit - double
-	//  11: bankAccMinBalance - double
+	//	08: bankAccStatus - short
+	//		Case 00: Normal
+	//		Case 01: Closed
+	//	09: bankAccBalance - double
+	//	10: bankAccTransactionLimit - double
+	//	11: bankAccMinBalance - double
+	//M_JointBankAcc
+	//	12: bankAccSubHolderIDs - String[]
+	//M_CorperateBankAcc
+	//	13: bankAccTransactOnlyIDs - String[]
 
-	//  12: bankAccSubHolderIDs - String[]
-	//  13: bankAccTransactOnlyIDs - String[]
-
+	//GET Methods
 	private M_IBankAccount dBankAccounts_GetOne(int inputCase, String input) throws Exception{
 		String line;
 		String[] dataSegments;
@@ -201,4 +215,80 @@ public class DA_BankAccount {
 	public M_IJointBankAcc dBankAccounts_GetByIDJoint(String bankAccID) throws Exception{
 		return dBankAccounts_GetOneJoint(1, bankAccID);
 	}
+
+	//POST Methods (Update)
+	public short dBankAccounts_Update(M_IBankAccount inputBankAcc) throws Exception
+	{
+		//Variable initialization
+		BufferedWriter bw = null; BufferedReader br = null;
+		String[] dataSegments;
+		String line;
+
+		inputBankAcc.updated();
+		
+		//Prepare inputBankAcc entry string
+		String updatedEntry = ("\n" + 
+			inputBankAcc.getCreatedBy() + "|" +					//00: createdBy - String
+			inputBankAcc.getCreatedAt() + "|" +					//01: createdAt - long
+			inputBankAcc.getUpdatedBy() + "|" +					//02: updatedBy - String
+			inputBankAcc.getUpdatedAt() + "|" +					//03: updatedAt - long
+
+			inputBankAcc.getBankAccID() + "|" +         		//04: bankAccID - String
+			inputBankAcc.getBankAccHolderID() + "|" +         	//05: bankAccHolderID - String
+			inputBankAcc.getBankAccType() + "|" +         		//06: bankAccType - short
+			inputBankAcc.getBankAccDescription() + "|" +		//07: bankAccDescription - String
+			inputBankAcc.getBankAccStatus() + "|" +				//08: bankAccStatus - short
+			inputBankAcc.getBankAccBalance() + "|" +			//09: bankAccBalance - double
+			inputBankAcc.getBankAccTransactionLimit() + "|" +	//10: bankAccTransactionLimit - double
+			inputBankAcc.getBankAccMinBalance() + "|" +			//11: bankAccMinBalance - double
+
+			"" + "|" + 											//12: bankAccSubHolderIDs - String[]
+			""													//13: bankAccTransactOnlyIDs - String[]
+		);
+
+		try
+		{
+			//Open buffered reader to db file
+			br = new BufferedReader(new FileReader(MV_Global.dbBankAccounts));
+
+			//Create temp file is does not exist
+			File tempFile = new File(MV_Global.dbTemp);
+			tempFile.createNewFile();
+			//Open buffered writer to temp file
+			bw = new BufferedWriter(new FileWriter(tempFile.getAbsoluteFile(), false));
+
+			//Copy contents of db file to temp file
+			line = br.readLine();
+			while(line != null){
+				dataSegments = line.split("\\|");
+				//Ignore record with the same bank acc id of inputBankAcc
+				if(!dataSegments[4].equals(inputBankAcc.getBankAccID())){
+					bw.write(line);
+				}
+				line = br.readLine();
+			}
+
+			//Write in updated entry of inputBankAcc
+			bw.write(updatedEntry);
+		}
+		catch(Exception e)
+		{
+			return -1;
+		}
+		finally
+		{
+			bw.close();
+			br.close();
+		}
+
+		Path from = Paths.get(MV_Global.dbTemp); //convert from File to Path
+		Path to = Paths.get(MV_Global.dbBankAccounts); //convert from String to Path
+		Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+
+		return 0;
+	}
+
+	//DEL Methods
+
+	//PUT Methods (Create)
 }

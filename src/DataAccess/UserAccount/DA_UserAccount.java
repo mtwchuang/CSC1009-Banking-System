@@ -19,6 +19,7 @@ public class DA_UserAccount {
 	//  01: createdAt - long
 	//  02: updatedBy - String
 	//  03: updatedAt - long
+	
 	//  04: userID - String
 	//  05: userType - short
 	//  06: userName - String

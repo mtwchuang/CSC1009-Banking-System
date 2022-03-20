@@ -33,8 +33,8 @@ public class V_BankAccIndex
 			}
 
 			//Print other actions
-			System.out.println("[" + bankAccActions.length + "]\tSwitch bank account");
-			System.out.println("\n[" + (bankAccActions.length + 1) + "]\tCancel and logout");
+			System.out.println("\n[" + bankAccActions.length + "]\tSwitch bank account");
+			System.out.println("[" + (bankAccActions.length + 1) + "]\tCancel and logout");
 
 			//Get user bank acc selection input
 			System.out.print("\nSelect action [Opt]: ");
@@ -68,7 +68,7 @@ public class V_BankAccIndex
 	//Process actions
 	private short executeBankAccActions(String actionCode) throws Exception{
 		//	Status codes:
-		//	-1: User-triggered cancellation
+		//		-1: User-triggered cancellation
 		short statusCode = 0;
 		switch(actionCode){
 			case "a0551": //Withdraw SG - S$10
@@ -95,6 +95,19 @@ public class V_BankAccIndex
 				break;
 			case "b134": //Transfer Balance
 				break;
+
+			//Admin Actions
+			case "z420": //ADMIN Make It Rain
+				break;
+			case "z421": //ADMIN Remove Balance
+				break;
+			case "z422": //ADMIN Transfer to Michael McDoesn'tExist [Local]
+				break;
+			case "z423": //ADMIN Transfer to Michael McDoesn'tExist [Overseas]
+				break;
+			case "z312": //ADMIN Terminate program
+				System.exit(0);
+
 
 			default: //Invalid action input
 				break; 

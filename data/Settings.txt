@@ -6,11 +6,12 @@ BankCountry|01-Singapore|02-Japan|03-US
 TimeZone|01-P-8|02-P-9|03-N-5
 //
 //ATM Settings
-AtmID|4206969-03
-AtmNotesQty|100|100|100|20|0|0|1
+AtmID|4206969-01
+AtmNotesQty|10|10|10|0|0|0|0
 //
 //Overseas Transaction Settings
 CurrencyRate|01-1|02-87.09|03-0.74
+CurrencySymbol|01-SGD|02-JPY|03-USD
 OverseasTransactionCharge|0.03
 //
 //Notes Denomination Settings
@@ -19,9 +20,9 @@ NotesDenominationJP|1000|2000|5000|10000
 NotesDenominationUS|1|2|5|10|20|50|100
 //
 //Bank Account Actions
-BankAccWithdrawOptSG|a0551-Withdraw S$ 10|a0552-Withdraw S$ 20|a0553-Withdraw S$ 50|a0554-Withdraw S$ 100
-BankAccWithdrawOptJP|a0561-Withdraw 1000 ¥|a0562-Withdraw 2000 ¥|a0563-Withdraw 5000 ¥|a0564-Withdraw 10000 ¥
-BankAccWithdrawOptUS|a0571-Withdraw US$ 10|a0572-Withdraw US$ 20|a0573-Withdraw US$ 50|a0574-Withdraw US$ 100
+BankAccWithdrawOptSG|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100
+BankAccWithdrawOptJP|a0561-Withdraw JPY 1000|a0562-Withdraw JPY 2000|a0563-Withdraw JPY 5000|a0564-Withdraw JPY 10000
+BankAccWithdrawOptUS|a0571-Withdraw USD 10|a0572-Withdraw USD 20|a0573-Withdraw USD 50|a0574-Withdraw USD 100
 BankAccActions|b131-Withdraw Other Amounts|b132-Deposit Balance|b133-View Transactions|b134-Transfer Balance
 BankAccOwnerActions|c961-View Balance|c962-Change Settings
-BankAccAdminActions|z420-Make It Rain|z421-Delete Balance|z422-Transfer to Nobody|z423-Transfer to Nobody(Overseas)
+BankAccAdminActions|z420-[ADMIN] Make It Rain|z421-[ADMIN] Make It Pain|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program

@@ -14,16 +14,15 @@ public class MV_Global {
     //ATM config
 	//[ATM_ID]-[Country]db
 	private static String atmID;
-	private static int[][] availableNotes;
+	public static int[][] availableNotes;
+    //Get method to lock values
     public static String getAtmID(){
         return atmID;
-    }
-    public static int[][] getAvailableNotes(){
-        return availableNotes;
     }
 
     //Bank config
     private static double overseasTransactionCharge;
+    //Get method to lock values
     public static double getOverseasTransactionCharge(){
         return overseasTransactionCharge;
     }
@@ -42,6 +41,7 @@ public class MV_Global {
 	public static String dbBalanceChanges = getDynamicDbPath() + "\\data\\Transaction\\BalanceChanges.txt";
 	public static String dbBalanceTransfers = getDynamicDbPath() + "\\data\\Transaction\\BalanceTransfers.txt";
 	public static String dbSettings = getDynamicDbPath() + "\\data\\Settings.txt";
+	public static String dbTemp = getDynamicDbPath() + "\\data\\temp.txt";
 	private static String getDynamicDbPath(){
 		return new File("").getAbsolutePath();
 	}

@@ -12,7 +12,6 @@ public interface M_ITransaction
 	public short getTransactionType();
 	public double getTransactionAmount();
 	public String getTransactionDescription();
-	public boolean isTransactionExecuted();
 	public boolean isTransactionOverseas();
 	public String getTransactionSrcBankAccID();
 

@@ -6,11 +6,14 @@ import java.util.List;
 
 import DataAccess.DA_Settings;
 import DataAccess.BankAccount.DA_BankAccount;
+import DataAccess.Transaction.DA_Transaction;
 import Model.BankAccount.M_CorporateBankAcc;
 import Model.BankAccount.M_IBankAccount;
 import Model.BankAccount.M_ICorporateBankAcc;
 import Model.BankAccount.M_IJointBankAcc;
 import Model.BankAccount.M_JointBankAcc;
+import Model.Transaction.M_BalanceChange;
+import Model.Transaction.M_IBalanceChange;
 import ModelView.MV_Global;
 
 public class MV_BankAccount{
@@ -100,52 +103,174 @@ public class MV_BankAccount{
     }
     
     //  Withdraw action
-    public short VWithdraw_withdraw(double withdrawAmt) throws Exception{
-        //Status codes:
-		//  0: Ok
-		//  1: Bank acc insufficient funds
-		//  2: Bank acc minimum funds trigger
-        //  3: ATM invalid denomination input
-        //  4: ATM insufficient denomination
-        //  5: Transaction error
+    public int[] VWithdraw_withdraw(double withdrawAmt) throws Exception{
+        //Return data:
+        //  [0]: Status code
+		//      0: Ok
+		//      1: Bank acc insufficient funds
+		//      2: Bank acc minimum funds trigger
+        //      3: ATM invalid denomination input
+        //      4: ATM insufficient denomination
+        //      5: Transaction error
+        //  [1 ... n]: Notes denomination count
 
+        //Variable initialization
+        DA_Transaction transactionDA = new DA_Transaction();
+        DA_BankAccount bankAccountDA = new DA_BankAccount();
+        M_IBalanceChange withdrawalTransactionFinal;
+        M_BalanceChange withdrawalTransaction;
+        String transactionDesc, currency;
+        int[] withdrawnNotes, returnVal;
+        double bankAccFutureBal, bankAccBal, bankAccMinBal;
+        short daStatusCode;
+
+        //Check number of notes to withdraw
+        withdrawnNotes = withdrawDenominationCal(withdrawAmt);
+        
+        //Prepare return value
+        returnVal = new int[withdrawnNotes.length + 1];
+        for(int i = 1; i < returnVal.length; i++)
+            returnVal[i] = withdrawnNotes[i - 1];
+
+        //If withdraw amount cannot be met with available denominations
+        if(withdrawnNotes[0] == -1) return new int[]{3};
+        //If withdraw amount cannot be met with availble ATM notes
+        else if(withdrawnNotes[0] == -2) return new int[]{4};
+
+        //Acquire locality currency symbol
+        switch(MV_Global.getAtmID().split("-")[1]){
+            case "02":
+                currency = "JPY";
+                break;
+            case "03":
+                currency = "USD";
+                break;
+            default:
+                currency = "SGD";
+        }
+
+        //Set trasaction desciption
+        transactionDesc = 
+            "Withdrawal of " + currency + " " + String.format("%.2f", withdrawAmt) +
+            " at ATM " + MV_Global.getAtmID();
+
+        //Acquire bank acc balance and bank acc min balance
+        bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
+        bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance();
+
+        //Withdrawal transaction record
+        withdrawalTransaction = new M_BalanceChange(true);
+        withdrawalTransaction.setTransactionType((short) 0);
+        withdrawalTransaction.setTransactionDescription(transactionDesc);
+        withdrawalTransaction.setTransactionOverseas(isBankAccOverseas());
+        withdrawalTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+        withdrawalTransaction.setTransactionBankAccInitialAmount(bankAccBal);
+        withdrawalTransaction.executeOnAtm();
+        withdrawalTransaction.setExecutedOnPurchase(false);
+
+        //Overseas withdrawal
         if(isBankAccOverseas()){
-            //Country codes, take me home
+            //Country codes, take me home~
             String atmLocality = MV_Global.getAtmID().split("-")[1];
             String bankLocality = getBankAccCountryCode();
 
-            //Acquire bank acc balance and bank acc min balance
-            double bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
-            double bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance();
+            //Convert withdrawAmt to base currency, SGD
+            double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
+            baseCurrencyWithdrawAmt = (Math.round(baseCurrencyWithdrawAmt * 100))/100;
+
+            //Convert withdrawAmt from base currency, SGD, to bank acc currency
+            double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
+            bankCurrencyWithdrawAmt = (Math.round(bankCurrencyWithdrawAmt * 100))/100;
 
             //Forecast bank balance after withdrawal
-            double bankAccFutureBal = bankAccBal - withdrawAmt;
+            double surchargeAmt = (Math.round((bankCurrencyWithdrawAmt * MV_Global.getOverseasTransactionCharge()) * 100))/100;
+            bankAccFutureBal = bankAccBal - bankCurrencyWithdrawAmt - surchargeAmt;
 
             //If bank acc does not have sufficient balance
-            if(bankAccFutureBal < 0) return 1;
+            if(bankAccFutureBal < 0) return new int[]{1};
             //If bank acc minimum balance is triggered by withdraw amount
-            else if(bankAccFutureBal <= bankAccMinBal) return 2;
+            else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
 
-            //Check number of notes to withdraw
-            int[] withdrawnNotes = withdrawDenominationCal(withdrawAmt);
+            //Withdrawal transaction record
+            withdrawalTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
+            withdrawalTransaction.setTransactionBankAccFinalAmount((Math.round((bankAccBal - bankCurrencyWithdrawAmt) * 100))/100);
+            withdrawalTransactionFinal = (M_IBalanceChange) withdrawalTransaction;
 
-            //If withdraw amount cannot be met with available denominations
-            if(withdrawnNotes[0] == -1) return 3;
-            //If withdraw amount cannot be met with availble ATM notes
-            else if(withdrawnNotes[0] == -2) return 4;
+            //Surcharge transaction record
+            M_BalanceChange surchargeTransaction = new M_BalanceChange(true);
+            surchargeTransaction.setTransactionType((short) 2);
+            surchargeTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
+            surchargeTransaction.setTransactionDescription(transactionDesc + "[Surcharge]");
+            surchargeTransaction.setTransactionOverseas(true);
+            surchargeTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+            surchargeTransaction.setTransactionBankAccInitialAmount((Math.round((bankAccBal - bankCurrencyWithdrawAmt) * 100))/100);
+            surchargeTransaction.setTransactionBankAccFinalAmount(bankAccFutureBal);
+            surchargeTransaction.executeOnAtm();
+            surchargeTransaction.setExecutedOnPurchase(false);
+            M_IBalanceChange surchargeTransactionFinal = (M_IBalanceChange) surchargeTransaction;
+            
+            //Bank account updated record
+            M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
+            currentBankAcc.setBankAccBalance(bankAccFutureBal);
 
-            //If ATM and bank acc localities are different
-            if(isBankAccOverseas()){
-                //Convert withdrawAmt to base currency, SGD
-                double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
-                //Convert withdrawAmt from base currency, SGD, to bank acc currency
-                double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
+            //Put new transactions to Data Access layer
+            try{
+                //Create withdrawal transaction
+                daStatusCode = transactionDA.dbBalanceChange_Create(withdrawalTransactionFinal);
+                if(daStatusCode != 0) return new int[]{5};
+
+                //Create surcharge transaction
+                daStatusCode = transactionDA.dbBalanceChange_Create(surchargeTransactionFinal);
+                if(daStatusCode != 0) return new int[]{5};
+
+                //Update bank acc record
+                daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
+                if(daStatusCode != 0) return new int[]{5};
             }
+            catch(Exception e){
+                return new int[]{5};
+            }
+        }
+        //Local withdrawal
+        else{
+            //Forecast bank balance after withdrawal
+            bankAccFutureBal = bankAccBal - withdrawAmt;
 
+            //If bank acc does not have sufficient balance
+            if(bankAccFutureBal < 0) return new int[]{1};
+            //If bank acc minimum balance is triggered by withdraw amount
+            else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
 
+            //Withdrawal transaction record
+            withdrawalTransaction.setTransactionAmount(withdrawAmt);
+            withdrawalTransaction.setTransactionBankAccFinalAmount((Math.round((bankAccFutureBal) * 100))/100);
+            withdrawalTransactionFinal = (M_IBalanceChange) withdrawalTransaction;
+
+            //Bank account updated record
+            M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
+            currentBankAcc.setBankAccBalance(bankAccFutureBal);
+
+            //Put new transactions to Data Access layer
+            try{
+                //Create withdrawal transaction
+                daStatusCode = transactionDA.dbBalanceChange_Create(withdrawalTransactionFinal);
+                if(daStatusCode != 0) return new int[]{5};
+
+                //Update bank acc record
+                daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
+                if(daStatusCode != 0) return new int[]{5};
+            }
+            catch(Exception e){
+                return new int[]{5};
+            }
         }
 
-        return 0;
+        //Update ATM note count
+        for(int i = 0; i < returnVal.length - 1; i++)
+            MV_Global.availableNotes[i][1] -= returnVal[i + 1];
+
+        returnVal[0] = 0;
+        return returnVal;
     }
 
     //Load bankAccID into session
@@ -212,25 +337,28 @@ public class MV_BankAccount{
     private int[] withdrawDenominationCal(double amount){
         //noteCount1 remainingAmt1
         //  Checks if ATM has enough notes to meet withdraw amount
-
         //noteCount2 remainingAmt2
         //  Checks if withdraw amount can be met with available denominations
 
-        int[][] availableDenominations = MV_Global.getAvailableNotes();
+        int[][] availableDenominations = MV_Global.availableNotes;
         int[] notesWithdrawn = new int[availableDenominations.length];
         int noteCount1 = 0, noteCount2 = 0;
         double remainingAmt1 = amount, remainingAmt2 = amount, currentDenomination;
         Arrays.fill(notesWithdrawn, 0);
 
-        for(int i = 0; i < availableDenominations.length; i++){
+        for(int i = availableDenominations.length - 1; i > -1; i--){
             currentDenomination = availableDenominations[i][0];
 
-            noteCount1 = (int)(remainingAmt1 % currentDenomination);
-            noteCount2 = (int)(remainingAmt2 % currentDenomination);
+            noteCount1 = (int)(remainingAmt1 / currentDenomination);
+            noteCount2 = (int)(remainingAmt2 / currentDenomination);
 
             if(noteCount1 > 0 && noteCount1 <= availableDenominations[i][1]){
                 remainingAmt1 -= noteCount1 * currentDenomination;
                 notesWithdrawn[i] = noteCount1;
+            }
+            else if(noteCount1 > 0 && noteCount1 > availableDenominations[i][1]){
+                remainingAmt1 -= availableDenominations[i][1] * currentDenomination;
+                notesWithdrawn[i] = availableDenominations[i][1];
             }
 
             if(noteCount2 > 0) remainingAmt2 -= noteCount2 * currentDenomination;

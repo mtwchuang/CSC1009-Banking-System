@@ -1,5 +1,7 @@
 package Model.BankAccount;
 
+import java.util.Calendar;
+import java.util.TimeZone;
 import java.util.UUID;
 
 import ModelView.MV_Global;
@@ -23,10 +25,12 @@ public class M_BankAccount implements M_IBankAccount{
 	public M_BankAccount(){
 	}
 	public M_BankAccount(String bankAccHolderID){
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		
 		this.createdBy = MV_Global.sessionUserAcc.getUserID();
-		this.createdAt = System.currentTimeMillis();
+		this.createdAt = cal.getTimeInMillis();
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = System.currentTimeMillis();
+		this.updatedAt = cal.getTimeInMillis();
 
 		this.bankAccID = UUID.randomUUID().toString();
 		this.bankAccHolderID = bankAccHolderID;
@@ -110,6 +114,7 @@ public class M_BankAccount implements M_IBankAccount{
 
 	public void updated(){
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = System.currentTimeMillis();
+		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		this.updatedAt = cal.getTimeInMillis();
 	}
 }

@@ -1,4 +1,7 @@
 package Model.Transaction;
+
+import ModelView.MV_Global;
+
 /*	Change logs
 	Added setter methods for both executedOnATM and executedOnPurchase
 */
@@ -34,5 +37,10 @@ public class M_BalanceChange extends M_Transaction implements M_IBalanceChange
 		this.AtmID = atmID;
 		this.executedOnAtm = true;
 		updated();
+	}
+
+	public void executeOnAtm(){
+		this.AtmID = MV_Global.getAtmID();
+		this.executedOnAtm = true;
 	}
 }

@@ -5,7 +5,9 @@ public interface M_IBalanceChange extends M_ITransaction
     public boolean isExecutedOnAtm();
     public String getAtmID();
     public boolean isExecutedOnPurchase();
-    // public void setExecutedOnAtm(boolean executedOnAtm); (should be non-modifiable)
-    // public void setExecutedOnPurchase(boolean executedOnPurchase); (should be non-modifiable)
-    // public void setAtmID(String atmID); (should be non-modifable)
+    //public void setExecutedOnAtm(boolean executedOnAtm);
+    public void setExecutedOnPurchase(boolean executedOnPurchase);
+    //public void setAtmID(String atmID);
+
+    public void executeOnAtm();
 }
