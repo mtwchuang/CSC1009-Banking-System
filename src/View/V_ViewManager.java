@@ -1,33 +1,27 @@
 package View;
 
-import ModelView.MV_Global;
-
 public class V_ViewManager{
-    public static boolean redirect(String page){
+    public static boolean redirect(String page, String... params){
         clearPage();
         try{
             switch(page.toLowerCase()){
-                case "back":
-                    MV_Global.pageDir.pop();
-                    return redirect(MV_Global.pageDir.peek());
-
+                //Login page
                 case "login":
-                    MV_Global.pageDir.push("login");
                     new View.Login.V_Login().run();
                     return true;
-
+                //User account page
                 case "useraccindex":
-                    MV_Global.pageDir.push("useraccindex");
                     new View.UserAccount.V_UserAccIndex().run();
                     return true;
-
+                //Bank account page
                 case "bankaccindex":
-                    MV_Global.pageDir.push("bankaccindex");
                     return new View.BankAccount.V_BankAccIndex().run();
-
+                //Withdraw page
+                case "withdraw":
+                    new View.BankAccount.V_Withdraw().run(params);
+                    return false;
+                //Logout
                 case "logout":
-                    while(!MV_Global.pageDir.empty())
-                        MV_Global.pageDir.pop();
                     new View.Login.V_Logout().run();
                     return true;
                     

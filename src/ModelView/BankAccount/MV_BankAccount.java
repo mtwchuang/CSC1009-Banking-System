@@ -46,7 +46,7 @@ public class MV_BankAccount{
         boolean owner = false;
 
         //Get withdraw options
-        switch(MV_Global.atmID.split("-")[1]){
+        switch(MV_Global.getAtmID().split("-")[1]){
             case "02": //Japan
                 actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccWithdrawOptJP")));
                 break;
@@ -100,7 +100,7 @@ public class MV_BankAccount{
     }
     
     //  Withdraw action
-    public short VBankAccIndex_withdraw(double withdrawAmt) throws Exception{
+    public short VWithdraw_withdraw(double withdrawAmt) throws Exception{
         //Status codes:
 		//  0: Ok
 		//  1: Bank acc insufficient funds
@@ -111,20 +111,37 @@ public class MV_BankAccount{
 
         if(isBankAccOverseas()){
             //Country codes, take me home
-            String atmLocality = MV_Global.atmID.split("-")[1];
+            String atmLocality = MV_Global.getAtmID().split("-")[1];
             String bankLocality = getBankAccCountryCode();
 
             //Acquire bank acc balance and bank acc min balance
             double bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
             double bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance();
 
-            int[] withdrawnNotes = withdrawDenominationCal(withdrawAmt);
-            if()
+            //Forecast bank balance after withdrawal
+            double bankAccFutureBal = bankAccBal - withdrawAmt;
 
-            //Convert withdrawAmt to base currency, SGD
-            double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
-            //Convert withdrawAmt from base currency, SGD, to bank acc currency
-            double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
+            //If bank acc does not have sufficient balance
+            if(bankAccFutureBal < 0) return 1;
+            //If bank acc minimum balance is triggered by withdraw amount
+            else if(bankAccFutureBal <= bankAccMinBal) return 2;
+
+            //Check number of notes to withdraw
+            int[] withdrawnNotes = withdrawDenominationCal(withdrawAmt);
+
+            //If withdraw amount cannot be met with available denominations
+            if(withdrawnNotes[0] == -1) return 3;
+            //If withdraw amount cannot be met with availble ATM notes
+            else if(withdrawnNotes[0] == -2) return 4;
+
+            //If ATM and bank acc localities are different
+            if(isBankAccOverseas()){
+                //Convert withdrawAmt to base currency, SGD
+                double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
+                //Convert withdrawAmt from base currency, SGD, to bank acc currency
+                double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
+            }
+
 
         }
 
@@ -165,16 +182,14 @@ public class MV_BankAccount{
     }
     public boolean isBankAccOverseas(String bankAccID){
         if(bankAccID.equals("%SESSION%"))
-            return getBankAccCountryCode().equals(MV_Global.atmID.split("-")[1]);
-        return getBankAccCountryCode(bankAccID).equals(MV_Global.atmID.split("-")[1]);
+            return getBankAccCountryCode().equals(MV_Global.getAtmID().split("-")[1]);
+        return getBankAccCountryCode(bankAccID).equals(MV_Global.getAtmID().split("-")[1]);
     }
 
     //Convert to base currency; X to SGD
     public double convertToBaseCurrency(double targetAmt, String countryCode) throws Exception{
         String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
 
-        String currencyCountry;
-        double currenyRate;
         for(String conversionRate: conversionRates){
             if(conversionRate.split("-")[0].equals(countryCode)){
                 return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
@@ -186,8 +201,6 @@ public class MV_BankAccount{
     public double convertFromBaseCurrency(double targetAmt, String countryCode) throws Exception{
         String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
 
-        String currencyCountry;
-        double currenyRate;
         for(String conversionRate: conversionRates){
             if(conversionRate.split("-")[0].equals(countryCode)){
                 return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
@@ -197,9 +210,37 @@ public class MV_BankAccount{
     }
 
     private int[] withdrawDenominationCal(double amount){
-        String[] availableDenominations = MV_Global.availableNotes[0];
+        //noteCount1 remainingAmt1
+        //  Checks if ATM has enough notes to meet withdraw amount
 
+        //noteCount2 remainingAmt2
+        //  Checks if withdraw amount can be met with available denominations
+
+        int[][] availableDenominations = MV_Global.getAvailableNotes();
+        int[] notesWithdrawn = new int[availableDenominations.length];
+        int noteCount1 = 0, noteCount2 = 0;
+        double remainingAmt1 = amount, remainingAmt2 = amount, currentDenomination;
+        Arrays.fill(notesWithdrawn, 0);
+
+        for(int i = 0; i < availableDenominations.length; i++){
+            currentDenomination = availableDenominations[i][0];
+
+            noteCount1 = (int)(remainingAmt1 % currentDenomination);
+            noteCount2 = (int)(remainingAmt2 % currentDenomination);
+
+            if(noteCount1 > 0 && noteCount1 <= availableDenominations[i][1]){
+                remainingAmt1 -= noteCount1 * currentDenomination;
+                notesWithdrawn[i] = noteCount1;
+            }
+
+            if(noteCount2 > 0) remainingAmt2 -= noteCount2 * currentDenomination;
+        }
+    
+        //If withdraw amount cannot be met with available denominations
+        if(remainingAmt2 != 0) Arrays.fill(notesWithdrawn, -1);
+        //If withdraw amount cannot be met with availble ATM notes
+        else if(remainingAmt1 != 0) Arrays.fill(notesWithdrawn, -2);
         
-        return null;
+        return notesWithdrawn;
     }
 }

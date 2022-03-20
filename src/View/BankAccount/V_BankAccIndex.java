@@ -66,25 +66,26 @@ public class V_BankAccIndex
 	}
 
 	//Process actions
-	private short executeBankAccActions(String actionCode){
-		MV_BankAccount bankAccMV = new MV_BankAccount();
+	private short executeBankAccActions(String actionCode) throws Exception{
+		//	Status codes:
+		//	-1: User-triggered cancellation
 		short statusCode = 0;
 		switch(actionCode){
 			case "a0551": //Withdraw SG - S$10
-				statusCode = bankAccMV.VBankAccIndex_withdraw(10);
+				V_ViewManager.redirect("withdraw", "10");
 				break;
 			case "a0552": //Withdraw SG - S$20
-				statusCode = bankAccMV.VBankAccIndex_withdraw(20);
+				V_ViewManager.redirect("withdraw", "20");
 				break;
 			case "a0553": //Withdraw SG - S$50
-				statusCode = bankAccMV.VBankAccIndex_withdraw(50);
+				V_ViewManager.redirect("withdraw", "50");
 				break;
 			case "a0554": //Withdraw SG - S$100
-				statusCode = bankAccMV.VBankAccIndex_withdraw(100);
+				V_ViewManager.redirect("withdraw", "100");
 				break;
 
 			case "a0561": //Withdraw JP - 1000 yen
-				break
+				break;
 
 			case "b131": //Withdraw Other Amounts
 				break;

@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
-import java.util.Stack;
 import java.util.concurrent.TimeUnit;
 
 import DataAccess.DA_Settings;
@@ -12,11 +11,25 @@ import Model.BankAccount.M_IBankAccount;
 import Model.UserAccount.M_IUserAccount;
 
 public class MV_Global {
+    //ATM config
+	//[ATM_ID]-[Country]db
+	private static String atmID;
+	private static int[][] availableNotes;
+    public static String getAtmID(){
+        return atmID;
+    }
+    public static int[][] getAvailableNotes(){
+        return availableNotes;
+    }
+
+    //Bank config
+    private static double overseasTransactionCharge;
+    public static double getOverseasTransactionCharge(){
+        return overseasTransactionCharge;
+    }
+
 	//Program-global scanner
 	public static Scanner input = new Scanner(System.in);
-
-	//Stack to keep track of user page navigation
-    public static Stack<String> pageDir = new Stack<String>();
 
 	//Session storage
 	public static M_IUserAccount sessionUserAcc;
@@ -33,11 +46,6 @@ public class MV_Global {
 		return new File("").getAbsolutePath();
 	}
 	
-	//ATM config
-	//[ATM_ID]-[Country]db
-	public static String atmID;
-	public static String[][] availableNotes;
-
 	//Program-global delay functions; for user experience and readability
 	public static void wait(int milliseconds) throws Exception{
 		TimeUnit.MILLISECONDS.sleep((long) milliseconds);
@@ -52,17 +60,20 @@ public class MV_Global {
 	}
 
 	//Load Atm config into MV_Global
-    public static int[][] initailizeAtmConfig(){
+    public static void initailizeAtmConfig(){
         String countryCode;
         int currentDenomination, currentDenominationCount;
         String[] notesDenominations = null, notesCount = null;
-        List<int[]> availableNotes = new ArrayList<int[]>();
+        List<int[]> availableNotesList = new ArrayList<int[]>();
 		DA_Settings settingsDA = new DataAccess.DA_Settings();
 
         //Fetch settings from settings file
         try{
             MV_Global.atmID = settingsDA.dbSettings_GetByKey("AtmID")[0];
             countryCode = MV_Global.atmID.split("-")[1];
+
+            MV_Global.overseasTransactionCharge = 
+                Double.parseDouble(settingsDA.dbSettings_GetByKey("OverseasTransactionCharge")[0]);
 
             switch(countryCode){
                 case "02":
@@ -86,7 +97,6 @@ public class MV_Global {
 
         for(int i = 0; i < notesDenominations.length; i++){
             currentDenomination = Integer.parseInt(notesDenominations[i]);
-
             try{
                 String temp = notesCount[i];
                 currentDenominationCount = Integer.parseInt(temp);
@@ -94,15 +104,16 @@ public class MV_Global {
             catch(IndexOutOfBoundsException ioobe){
                 currentDenominationCount = 0;
             }
-
-            availableNotes.add(new int[]{currentDenomination, currentDenominationCount});
+            availableNotesList.add(new int[]{currentDenomination, currentDenominationCount});
         }
 
-        int[][] temp = new int[availableNotes.size()][2];
-        for(int i = 0; i < availableNotes.size(); i++){
-            temp[i][0] = availableNotes.get(i)[0];
-            temp[i][1] = availableNotes.get(i)[1];
+        int[][] temp = new int[availableNotesList.size()][2];
+        for(int i = 0; i < availableNotesList.size(); i++){
+            temp[i][0] = availableNotesList.get(i)[0];
+            temp[i][1] = availableNotesList.get(i)[1];
         }
-        return temp;
+        availableNotes = temp;
+
+
     }
 }
