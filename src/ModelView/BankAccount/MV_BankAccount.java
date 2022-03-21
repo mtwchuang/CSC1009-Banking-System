@@ -109,9 +109,10 @@ public class MV_BankAccount{
 		//      0: Ok
 		//      1: Bank acc insufficient funds
 		//      2: Bank acc minimum funds trigger
-        //      3: ATM invalid denomination input
-        //      4: ATM insufficient denomination
-        //      5: Transaction error
+        //      3: Bank acc transaction limit trigger
+        //      4: ATM invalid denomination input
+        //      5: ATM insufficient denomination
+        //      6: Transaction error
         //  [1 ... n]: Notes denomination count
 
         //Variable initialization
@@ -121,7 +122,7 @@ public class MV_BankAccount{
         M_BalanceChange withdrawalTransaction;
         String transactionDesc, currency;
         int[] withdrawnNotes, returnVal;
-        double bankAccFutureBal, bankAccBal, bankAccMinBal;
+        double bankAccFutureBal, bankAccBal, bankAccMinBal, bankAccTxnLimit;
         short daStatusCode;
 
         //Check number of notes to withdraw
@@ -133,21 +134,12 @@ public class MV_BankAccount{
             returnVal[i] = withdrawnNotes[i - 1];
 
         //If withdraw amount cannot be met with available denominations
-        if(withdrawnNotes[0] == -1) return new int[]{3};
+        if(withdrawnNotes[0] == -1) return new int[]{4};
         //If withdraw amount cannot be met with availble ATM notes
-        else if(withdrawnNotes[0] == -2) return new int[]{4};
+        else if(withdrawnNotes[0] == -2) return new int[]{5};
 
         //Acquire locality currency symbol
-        switch(MV_Global.getAtmID().split("-")[1]){
-            case "02":
-                currency = "JPY";
-                break;
-            case "03":
-                currency = "USD";
-                break;
-            default:
-                currency = "SGD";
-        }
+        currency = getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
 
         //Set trasaction desciption
         transactionDesc = 
@@ -157,6 +149,7 @@ public class MV_BankAccount{
         //Acquire bank acc balance and bank acc min balance
         bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
         bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance();
+        bankAccTxnLimit = MV_Global.sessionBankAcc.getBankAccTransactionLimit();
 
         //Withdrawal transaction record
         withdrawalTransaction = new M_BalanceChange(true);
@@ -198,6 +191,8 @@ public class MV_BankAccount{
             if(bankAccFutureBal < 0) return new int[]{1};
             //If bank acc minimum balance is triggered by withdraw amount
             else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
+            //If bank acc transaction limit is triggered by withdraw amount
+            else if(bankCurrencyWithdrawAmt > bankAccTxnLimit) return new int[]{3};
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
@@ -225,18 +220,18 @@ public class MV_BankAccount{
             try{
                 //Create withdrawal transaction
                 daStatusCode = transactionDA.dbBalanceChange_Create(withdrawalTransactionFinal);
-                if(daStatusCode != 0) return new int[]{5};
+                if(daStatusCode != 0) return new int[]{6};
 
                 //Create surcharge transaction
                 daStatusCode = transactionDA.dbBalanceChange_Create(surchargeTransactionFinal);
-                if(daStatusCode != 0) return new int[]{5};
+                if(daStatusCode != 0) return new int[]{6};
 
                 //Update bank acc record
                 daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
-                if(daStatusCode != 0) return new int[]{5};
+                if(daStatusCode != 0) return new int[]{6};
             }
             catch(Exception e){
-                return new int[]{5};
+                return new int[]{6};
             }
         }
         //Local withdrawal
@@ -248,6 +243,8 @@ public class MV_BankAccount{
             if(bankAccFutureBal < 0) return new int[]{1};
             //If bank acc minimum balance is triggered by withdraw amount
             else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
+            //If bank acc transaction limit is triggered by withdraw amount
+            else if(withdrawAmt > bankAccTxnLimit) return new int[]{3};
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(withdrawAmt);
@@ -262,14 +259,14 @@ public class MV_BankAccount{
             try{
                 //Create withdrawal transaction
                 daStatusCode = transactionDA.dbBalanceChange_Create(withdrawalTransactionFinal);
-                if(daStatusCode != 0) return new int[]{5};
+                if(daStatusCode != 0) return new int[]{6};
 
                 //Update bank acc record
                 daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
-                if(daStatusCode != 0) return new int[]{5};
+                if(daStatusCode != 0) return new int[]{6};
             }
             catch(Exception e){
-                return new int[]{5};
+                return new int[]{6};
             }
         }
 
@@ -347,6 +344,16 @@ public class MV_BankAccount{
         if(bankAccID.equals("%SESSION%"))
             return !getBankAccCountryCode().equals(MV_Global.getAtmID().split("-")[1]);
         return !getBankAccCountryCode(bankAccID).equals(MV_Global.getAtmID().split("-")[1]);
+    }
+
+    //Get currency symbol
+    public String getCurrencySymbol(String currencyCode){
+        for(String datum: MV_Global.getCurrencySymbols()){
+            if(currencyCode.equals(datum.split("-")[0])){
+                return datum.split("-")[1];
+            }
+        }
+        return "";
     }
 
     //Convert to base currency; X to SGD

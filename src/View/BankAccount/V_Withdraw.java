@@ -68,13 +68,13 @@ public class V_Withdraw {
         System.out.println("Processing withdrawal...");
         returnData = bankAccMV.VWithdraw_withdraw(withdrawAmt);
 
-    
         //  0: Ok
         //  1: Bank acc insufficient funds
         //  2: Bank acc minimum funds trigger
-        //  3: ATM invalid denomination input
-        //  4: ATM insufficient denomination
-        //  5: Transaction error
+        //  3: Bank acc transaction limit trigger
+        //  4: ATM invalid denomination input
+        //  5: ATM insufficient denomination
+        //  6: Transaction error
         switch(returnData[0]){
             case 0:
                 System.out.println("Withdrawal successful\n\n" + "Dispensing " + currency + " " + String.format("%.2f", withdrawAmt) + ":");
@@ -91,10 +91,14 @@ public class V_Withdraw {
                 MV_Global.waitError();
                 return;
             case 3:
-                System.out.println("Invalid denomiation value...");
+                System.out.println("Bank account transaction limit exceeded...");
                 MV_Global.waitError();
                 return;
             case 4:
+                System.out.println("Invalid denomiation value...");
+                MV_Global.waitError();
+                return;
+            case 5:
                 System.out.println("ATM does not have sufficient amount...");
                 MV_Global.waitError();
                 return;
@@ -107,29 +111,20 @@ public class V_Withdraw {
 
     //Overseas transaction surcharge confirmation
 	private boolean confirmSurcharge(double transactionAmt){
+        MV_BankAccount bankAccMV = new MV_BankAccount();
 		double surchargePercentage = MV_Global.getOverseasTransactionCharge();
         double surchargeAmt = (Math.round((transactionAmt * MV_Global.getOverseasTransactionCharge()) * 100))/100;
         String confirmation = "", currency = "";
 
         //Acquire locality currency symbol
-        switch(MV_Global.getAtmID().split("-")[1]){
-            case "02":
-                currency = "JPY";
-                break;
-            case "03":
-                currency = "USD";
-                break;
-            default:
-                currency = "SGD";
-        }
+        currency = bankAccMV.getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
 
         //Loop till valid input acquired
 		while(true){
 			System.out.print(
 				"\n**NOTICE**\n" +
-				"You are attempting to perform a foriegn transaction which will incur a surcharge\n" +
-				"of " + String.format("%.2f", (surchargePercentage * 100)) + "% of your transaction amount, which equates\n" +
-                "to " + currency + " " + String.format("%.2f", surchargeAmt) + "\n" +
+				"You are attempting to perform a foreign transaction which will incur a surcharge of " + String.format("%.2f", (surchargePercentage * 100)) + "%" +
+                "of your transaction amount, which equates to " + currency + " " + String.format("%.2f", surchargeAmt) + ".\n" +
 				"Proceed? [Y/N]: ");
 
             //Acquire acknowledgement input

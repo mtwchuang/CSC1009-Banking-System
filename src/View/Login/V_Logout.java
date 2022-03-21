@@ -20,6 +20,7 @@ public class V_Logout {
         System.out.println("                                                      \"Y88P\"                   ");
         System.out.println("\nLogging out...");
 
-        MV_Global.wait(3000);
+        MV_Global.waitSuccess();
+        MV_Global.waitSuccess();
     }
 }

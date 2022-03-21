@@ -3,31 +3,31 @@ package View.AdminActions;
 import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
 
-public class V_ChangeBal {
+public class V_ChangeBalance {
     public void run(){
         double targetAmt;
         short statusCode;
 
         while(true){
-            System.out.print("Enter amount: ");
+            System.out.print("Enter amount to add: ");
             try{
 			    targetAmt = Double.parseDouble(MV_Global.input.nextLine());
-                System.out.println("Processing...");
+                System.out.println("\nProcessing...");
                 
                 statusCode = new MV_BankAccount().VChangeBal_changeBal(targetAmt);
 
                 if(statusCode == -1){
-                    System.out.println("You are not authorized. (⌐■_■)");
+                    System.out.println("You are not authorized.");
                     MV_Global.waitError();
                     return;
                 }
                 else if(statusCode > 0){
-                    System.out.println("Process failed... (¬_¬ )");
+                    System.out.println("Process failed...");
                     MV_Global.waitError();
                     return;
                 }
                 else if(statusCode == 0){
-                    System.out.println("Process complete. (●'◡'●)");
+                    System.out.println("Process complete.");
                     System.out.println("Current balance: " + MV_Global.sessionBankAcc.getBankAccBalance());
                     MV_Global.waitSuccess();
                     return;

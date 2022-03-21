@@ -24,10 +24,13 @@ public class V_ViewManager{
                 case "logout":
                     new View.Login.V_Logout().run();
                     return true;
-                //ChangeBal
+                //ChangeBalance
                 case "changebal":
-                    new View.AdminActions.V_ChangeBal().run();
+                    new View.AdminActions.V_ChangeBalance().run();
                     return false;
+                //ViewBalance
+                case "viewbal":
+                    return new View.BankAccount.V_ViewBalance().run();
                 default:
                     throw new Exception("Navigation invalid page");
             }
