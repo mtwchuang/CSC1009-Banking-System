@@ -285,7 +285,7 @@ public class MV_BankAccount{
     //Logic functions for V_ChangeBal
     //  [ADMIN] Change balance
     public short VChangeBal_changeBal(double inputAmt) throws Exception{
-        //Authorization
+        //Authorization; Lvl Admin
         if(MV_Global.sessionUserAcc.getUserType() <= 3) return -1;
 
         DA_BankAccount bankAccountDA = new DA_BankAccount();
@@ -383,6 +383,24 @@ public class MV_BankAccount{
             }
         }
         return "";
+    }
+
+    //Get locality country name
+    public String getLocalityName(String countryCode){
+        DA_Settings settings = new DA_Settings();
+        try{
+            String[] countryList = settings.dbSettings_GetByKey("BankCountry");
+            
+            for(int i = 0; i < countryList.length; i++){
+                if(countryList[i].split("-")[0].equals(countryCode)){
+                    return countryList[i].split("-")[1];
+                }
+            }
+        }
+        catch(Exception e){
+            //Ostrich Algorithm
+        }
+        return "--";
     }
 
     //Convert to base currency; X to SGD

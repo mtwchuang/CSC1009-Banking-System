@@ -93,7 +93,7 @@ public class V_BankAccIndex
 			case "b131": //Withdraw Other Amounts
 				return V_ViewManager.redirect("withdraw", "-1");
 			case "b132": //Deposit Balance
-				break;
+				return V_ViewManager.redirect("deposit", "-1");
 			case "b133": //View Transactions
 				break;
 			case "b134": //Transfer Balance
@@ -102,12 +102,13 @@ public class V_BankAccIndex
 			//Account holder settings
 			case "c961": //View Balance
 				return V_ViewManager.redirect("viewbankaccdetails");
-			case "c962": //Change Settings
-				break;
 
 			//Admin Actions
 			case "z420": //ADMIN Alter Balance
-				V_ViewManager.redirect("changebal");
+				V_ViewManager.redirect("admin-changebal");
+				break;
+			case "z421": //ADMIN View ATM Details
+				V_ViewManager.redirect("admin-atmdetails");
 				break;
 			case "z422": //ADMIN Transfer to Michael McDoesn'tExist [Local]
 				break;

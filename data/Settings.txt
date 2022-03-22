@@ -2,7 +2,7 @@
 //
 //Bank Architecture Settings
 BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020201-Japan,Tokyo,Fushimi|020202-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
-BankCountry|01-Singapore|02-Japan|03-US
+BankCountry|01-Singapore|02-Japan|03-United States
 TimeZone|01-P-8|02-P-9|03-N-5
 //
 //ATM Settings
@@ -25,4 +25,4 @@ BankAccWithdrawOptJP|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withd
 BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100
 BankAccActions|b131-Withdraw Other Amounts|b132-Deposit Balance|b133-View Transactions|b134-Transfer Balance
 BankAccOwnerActions|c961-View Account Details
-BankAccAdminActions|z420-[ADMIN] Change Balance|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program
+BankAccAdminActions|z420-[ADMIN] Change Balance|z421-[ADMIN] View ATM Details|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program

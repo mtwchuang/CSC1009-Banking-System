@@ -116,10 +116,32 @@ public class V_ViewDetails {
             "Bank Account: " + MV_Global.sessionBankAcc.getBankAccID());
         System.out.println("");
 
+        //Account status translation
+        switch(MV_Global.sessionBankAcc.getBankAccStatus()){
+            case 0: 
+                accountStatus = "Normal";
+                break;
+            case 1:
+                accountStatus = "Locked";
+                break;
+        }
+        //Account type translation
+        switch(MV_Global.sessionBankAcc.getBankAccStatus()){
+            case 0: 
+                accountType = "Standard Account";
+                break;
+            case 1:
+                accountType = "Joint Account";
+                break;
+            case 2:
+                accountType = "Corporate Account";
+                break;
+        }
+
         while(true){
             V_ViewManager.clearPage();
 
-            System.out.println("\nOpt\tField\t\tField Data");
+            System.out.println("\nOpt\tField\t\t\t\tField Data");
             System.out.println("---------------------------------------------------------------------");
             System.out.println("[-]\tAccount Type\t\t\t" + accountType);
             System.out.println("[-]\tAccount Status\t\t\t" + accountStatus);
@@ -148,7 +170,7 @@ public class V_ViewDetails {
                         }
                         //Valid input
                         else{
-                            System.out.println("Applying changes...");
+                            System.out.println("\nApplying changes...");
                             MV_Global.waitSuccess();
                             newDesc = userInput;
                         }
@@ -163,12 +185,12 @@ public class V_ViewDetails {
 
                         //Negative value
                         if(userInputDouble < 0){
-                            System.out.println("Value cannot be lesser than 0...");
+                            System.out.println("\nValue cannot be lesser than 0...");
                             MV_Global.waitError();
                         }
                         //Valid input
                         else{
-                            System.out.println("Applying changes...");
+                            System.out.println("\nApplying changes...");
                             newTxnLimit = userInputDouble;
                             MV_Global.waitSuccess();
                         }
@@ -188,7 +210,7 @@ public class V_ViewDetails {
                         }
                         //Valid input
                         else{
-                            System.out.println("Applying changes...");
+                            System.out.println("\nApplying changes...");
                             newMinBal = oldMinBal;
                             MV_Global.waitSuccess();
                         }
@@ -197,12 +219,12 @@ public class V_ViewDetails {
                         System.out.println("Saving changes...");
                         status = bankAccMV.VViewDetails_updateBankAcc(newDesc, newTxnLimit, newMinBal);
                         if(status == 0){
-                            System.out.println("Saving successful.\nReturning...");
+                            System.out.println("Saving successful.\n\nReturning...");
                             MV_Global.waitSuccess();
                             return;
                         }
                         else{
-                            System.out.println("Saving failed.\nReturning...");
+                            System.out.println("Saving failed.\n\nReturning...");
                             MV_Global.waitError();
                         }
                         break;

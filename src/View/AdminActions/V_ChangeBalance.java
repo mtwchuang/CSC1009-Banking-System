@@ -5,6 +5,9 @@ import ModelView.BankAccount.MV_BankAccount;
 
 public class V_ChangeBalance {
     public void run(){
+        //Authorization; Lvl Admin
+        if(MV_Global.sessionUserAcc.getUserType() <= 3) return;
+
         double targetAmt;
         short statusCode;
 
