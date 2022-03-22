@@ -29,6 +29,10 @@ public class V_Deposit {
             try{
                 inputAmount = Double.parseDouble(userInput);
                 if(inputAmount <= 0) throw new Exception();
+
+                inputAmount = Math.round((inputAmount * 100));
+                inputAmount /= 100;
+
                 withdraw = !withdraw;
             }
             catch(Exception e){

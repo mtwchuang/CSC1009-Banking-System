@@ -223,8 +223,6 @@ public class DA_BankAccount {
 		BufferedWriter bw = null; BufferedReader br = null;
 		String[] dataSegments;
 		String line;
-
-		inputBankAcc.updated();
 		
 		//Prepare inputBankAcc entry string
 		String updatedEntry = ("\n" + 

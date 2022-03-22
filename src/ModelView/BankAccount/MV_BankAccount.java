@@ -285,6 +285,77 @@ public class MV_BankAccount{
         return returnVal;
     }
 
+    //Logic functions for V_Deposit
+    //  Deposit action
+    public short VDeposit_deposit(double depositAmt) throws Exception{
+        //Variable initialization
+        DA_Transaction transactionDA = new DA_Transaction();
+        DA_BankAccount bankAccountDA = new DA_BankAccount();
+        M_IBalanceChange depositTransactionFinal;
+        M_BalanceChange depositTransaction;
+        String transactionDesc, currency;
+        int[] notes;
+        double bankAccFutureBal, bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance();
+        short daStatusCode = 0;
+
+        //Acquire locality currency symbol
+        currency = getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
+
+        //Forecast future balance
+        bankAccFutureBal = bankAccBal + depositAmt;
+
+        //Ensure 2dp consistency
+        bankAccFutureBal = Math.round(bankAccFutureBal * 100);
+        bankAccFutureBal /= 100;
+
+        //Set trasaction desciption
+        transactionDesc = 
+            "Deposit of " + currency + " " + String.format("%.2f", depositAmt) +
+            " at ATM " + MV_Global.getAtmID();
+
+        //Withdrawal transaction record
+        depositTransaction = new M_BalanceChange(true);
+        depositTransaction.setTransactionType((short) 0);
+        depositTransaction.setTransactionDescription(transactionDesc);
+        depositTransaction.setTransactionOverseas(isBankAccOverseas());
+        depositTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+        depositTransaction.setTransactionBankAccInitialAmount(bankAccBal);
+        depositTransaction.executeOnAtm();
+        depositTransaction.setExecutedOnPurchase(false);
+        depositTransaction.setTransactionAmount(depositAmt);
+        depositTransaction.setTransactionBankAccFinalAmount(bankAccFutureBal);
+        depositTransactionFinal = (M_IBalanceChange) depositTransaction;
+
+        //Updated bank account record
+        M_IBankAccount updatedBankAccRecord = MV_Global.sessionBankAcc;
+        updatedBankAccRecord.setBankAccBalance(bankAccFutureBal);
+		updatedBankAccRecord.updated();
+
+        //Put new transactions to Data Access layer
+        try{
+            //Create withdrawal transaction
+            daStatusCode = transactionDA.dbBalanceChange_Create(depositTransactionFinal);
+            if(daStatusCode != 0) return 1;
+
+            //Update bank acc record
+            daStatusCode = bankAccountDA.dBankAccounts_Update(updatedBankAccRecord);
+            if(daStatusCode != 0) return 2;
+        }
+        catch(Exception e){
+            return 3;
+        }
+        
+        //Update session bank data
+        MV_Global.sessionBankAcc.setBankAccBalance(bankAccFutureBal);
+
+        //Update ATM note count
+        notes = denominationCal(depositAmt, true);
+        for(int i = 0; i < notes.length; i++)
+            MV_Global.availableNotes[i][1] += notes[i];
+    
+        return 0;
+    }
+
     //Logic functions for V_ChangeBal
     //  [ADMIN] Change balance
     public short VChangeBal_changeBal(double inputAmt) throws Exception{
