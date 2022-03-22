@@ -4,8 +4,7 @@ import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
 import View.V_ViewManager;
 
-public class V_BankAccIndex 
-{
+public class V_BankAccIndex{
 	//Action selections
 	public boolean run() throws Exception{
 		//Variable declaration

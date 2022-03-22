@@ -64,6 +64,9 @@ public class MV_BankAccount{
         //Get user action options
         actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccActions")));
 
+        //Get deposit action; unavailable if bank account is overseas
+        if(!isBankAccOverseas()) actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccDeposit")));
+
         //Get bank account owner action options
         switch(MV_Global.sessionBankAcc.getBankAccType()){
             case 1: //Joint account
@@ -127,7 +130,7 @@ public class MV_BankAccount{
         short daStatusCode;
 
         //Check number of notes to withdraw
-        withdrawnNotes = withdrawDenominationCal(withdrawAmt);
+        withdrawnNotes = denominationCal(withdrawAmt, false);
         
         //Prepare return value
         returnVal = new int[withdrawnNotes.length + 1];
@@ -426,17 +429,17 @@ public class MV_BankAccount{
         return 0;
     }
 
-    private int[] withdrawDenominationCal(double amount){
+    public int[] denominationCal(double amount, boolean getNearestNotes){
         //noteCount1 remainingAmt1
         //  Checks if ATM has enough notes to meet withdraw amount
         //noteCount2 remainingAmt2
         //  Checks if withdraw amount can be met with available denominations
 
         int[][] availableDenominations = MV_Global.availableNotes;
-        int[] notesWithdrawn = new int[availableDenominations.length];
+        int[] notes = new int[availableDenominations.length];
         int noteCount1 = 0, noteCount2 = 0;
         double remainingAmt1 = amount, remainingAmt2 = amount, currentDenomination;
-        Arrays.fill(notesWithdrawn, 0);
+        Arrays.fill(notes, 0);
 
         for(int i = availableDenominations.length - 1; i > -1; i--){
             currentDenomination = availableDenominations[i][0];
@@ -446,21 +449,24 @@ public class MV_BankAccount{
 
             if(noteCount1 > 0 && noteCount1 <= availableDenominations[i][1]){
                 remainingAmt1 -= noteCount1 * currentDenomination;
-                notesWithdrawn[i] = noteCount1;
+                notes[i] = noteCount1;
             }
             else if(noteCount1 > 0 && noteCount1 > availableDenominations[i][1]){
                 remainingAmt1 -= availableDenominations[i][1] * currentDenomination;
-                notesWithdrawn[i] = availableDenominations[i][1];
+                notes[i] = availableDenominations[i][1];
             }
 
             if(noteCount2 > 0) remainingAmt2 -= noteCount2 * currentDenomination;
         }
     
         //If withdraw amount cannot be met with available denominations
-        if(remainingAmt2 != 0) Arrays.fill(notesWithdrawn, -1);
+        if(remainingAmt2 != 0){
+            if(!getNearestNotes) Arrays.fill(notes, -1);
+            else return notes;
+        }
         //If withdraw amount cannot be met with availble ATM notes
-        else if(remainingAmt1 != 0) Arrays.fill(notesWithdrawn, -2);
+        else if(remainingAmt1 != 0 && !getNearestNotes) Arrays.fill(notes, -2);
         
-        return notesWithdrawn;
+        return notes;
     }
 }
