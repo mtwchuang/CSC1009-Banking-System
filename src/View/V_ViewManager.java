@@ -29,8 +29,8 @@ public class V_ViewManager{
                     new View.AdminActions.V_ChangeBalance().run();
                     return false;
                 //ViewBalance
-                case "viewbal":
-                    return new View.BankAccount.V_ViewBalance().run();
+                case "viewbankaccdetails":
+                    return new View.BankAccount.V_ViewDetails().run();
                 default:
                     throw new Exception("Navigation invalid page");
             }

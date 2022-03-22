@@ -102,7 +102,8 @@ public class MV_BankAccount{
         return temp;
     }
     
-    //Withdraw action
+    //Logic functions for V_Withdraw
+    //  Withdraw action
     public int[] VWithdraw_withdraw(double withdrawAmt) throws Exception{
         //Return data:
         //  [0]: Status code
@@ -192,7 +193,7 @@ public class MV_BankAccount{
             //If bank acc minimum balance is triggered by withdraw amount
             else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
             //If bank acc transaction limit is triggered by withdraw amount
-            else if(bankCurrencyWithdrawAmt > bankAccTxnLimit) return new int[]{3};
+            else if(bankAccTxnLimit > 0 && bankCurrencyWithdrawAmt > bankAccTxnLimit) return new int[]{3};
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(bankCurrencyWithdrawAmt);
@@ -244,7 +245,7 @@ public class MV_BankAccount{
             //If bank acc minimum balance is triggered by withdraw amount
             else if(bankAccFutureBal < bankAccMinBal) return new int[]{2};
             //If bank acc transaction limit is triggered by withdraw amount
-            else if(withdrawAmt > bankAccTxnLimit) return new int[]{3};
+            else if(bankAccTxnLimit > 0 && withdrawAmt > bankAccTxnLimit) return new int[]{3};
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(withdrawAmt);
@@ -281,7 +282,8 @@ public class MV_BankAccount{
         return returnVal;
     }
 
-    //[ADMIN] Change balance
+    //Logic functions for V_ChangeBal
+    //  [ADMIN] Change balance
     public short VChangeBal_changeBal(double inputAmt) throws Exception{
         //Authorization
         if(MV_Global.sessionUserAcc.getUserType() <= 3) return -1;
@@ -306,6 +308,33 @@ public class MV_BankAccount{
         MV_Global.sessionBankAcc.setBankAccBalance(newBal);
 
         return 0;
+    }
+
+    //Logic functions for V_ViewDetails
+    //  User custom change for bank acc settings
+    public short VViewDetails_updateBankAcc(String desc, double txnLimit, double minBal) throws Exception{
+        short status = 0;
+        DA_BankAccount bankAccDA = new DA_BankAccount();
+
+        //Bank account updated record
+        M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
+        currentBankAcc.setBankAccDescription(desc);
+        currentBankAcc.setBankAccTransactionLimit(txnLimit);
+        currentBankAcc.setBankAccMinBalance(minBal);
+
+        //Put new transactions to Data Access layer
+        try{
+            //Update bank acc record
+            status = bankAccDA.dBankAccounts_Update(currentBankAcc);
+        }
+        catch(Exception e){
+            return -2;
+        }
+
+        //Set session bank acc to updated values
+        if(status == 0) MV_Global.sessionBankAcc = currentBankAcc;
+
+        return status;
     }
 
     //Load bankAccID into session

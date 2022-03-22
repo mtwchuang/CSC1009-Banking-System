@@ -101,7 +101,7 @@ public class V_BankAccIndex
 
 			//Account holder settings
 			case "c961": //View Balance
-				return V_ViewManager.redirect("viewbal");
+				return V_ViewManager.redirect("viewbankaccdetails");
 			case "c962": //Change Settings
 				break;
 
