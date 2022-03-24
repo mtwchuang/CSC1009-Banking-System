@@ -2,6 +2,7 @@ package View.UserAccount;
 
 import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
+import ModelView.UserAccount.MV_UserAccount;
 import View.V_ViewManager;
 
 public class V_UserAccIndex 
@@ -30,7 +31,8 @@ public class V_UserAccIndex
 			}
 
 			//Print other actions
-			System.out.println("\n[" + bankAccs.length + "]\tCancel and logout");
+			System.out.println("\n[" + bankAccs.length + "]\tChange password");
+			System.out.println("[" + (bankAccs.length + 1) + "]\tLogout");
 
 			//Get user bank acc selection input
 			System.out.print("\nSelect a bank account [Opt]: ");
@@ -40,11 +42,17 @@ public class V_UserAccIndex
 			//User input validation
 			try{
 				inputBankAccSelectionInt = Integer.parseInt(inputBankAccSelection);
+
 				//Out of selection values' range
-				if(inputBankAccSelectionInt < 0 || inputBankAccSelectionInt > bankAccs.length)
+				if(inputBankAccSelectionInt < 0 || inputBankAccSelectionInt > (bankAccs.length + 1))
 					throw new Exception("Hijo de puta");
-				//User cancel action
+				//
 				else if(inputBankAccSelectionInt == bankAccs.length){
+					this.changePassword();
+					V_ViewManager.clearPage();
+				}
+				//User cancel action
+				else if(inputBankAccSelectionInt == (bankAccs.length + 1)){
 					System.out.println("Logging out.");
 					MV_Global.waitSuccess();
 					return;
@@ -69,6 +77,60 @@ public class V_UserAccIndex
 			}
 
 			V_ViewManager.clearPage();
+		}
+	}
+
+	public void changePassword(){
+		short authenticationStatus;
+		MV_UserAccount userAccMV = new MV_UserAccount();
+		String inputPassword, inputPassword2;
+
+		while(true){
+			V_ViewManager.clearPage();
+
+			System.out.print("Current password: ");
+			inputPassword = MV_Global.input.nextLine();
+
+			try{
+				authenticationStatus = userAccMV.VLogin_checkAcc(MV_Global.sessionUserAcc.getUserName(), inputPassword);
+				//Check authenticationStatus
+				if(authenticationStatus == 0){
+					System.out.print("Enter new password [Max 100]: ");
+					inputPassword = MV_Global.input.nextLine();
+
+					System.out.print("Confirm new password [Max 100]: ");
+					inputPassword2 = MV_Global.input.nextLine();
+
+					if(inputPassword2.equals(inputPassword)){
+						short mvStatus = userAccMV.VUserAccIndex_changePassword(inputPassword);
+						switch(mvStatus){
+							case 0: //OK Status
+								System.out.println("Password change successful.");
+								MV_Global.waitSuccess();
+								return;
+							case 1: //Password too long
+								System.out.println("New password exceeded 100 characters");
+								MV_Global.waitError();
+								break;
+							default:
+								System.out.println("Change password failed.");
+								MV_Global.waitError();
+								break;
+						}
+					}
+					else{
+						System.out.println("New password does not match password confirmation.");
+						MV_Global.waitError();
+					}
+				}
+				else{
+					System.out.println("\nIncorrect password: ");
+					MV_Global.waitError();
+				}
+			}
+			catch(Exception e){
+				
+			}
 		}
 	}
 }

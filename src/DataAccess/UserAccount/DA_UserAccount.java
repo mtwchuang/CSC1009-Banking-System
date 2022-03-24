@@ -3,8 +3,12 @@ package DataAccess.UserAccount;
 import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileOutputStream;
 import java.io.FileReader;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -164,5 +168,28 @@ public class DA_UserAccount {
 			}
 		}
 		return password;
+	}
+
+	public short dbUserAccounts_UpdateUserPassword(String password) throws Exception{
+		try{
+			byte[] hashedPassword;
+			MessageDigest sha265Hash = MessageDigest.getInstance("SHA-256");
+			hashedPassword = sha265Hash.digest(password.getBytes(StandardCharsets.UTF_8));
+			MessageDigest md5Hash = MessageDigest.getInstance("MD5");
+			hashedPassword = md5Hash.digest(hashedPassword);
+			
+			M_UserAccountLogin login = new M_UserAccountLogin(hashedPassword);
+	
+			FileOutputStream fileOutputStream = new FileOutputStream(MV_Global.dbUserAccountLogins + "\\" + MV_Global.sessionUserAcc.getUserID());
+			ObjectOutputStream objectOutputStream = new ObjectOutputStream(fileOutputStream);
+				
+			objectOutputStream.writeObject(login);
+			objectOutputStream.flush();
+			objectOutputStream.close();
+		}
+		catch(Exception e){
+			return 1;
+		}
+		return 0;
 	}
 }

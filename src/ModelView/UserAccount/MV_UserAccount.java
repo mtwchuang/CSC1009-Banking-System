@@ -47,6 +47,35 @@ public class MV_UserAccount {
 		return 0;
 	}
 	
+	//Logic fucmtions for V_UserAccIndex
+	//	Change password function
+	public short VUserAccIndex_changePassword(String userPassword) throws Exception{
+		//Status codes:
+		//	0: Ok
+		//	1: Password too long
+		//	2: Data access layer error
+		//	3: Non-0 data access layer code
+		
+		//If password is too long
+		if(userPassword.length() > 100) return 1;
+
+		DA_UserAccount userAccDa = new DA_UserAccount();
+		short daStatus;
+
+		//Post to data access layer
+		try{
+			daStatus = userAccDa.dbUserAccounts_UpdateUserPassword(userPassword);
+		}
+		catch(Exception e){
+			return 2;
+		}
+
+		//If data access layer returned non-Ok status code
+		if(daStatus != 0) return 3;
+		
+		return 0;
+	}
+
 	//Double layered hashing
 	private byte[] passwordHashing(String userPassword)
 	{
