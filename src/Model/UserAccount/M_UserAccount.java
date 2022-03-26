@@ -1,5 +1,8 @@
 package Model.UserAccount;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
@@ -122,8 +125,11 @@ public class M_UserAccount implements M_IUserAccount{
     }
 
     public void updated(){
-        Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+        LocalDateTime now = LocalDateTime.now();
+		ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+		ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+        
         this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = cal.getTimeInMillis();
+		this.updatedAt = utcTime.toInstant().toEpochMilli();
     }
 }

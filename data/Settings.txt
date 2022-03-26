@@ -1,13 +1,15 @@
 //Program Settings [This file will never be altered by runtime, only read]
+PagingSize|20
+DateFormat|dd/MM/yyyy HH:mm:ss
 //
 //Bank Architecture Settings
 BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020201-Japan,Tokyo,Fushimi|020202-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
-BankCountry|01-Singapore|02-Japan|03-United States
-TimeZone|01-P-8|02-P-9|03-N-5
+BankCountry|01-Singapore|02-Japan|03-US_NewYork
+TimeZone|01-Asia/Singapore|02-Asia/Tokyo|03-America/New_York
 //
 //ATM Settings
 AtmID|4206969-01
-AtmNotesQty|10|10|10|0|0|0|0
+AtmNotesQty|100|100|100|100|100|100|100
 //
 //Overseas Transaction Settings
 CurrencyRate|01-1|02-87.09|03-0.74

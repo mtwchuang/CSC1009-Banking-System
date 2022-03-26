@@ -320,7 +320,7 @@ public class MV_BankAccount{
 
         //Withdrawal transaction record
         depositTransaction = new M_BalanceChange(true);
-        depositTransaction.setTransactionType((short) 0);
+        depositTransaction.setTransactionType((short) 1);
         depositTransaction.setTransactionDescription(transactionDesc);
         depositTransaction.setTransactionOverseas(isBankAccOverseas());
         depositTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());

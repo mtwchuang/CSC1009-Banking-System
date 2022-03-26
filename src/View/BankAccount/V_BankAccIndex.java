@@ -94,6 +94,7 @@ public class V_BankAccIndex{
 			case "b132": //Deposit Balance
 				return V_ViewManager.redirect("deposit", "-1");
 			case "b133": //View Transactions
+				V_ViewManager.redirect("txnindex");
 				break;
 			case "b134": //Transfer Balance
 				break;

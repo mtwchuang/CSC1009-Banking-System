@@ -8,6 +8,7 @@ import java.util.concurrent.TimeUnit;
 
 import DataAccess.DA_Settings;
 import Model.BankAccount.M_IBankAccount;
+import Model.Transaction.M_ITransaction;
 import Model.UserAccount.M_IUserAccount;
 
 public class MV_Global {
@@ -38,6 +39,10 @@ public class MV_Global {
 	public static M_IUserAccount sessionUserAcc;
 	public static M_IBankAccount sessionBankAcc;
 
+    //Cache storage for faster loading
+    public static int cacheInstance = -1;
+    public static M_ITransaction[] cacheTxn;
+
 	//Database path config
 	public static String dbUserAccounts = getDynamicDbPath() + "\\data\\UserAccount\\UserAccounts.txt";
 	public static String dbUserAccountLogins = getDynamicDbPath() + "\\data\\UserAccount\\UserAccountLogins";
@@ -57,10 +62,15 @@ public class MV_Global {
 	public static void waitSuccess() throws Exception{wait(1000);}
 	public static void waitError() throws Exception{wait(1000);}
 
-	//Clear session data
+	//Clear session data and cache
 	public static void clearSession(){
+        //Clear session data
 		sessionUserAcc = null;
 		sessionBankAcc = null;
+
+        //Clear cache
+        cacheInstance = -1;
+        cacheTxn = null;
 	}
 
 	//Load Atm config into MV_Global

@@ -1,7 +1,8 @@
 package Model.Transaction;
 
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 import ModelView.MV_Global;
 /*	Changes logs
@@ -29,17 +30,18 @@ public abstract class M_Transaction implements M_ITransaction
 	public M_Transaction(boolean creatingNew)
 	{
 		// asks if this is a new transaction that is being created
-		if(creatingNew)
-		{
-			Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		if(creatingNew){
+			LocalDateTime now = LocalDateTime.now();
+        	ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+        	ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
 			
 			this.createdBy = MV_Global.sessionUserAcc.getUserID();
-			this.createdAt = cal.getTimeInMillis();
+			this.createdAt = utcTime.toInstant().toEpochMilli();
 			this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-			this.updatedAt = cal.getTimeInMillis();
+			this.updatedAt = utcTime.toInstant().toEpochMilli();
 	
 			this.transactionID = UUID.randomUUID().toString();
-	
+
 			this.transactionSrcBankAccID = MV_Global.sessionBankAcc.getBankAccID();
 		}
 	}
@@ -124,8 +126,11 @@ public abstract class M_Transaction implements M_ITransaction
 	}
 
 	public void updated(){
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		LocalDateTime now = LocalDateTime.now();
+		ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+		ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+		
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = cal.getTimeInMillis();
+		this.updatedAt = utcTime.toInstant().toEpochMilli();
 	}
 }

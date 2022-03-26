@@ -143,9 +143,9 @@ public class DA_Transaction
 						break;
 					}
 					// search by bankid
-					case(10):
+					case(9):
 					{
-						matchFound = (dataSegments[10].equals(input));
+						matchFound = (dataSegments[9].equals(input));
 						break;
 					}
 				}
@@ -292,9 +292,9 @@ public class DA_Transaction
 						break;
 					}
 					// search by bankid
-					case(10):
+					case(9):
 					{
-						matchFound = (dataSegments[10].equals(input));
+						matchFound = (dataSegments[9].equals(input));
 						break;
 					}
 				}
@@ -344,7 +344,7 @@ public class DA_Transaction
 	}
 	
 	// public function to return balance change by transactionID
-	public M_IBalanceChange dbBalanceChange_GetByTransID(String transID) throws Exception
+	public M_IBalanceChange dbBalanceChange_GetByTxnID(String transID) throws Exception
 	{
 		return dbBalanceChange_GetOne(4, transID);
 	}
@@ -356,7 +356,7 @@ public class DA_Transaction
 	// public function to return multiple balance changes by bankid
 	public M_IBalanceChange[] dbBalanceChange_GetByBankID(String bankID) throws Exception
 	{
-		return dbBalanceChange_GetMultiple(10, bankID);
+		return dbBalanceChange_GetMultiple(9, bankID);
 	}
 	// public function to return all balance changes
 	public M_IBalanceChange[] dbBalanceChange_GetAll() throws Exception
@@ -418,7 +418,7 @@ public class DA_Transaction
 	}
 
 	// public function to return balance transfer by transactionID
-	public M_IBalanceTransfer dbBalanceTransfer_GetByTransID(String transID) throws Exception
+	public M_IBalanceTransfer dbBalanceTransfer_GetByTxnID(String transID) throws Exception
 	{
 		return dbBalanceTransfer_GetOne(4, transID);
 	}
@@ -430,7 +430,7 @@ public class DA_Transaction
 	// public function to return multiple balance transfers by bankid
 	public M_IBalanceTransfer[] dbBalanceTransfer_GetByBankID(String bankID) throws Exception
 	{
-		return dbBalanceTransfer_GetMultiple(10, bankID);
+		return dbBalanceTransfer_GetMultiple(9, bankID);
 	}    
 	// public function to return all balance transfers
 	public M_IBalanceTransfer[] dbBalanceTransfer_GetAll() throws Exception

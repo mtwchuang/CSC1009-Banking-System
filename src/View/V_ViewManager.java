@@ -17,6 +17,9 @@ public class V_ViewManager{
                     return true;
                 case "bankaccindex": //Bank account page
                     return new View.BankAccount.V_BankAccIndex().run();
+                case "txnindex":
+                    new View.Transactions.V_TransactionIndex().run();
+                    return false;
 
                 //Business Process Pages
                 case "viewbankaccdetails": //ViewBalance page

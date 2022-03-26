@@ -1,7 +1,8 @@
 package Model.BankAccount;
 
-import java.util.Calendar;
-import java.util.TimeZone;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.util.UUID;
 
 import ModelView.MV_Global;
@@ -25,12 +26,14 @@ public class M_BankAccount implements M_IBankAccount{
 	public M_BankAccount(){
 	}
 	public M_BankAccount(String bankAccHolderID){
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
+		LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+        ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
 		
 		this.createdBy = MV_Global.sessionUserAcc.getUserID();
-		this.createdAt = cal.getTimeInMillis();
+		this.createdAt = utcTime.toInstant().toEpochMilli();
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		this.updatedAt = cal.getTimeInMillis();
+		this.updatedAt = utcTime.toInstant().toEpochMilli();
 
 		this.bankAccID = UUID.randomUUID().toString();
 		this.bankAccHolderID = bankAccHolderID;
@@ -113,8 +116,11 @@ public class M_BankAccount implements M_IBankAccount{
 	}
 
 	public void updated(){
+		LocalDateTime now = LocalDateTime.now();
+        ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());
+        ZonedDateTime utcTime = zonedDateTime.withZoneSameInstant(ZoneId.of("UTC"));
+
 		this.updatedBy = MV_Global.sessionUserAcc.getUserID();
-		Calendar cal = Calendar.getInstance(TimeZone.getTimeZone("GMT"));
-		this.updatedAt = cal.getTimeInMillis();
+		this.updatedAt = utcTime.toInstant().toEpochMilli();
 	}
 }
