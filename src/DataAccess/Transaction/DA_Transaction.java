@@ -624,7 +624,7 @@ public class DA_Transaction
 			inputBalChange.getCreatedBy() + "|" +                       						//00: createdBy - String
 			inputBalChange.getCreatedAt() + "|" +                       						//01: createdAt - long
 			inputBalChange.getUpdatedBy() + "|" +                       						//02: updatedBy - String
-			inputBalChange.getUpdatedBy() + "|" +                       						//03: updatedAt - long
+			inputBalChange.getUpdatedAt() + "|" +                       						//03: updatedAt - long
 
 			inputBalChange.getTransactionID() + "|" +                   						//04: transactionID - String
 			inputBalChange.getTransactionType() + "|" +                 						//05: transactionType - short

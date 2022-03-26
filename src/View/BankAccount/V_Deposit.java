@@ -7,10 +7,11 @@ public class V_Deposit {
     public void run() throws Exception{
 		MV_BankAccount bankAccMV = new MV_BankAccount();
         String userInput = "", currency = bankAccMV.getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
+        double inputAmount = 0, depositableAmount = 0, undepositableAmount = 0;
         int[][] availableDenominations = MV_Global.availableNotes;
         int[] depositedNotes;
         int i;
-        double inputAmount = 0, depositableAmount = 0, undepositableAmount = 0;
+        short status;
         boolean withdraw = false;
 
         while(true){
@@ -57,11 +58,19 @@ public class V_Deposit {
                     System.out.println("\nThe following amount does not have a valid note denomination and will not be deposited.");
                     System.out.println("Rejected amount: " + currency + " " + String.format("%.2f", undepositableAmount));
                 }
-
-                MV_Global.input.nextLine();
-                MV_Global.waitSuccess();
-
-                withdraw = !withdraw;
+;
+                status = bankAccMV.VDeposit_deposit(depositableAmount);
+                if(status == 0){
+                    System.out.println("\nDeposit successful.");
+                    System.out.println("Returning...");
+                    MV_Global.waitSuccess();
+                }
+                else{
+                    System.out.println("\nDeposit failed.");
+                    System.out.println("Returning...");
+                    MV_Global.waitError();
+                }
+                return;
             }
         }
     }

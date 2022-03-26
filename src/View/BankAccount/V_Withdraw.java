@@ -79,8 +79,10 @@ public class V_Withdraw {
             case 0:
                 System.out.println("Withdrawal successful\n\n" + "Dispensing " + currency + " " + String.format("%.2f", withdrawAmt) + ":");
                 for(int i = 0; i < MV_Global.availableNotes.length; i++)
-                    System.out.println("- x" + returnData[i + 1] + "\t" + currency + " " + MV_Global.availableNotes[i][0]);
-                MV_Global.wait(5000);
+                    System.out.println("\t- x" + returnData[i + 1] + "\t" + currency + " " + MV_Global.availableNotes[i][0]);
+
+                System.out.println("\nReturning...");
+                MV_Global.waitSuccess();
                 return;
             case 1:
                 System.out.println("Bank account does not have sufficient balance...");

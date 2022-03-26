@@ -288,6 +288,11 @@ public class MV_BankAccount{
     //Logic functions for V_Deposit
     //  Deposit action
     public short VDeposit_deposit(double depositAmt) throws Exception{
+        //Status code:
+        //  0: Ok
+        //  1: Data access layer withdrawal transaction error
+        //  2: Data access layer bank account update error
+
         //Variable initialization
         DA_Transaction transactionDA = new DA_Transaction();
         DA_BankAccount bankAccountDA = new DA_BankAccount();
@@ -500,6 +505,7 @@ public class MV_BankAccount{
         return 0;
     }
 
+    //Calculate number of denomination notes for specified amount
     public int[] denominationCal(double amount, boolean getNearestNotes){
         //noteCount1 remainingAmt1
         //  Checks if ATM has enough notes to meet withdraw amount
@@ -507,10 +513,11 @@ public class MV_BankAccount{
         //  Checks if withdraw amount can be met with available denominations
 
         int[][] availableDenominations = MV_Global.availableNotes;
-        int[] notes = new int[availableDenominations.length];
+        int[] notes1 = new int[availableDenominations.length], notes2 = new int[availableDenominations.length];
         int noteCount1 = 0, noteCount2 = 0;
         double remainingAmt1 = amount, remainingAmt2 = amount, currentDenomination;
-        Arrays.fill(notes, 0);
+        Arrays.fill(notes1, 0);
+        Arrays.fill(notes2, 0);
 
         for(int i = availableDenominations.length - 1; i > -1; i--){
             currentDenomination = availableDenominations[i][0];
@@ -518,26 +525,28 @@ public class MV_BankAccount{
             noteCount1 = (int)(remainingAmt1 / currentDenomination);
             noteCount2 = (int)(remainingAmt2 / currentDenomination);
 
+            //Calculate denomiation count while factoring available notes
             if(noteCount1 > 0 && noteCount1 <= availableDenominations[i][1]){
                 remainingAmt1 -= noteCount1 * currentDenomination;
-                notes[i] = noteCount1;
+                notes1[i] = noteCount1;
             }
             else if(noteCount1 > 0 && noteCount1 > availableDenominations[i][1]){
                 remainingAmt1 -= availableDenominations[i][1] * currentDenomination;
-                notes[i] = availableDenominations[i][1];
+                notes1[i] = availableDenominations[i][1];
             }
 
-            if(noteCount2 > 0) remainingAmt2 -= noteCount2 * currentDenomination;
+            //Calculate denomiation count without factoring available notes
+            if(noteCount2 > 0){
+                remainingAmt2 -= noteCount2 * currentDenomination;
+                notes2[i] = noteCount2;
+            }
         }
     
         //If withdraw amount cannot be met with available denominations
-        if(remainingAmt2 != 0){
-            if(!getNearestNotes) Arrays.fill(notes, -1);
-            else return notes;
-        }
+        if(remainingAmt2 != 0 && !getNearestNotes) Arrays.fill(notes1, -1);
         //If withdraw amount cannot be met with availble ATM notes
-        else if(remainingAmt1 != 0 && !getNearestNotes) Arrays.fill(notes, -2);
+        else if(remainingAmt1 != 0 && !getNearestNotes) Arrays.fill(notes1, -2);
         
-        return notes;
+        return (getNearestNotes)? notes2: notes1;
     }
 }
