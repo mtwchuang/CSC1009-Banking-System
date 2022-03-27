@@ -217,6 +217,7 @@ public class DA_BankAccount {
 	}
 
 	//POST Methods (Update)
+	// Update function for M_IBankAccount
 	public short dBankAccounts_Update(M_IBankAccount inputBankAcc) throws Exception
 	{
 		//Variable initialization
@@ -267,7 +268,7 @@ public class DA_BankAccount {
 				line = br.readLine();
 			}
 
-			//Write in updated entry of inputBankAcc
+			//Write in updated entry of inputJointAcc
 			bw.write(updatedEntry);
 		}
 		catch(Exception e)
@@ -286,6 +287,136 @@ public class DA_BankAccount {
 
 		return 0;
 	}
+	// Update function for M_IJointBankAcc
+	public short dBankAccounts_Update(M_IJointBankAcc inputJointAcc) throws Exception
+	{
+		//Variable initialization
+		BufferedWriter bw = null; BufferedReader br = null;
+		String[] dataSegments;
+		String line;
+
+		//Prepare inputJointAcc entry string
+		String updatedEntry = (
+			inputJointAcc.getCreatedBy() + "|" +					//00: createdBy - String
+			inputJointAcc.getCreatedAt() + "|" +					//01: createdAt - long
+			inputJointAcc.getUpdatedBy() + "|" +					//02: updatedBy - String
+			inputJointAcc.getUpdatedAt() + "|" +					//03: updatedAt - long
+
+			inputJointAcc.getBankAccID() + "|" +         		//04: bankAccID - String
+			inputJointAcc.getBankAccHolderID() + "|" +         	//05: bankAccHolderID - String
+			inputJointAcc.getBankAccType() + "|" +         		//06: bankAccType - short
+			inputJointAcc.getBankAccDescription() + "|" +		//07: bankAccDescription - String
+			inputJointAcc.getBankAccStatus() + "|" +				//08: bankAccStatus - short
+			inputJointAcc.getBankAccBalance() + "|" +			//09: bankAccBalance - double
+			inputJointAcc.getBankAccTransactionLimit() + "|" +	//10: bankAccTransactionLimit - double
+			inputJointAcc.getBankAccMinBalance() + "|" +	
+
+			inputJointAcc.getBankAccSubHolderID() + "|" + 		//12: bankAccSubHolderIDs - String[]
+			""													//13: bankAccTransactOnlyIDs - String[]
+		);
+
+		try
+		{
+			//Open buffered reader to db file
+			br = new BufferedReader(new FileReader(MV_Global.dbBankAccounts));
+
+			//Create temp file is does not exist
+			File tempFile = new File(MV_Global.dbTemp);
+			tempFile.createNewFile();
+			//Open buffered writer to temp file
+			bw = new BufferedWriter(new FileWriter(tempFile.getAbsoluteFile(), false));
+
+			//Copy contents of db file to temp file
+			line = br.readLine();
+			while(line != null){
+				dataSegments = line.split("\\|");
+
+				//Ignore record with the same bank acc id of inputJointAcc
+				if(!dataSegments[4].equals(inputJointAcc.getBankAccID())){
+					bw.write(line + "\n");
+				}
+				line = br.readLine();
+			}
+
+			//Write in updated entry of inputJointAcc
+			bw.write(updatedEntry);
+		}
+		catch(Exception e)
+		{
+			return -1;
+		}
+		finally
+		{
+			bw.close();
+			br.close();
+		}
+		return 0;
+	}
+	public short dBankAccounts_Update(M_ICorporateBankAcc inputCorporateAcc) throws Exception
+	{
+		//Variable initialization
+		BufferedWriter bw = null; BufferedReader br = null;
+		String[] dataSegments;
+		String line;
+
+		//Prepare inputCorporateAcc entry string
+		String updatedEntry = (
+			inputCorporateAcc.getCreatedBy() + "|" +					//00: createdBy - String
+			inputCorporateAcc.getCreatedAt() + "|" +					//01: createdAt - long
+			inputCorporateAcc.getUpdatedBy() + "|" +					//02: updatedBy - String
+			inputCorporateAcc.getUpdatedAt() + "|" +					//03: updatedAt - long
+
+			inputCorporateAcc.getBankAccID() + "|" +         		//04: bankAccID - String
+			inputCorporateAcc.getBankAccHolderID() + "|" +         	//05: bankAccHolderID - String
+			inputCorporateAcc.getBankAccType() + "|" +         		//06: bankAccType - short
+			inputCorporateAcc.getBankAccDescription() + "|" +		//07: bankAccDescription - String
+			inputCorporateAcc.getBankAccStatus() + "|" +				//08: bankAccStatus - short
+			inputCorporateAcc.getBankAccBalance() + "|" +			//09: bankAccBalance - double
+			inputCorporateAcc.getBankAccTransactionLimit() + "|" +	//10: bankAccTransactionLimit - double
+			inputCorporateAcc.getBankAccMinBalance() + "|" +	
+
+			inputCorporateAcc.getBankAccSubHolderIDs() + "|" + 		//12: bankAccSubHolderIDs - String[]
+			inputCorporateAcc.getBankAccTransactOnlyIDs()			//13: bankAccTransactOnlyIDs - String[]
+		);
+
+		try
+		{
+			//Open buffered reader to db file
+			br = new BufferedReader(new FileReader(MV_Global.dbBankAccounts));
+
+			//Create temp file is does not exist
+			File tempFile = new File(MV_Global.dbTemp);
+			tempFile.createNewFile();
+			//Open buffered writer to temp file
+			bw = new BufferedWriter(new FileWriter(tempFile.getAbsoluteFile(), false));
+
+			//Copy contents of db file to temp file
+			line = br.readLine();
+			while(line != null){
+				dataSegments = line.split("\\|");
+
+				//Ignore record with the same bank acc id of inputCorporateAcc
+				if(!dataSegments[4].equals(inputCorporateAcc.getBankAccID())){
+					bw.write(line + "\n");
+				}
+				line = br.readLine();
+			}
+
+			//Write in updated entry of inputJointAcc
+			bw.write(updatedEntry);
+		}
+		catch(Exception e)
+		{
+			return -1;
+		}
+		finally
+		{
+			bw.close();
+			br.close();
+		}
+		return 0;
+	}
+
 
 	//DEL Methods
 
