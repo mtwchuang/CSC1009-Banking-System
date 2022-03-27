@@ -659,4 +659,49 @@ public class DA_Transaction
 		}
 		return 0;
 	}
+	public short dbBalanceTransfer_Create(M_IBalanceTransfer inputBalTransfer) throws Exception
+	{
+		//Variable initialization
+		BufferedWriter bw = null;
+
+		//Prepare inputBalChange entry string
+		String newEntry = ("\n" + 
+			inputBalTransfer.getCreatedBy() + "|" +                       						//00: createdBy - String
+			inputBalTransfer.getCreatedAt() + "|" +                       						//01: createdAt - long
+			inputBalTransfer.getUpdatedBy() + "|" +                       						//02: updatedBy - String
+			inputBalTransfer.getUpdatedAt() + "|" +                       						//03: updatedAt - long
+
+			inputBalTransfer.getTransactionID() + "|" +                   						//04: transactionID - String
+			inputBalTransfer.getTransactionType() + "|" +                 						//05: transactionType - short
+			inputBalTransfer.getTransactionAmount() + "|" +               						//06: transactionAmount - double
+			inputBalTransfer.getTransactionDescription() + "|" +          						//07: transactionDescription - String
+			(inputBalTransfer.isTransactionOverseas() ? "1": "0") + "|" + 						//08: transactionOverseas - boolean
+			inputBalTransfer.getTransactionSrcBankAccID() + "|" +         						//09: transactionBankAccID - String
+			String.format("%.2f", inputBalTransfer.getTransactionBankAccInitialAmount()) + "|" +//10: transactionBankAccInitialAmount - double
+			String.format("%.2f", inputBalTransfer.getTransactionBankAccFinalAmount()) + "|" + 	//11: transactionBankAccFinalAmount - double
+
+			"|" + 																				//12: executedOnAtm - boolean
+			"|" +																				//13: AtmID - String
+			"|" +																				//14: executedOnPurchase - boolean
+
+			inputBalTransfer.getTransactionTargetBankAccID()									//15: transactionTargetAccID - String 
+		);
+
+		try
+		{
+			//Open buffered writer to dbBalanceChanges
+			File dbFile = new File(MV_Global.dbBalanceChanges);
+			bw = new BufferedWriter(new FileWriter(dbFile.getAbsoluteFile(), true));
+			bw.write(newEntry);
+		}
+		catch(Exception e)
+		{
+			return -1;
+		}
+		finally
+		{
+			bw.close();
+		}
+		return 0;
+	}
 }

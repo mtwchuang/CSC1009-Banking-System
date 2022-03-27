@@ -221,8 +221,39 @@ public class DA_BankAccount {
 	{
 		//Variable initialization
 		BufferedWriter bw = null; BufferedReader br = null;
-		String[] dataSegments;
-		String line;
+		String[] dataSegments = {};
+		String line, bankAccSubHolderIDs, bankAccTransactOnlyIDs;
+
+		try{
+			br = new BufferedReader(new FileReader(MV_Global.dbBankAccounts));
+			//Skip first line; header line
+			br.readLine();
+
+			line = br.readLine();
+			while(line != null){
+				dataSegments = line.split("\\|");
+				if(dataSegments[4].equals(inputBankAcc.getBankAccID())){
+					break;
+				}
+				line = br.readLine();
+			}
+		}
+		finally{
+			br.close();
+		}
+
+		try{
+			bankAccSubHolderIDs = dataSegments[12];
+		}
+		catch(Exception e){
+			bankAccSubHolderIDs = "";
+		}
+		try{
+			bankAccTransactOnlyIDs = dataSegments[13];
+		}
+		catch(Exception e){
+			bankAccTransactOnlyIDs = "";
+		}
 		
 		//Prepare inputBankAcc entry string
 		String updatedEntry = (
@@ -240,8 +271,8 @@ public class DA_BankAccount {
 			inputBankAcc.getBankAccTransactionLimit() + "|" +	//10: bankAccTransactionLimit - double
 			inputBankAcc.getBankAccMinBalance() + "|" +			//11: bankAccMinBalance - double
 
-			"" + "|" + 											//12: bankAccSubHolderIDs - String[]
-			""													//13: bankAccTransactOnlyIDs - String[]
+			bankAccSubHolderIDs + "|" + 						//12: bankAccSubHolderIDs - String[]
+			bankAccTransactOnlyIDs								//13: bankAccTransactOnlyIDs - String[]
 		);
 
 		try
@@ -288,6 +319,8 @@ public class DA_BankAccount {
 	}
 
 	//DEL Methods
+	//	Feature not required in solution
 
 	//PUT Methods (Create)
+	//	Feature not required in solution
 }

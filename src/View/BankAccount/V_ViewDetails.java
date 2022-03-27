@@ -81,14 +81,17 @@ public class V_ViewDetails {
                 switch(userInputInt){
                     case 0: //Change Settings
                         changeBankAccSettings();
-                        V_ViewManager.clearPage();
                         break;
                     case 1: //Return
+                        System.out.println("Returing...");
+                        MV_Global.waitSuccess();
                         return false;
                     default: //Logout
                         return true;
                 }
             }
+
+            V_ViewManager.clearPage();
         }
     }
 

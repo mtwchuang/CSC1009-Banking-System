@@ -115,7 +115,10 @@ public class V_Withdraw {
 	private boolean confirmSurcharge(double transactionAmt){
         MV_BankAccount bankAccMV = new MV_BankAccount();
 		double surchargePercentage = MV_Global.getOverseasTransactionCharge();
-        double surchargeAmt = (Math.round((transactionAmt * MV_Global.getOverseasTransactionCharge()) * 100))/100;
+        double surchargeAmt = transactionAmt * MV_Global.getOverseasTransactionCharge();
+        surchargeAmt = Math.round(surchargeAmt * 100);
+        surchargeAmt /= 100;
+
         String confirmation = "", currency = "";
 
         //Acquire locality currency symbol

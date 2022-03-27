@@ -11,7 +11,9 @@ import Model.BankAccount.M_IBankAccount;
 import Model.BankAccount.M_ICorporateBankAcc;
 import Model.BankAccount.M_IJointBankAcc;
 import Model.Transaction.M_BalanceChange;
+import Model.Transaction.M_BalanceTransfer;
 import Model.Transaction.M_IBalanceChange;
+import Model.Transaction.M_IBalanceTransfer;
 import ModelView.MV_Global;
 
 public class MV_BankAccount{
@@ -203,11 +205,13 @@ public class MV_BankAccount{
 
             //Convert withdrawAmt to base currency, SGD
             double baseCurrencyWithdrawAmt = convertToBaseCurrency(withdrawAmt, atmLocality);
-            baseCurrencyWithdrawAmt = (Math.round(baseCurrencyWithdrawAmt * 100))/100;
+            baseCurrencyWithdrawAmt = Math.round(baseCurrencyWithdrawAmt * 100);
+            baseCurrencyWithdrawAmt /= 100;
 
             //Convert withdrawAmt from base currency, SGD, to bank acc currency
             double bankCurrencyWithdrawAmt = convertFromBaseCurrency(baseCurrencyWithdrawAmt, bankLocality);
-            bankCurrencyWithdrawAmt = (Math.round(bankCurrencyWithdrawAmt * 100))/100;
+            bankCurrencyWithdrawAmt = Math.round(bankCurrencyWithdrawAmt * 100);
+            bankCurrencyWithdrawAmt /= 100;
 
             //Forecast bank balance after withdrawal
             //  Split into multi steps due to chances of data loss
@@ -272,6 +276,8 @@ public class MV_BankAccount{
         else{
             //Forecast bank balance after withdrawal
             bankAccFutureBal = bankAccBal - withdrawAmt;
+            bankAccFutureBal = Math.round((bankAccFutureBal) * 100);
+            bankAccFutureBal /= 100;
 
             //If bank acc does not have sufficient balance
             if(bankAccFutureBal < 0) return new int[]{1};
@@ -282,7 +288,7 @@ public class MV_BankAccount{
 
             //Withdrawal transaction record
             withdrawalTransaction.setTransactionAmount(withdrawAmt);
-            withdrawalTransaction.setTransactionBankAccFinalAmount((Math.round((bankAccFutureBal) * 100))/100);
+            withdrawalTransaction.setTransactionBankAccFinalAmount(bankAccFutureBal);
             withdrawalTransactionFinal = (M_IBalanceChange) withdrawalTransaction;
 
             //Bank account updated record
@@ -316,7 +322,7 @@ public class MV_BankAccount{
     }
 
     //Logic functions for V_Deposit
-    //  Deposit action
+    //  Deposit action1
     public short VDeposit_deposit(double depositAmt) throws Exception{
         //Status code:
         //  0: Ok
@@ -343,7 +349,7 @@ public class MV_BankAccount{
         bankAccFutureBal = Math.round(bankAccFutureBal * 100);
         bankAccFutureBal /= 100;
 
-        //Set trasaction desciption
+        //Set trasaction description
         transactionDesc = 
             "Deposit of " + currency + " " + String.format("%.2f", depositAmt) +
             " at ATM " + MV_Global.getAtmID();
@@ -396,9 +402,164 @@ public class MV_BankAccount{
     public short VTransfer_transfer(double transferAmt, String destBankAccID, boolean surchargeAcknowledgement) throws Exception{
         //Status codes:
         //  0 - Ok
+        //  1 - Requires surcharge acknowledgement
+        //  2 - Insufficient funds for surcharge
+        //  3 - Transaction error
 
+        //If destination bank is overseas and no surcharge acknowledgement
+        if(isBankAccOverseas(destBankAccID) && !surchargeAcknowledgement) return 1;
 
+        //Variable initialization
+        M_IBankAccount sendingBankAcc, receivingBankAcc;
+        DA_Transaction transactionDA = new DA_Transaction();
+        DA_BankAccount bankAccountDA = new DA_BankAccount();
+        M_BalanceChange surchargeTransaction;
+        M_BalanceTransfer transferSending, transferReceiving;
+        M_IBalanceChange surchargeTransactionFinal = null;
+        M_IBalanceTransfer transferSendingFinal, transferReceivingFinal;
+        String 
+            transactionDesc, 
+            sendingBankCurrency, 
+            receivingBankLocality;
+        double 
+            surchargeAmt = 0, transferAmtConverted = 0,
+            sendingBankInitialBal, sendingBankFinalBal, 
+            receivingBankInitialBal, receivingBankFinalBal, 
+            sendingBankFinalWithSurchargeBal = 0;
+        short daStatusCode;
+        boolean overseasTransfer = isBankAccOverseas(destBankAccID);
 
+        //Acquire sending party bank account data
+        sendingBankAcc = MV_Global.sessionBankAcc;
+
+        //Acquire receiving party bank account data
+        receivingBankAcc = bankAccountDA.dBankAccounts_GetByID(destBankAccID);
+        receivingBankLocality = getBankAccCountryCode(destBankAccID);
+
+        //Check currencies
+        sendingBankCurrency = getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
+
+        //Prepare transaction description
+        transactionDesc = 
+            "Transfer " + sendingBankCurrency + " " + String.format("%.2f", transferAmt) + " from " +
+            MV_Global.sessionBankAcc.getBankAccID() + " to " + destBankAccID + " @ ATM " + MV_Global.getAtmID();
+
+        //Calculate surcharge
+        if(overseasTransfer) {
+            surchargeAmt = transferAmt * MV_Global.getOverseasTransactionCharge();
+            surchargeAmt = Math.round(surchargeAmt * 100);
+            surchargeAmt /= 100;
+        }
+        
+        //Process and calculate receiving bank account's record
+        receivingBankInitialBal = receivingBankAcc.getBankAccBalance();
+        if(overseasTransfer){
+            //Convert withdrawAmt to base currency, SGD
+            transferAmtConverted = convertToBaseCurrency(transferAmt, MV_Global.getAtmID().split("-")[1]);
+            transferAmtConverted = Math.round(transferAmtConverted * 100);
+            transferAmtConverted /= 100;
+
+            //Convert withdrawAmt from base currency, SGD, to receiving bank acc currency
+            transferAmtConverted = convertFromBaseCurrency(transferAmtConverted, receivingBankLocality);
+            transferAmtConverted = Math.round(transferAmtConverted * 100);
+            transferAmtConverted /= 100;
+
+            receivingBankFinalBal = receivingBankInitialBal + transferAmtConverted;
+        }
+        else receivingBankFinalBal = receivingBankInitialBal + transferAmt;
+
+        //Process and calculate sending bank account's record
+        sendingBankInitialBal = MV_Global.sessionBankAcc.getBankAccBalance();
+        sendingBankFinalBal = sendingBankInitialBal - transferAmt;
+        if(overseasTransfer) sendingBankFinalWithSurchargeBal = sendingBankFinalBal - surchargeAmt;
+
+        //Ensure 2dp accuracy
+        sendingBankFinalBal = Math.round(sendingBankFinalBal * 100);
+        sendingBankFinalBal /= 100;
+        receivingBankFinalBal = Math.round(receivingBankFinalBal * 100);
+        receivingBankFinalBal /= 100;
+        if(overseasTransfer) {
+            sendingBankFinalWithSurchargeBal = Math.round(sendingBankFinalWithSurchargeBal * 100);
+            sendingBankFinalWithSurchargeBal /= 100;
+        }
+
+        //Transfer Sending transaction record
+        transferSending = new M_BalanceTransfer(true);
+        transferSending.setTransactionType((short) 3);
+        transferSending.setTransactionDescription(transactionDesc);
+        transferSending.setTransactionOverseas(overseasTransfer);
+        transferSending.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+        transferSending.setTransactionBankAccInitialAmount(sendingBankInitialBal);
+        transferSending.setTransactionAmount(transferAmt);
+        transferSending.setTransactionBankAccFinalAmount(receivingBankFinalBal);
+        transferSending.setTransactionTargetBankAccID(destBankAccID);
+        transferSendingFinal = (M_IBalanceTransfer) transferSending;
+
+        //Transfer Receiving transaction record
+        transferReceiving = new M_BalanceTransfer(true);
+        transferReceiving.setTransactionType((short) 4);
+        transferReceiving.setTransactionDescription(transactionDesc);
+        transferReceiving.setTransactionOverseas(overseasTransfer);
+        transferReceiving.setTransactionSrcBankAccID(destBankAccID);
+        transferReceiving.setTransactionBankAccInitialAmount(receivingBankInitialBal);
+        transferReceiving.setTransactionAmount((overseasTransfer) ? transferAmtConverted :transferAmt);
+        transferReceiving.setTransactionBankAccFinalAmount(receivingBankFinalBal);
+        transferReceiving.setTransactionTargetBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+        transferReceivingFinal = (M_IBalanceTransfer) transferReceiving;
+
+        //Surcharge transaction record
+        if(overseasTransfer){
+            surchargeTransaction = new M_BalanceChange(true);
+            surchargeTransaction.setTransactionType((short) 2);
+            surchargeTransaction.setTransactionAmount(surchargeAmt);
+            surchargeTransaction.setTransactionDescription(transactionDesc + " [Surcharge]");
+            surchargeTransaction.setTransactionOverseas(true);
+            surchargeTransaction.setTransactionSrcBankAccID(MV_Global.sessionBankAcc.getBankAccID());
+            surchargeTransaction.setTransactionBankAccInitialAmount(receivingBankFinalBal);
+            surchargeTransaction.setTransactionBankAccFinalAmount(sendingBankFinalWithSurchargeBal);
+            surchargeTransaction.executeOnAtm();
+            surchargeTransaction.setExecutedOnPurchase(false);
+            surchargeTransactionFinal = (M_IBalanceChange) surchargeTransaction;
+        }
+
+        //Sending party's bank account record
+        sendingBankAcc.setBankAccBalance((overseasTransfer) ? sendingBankFinalWithSurchargeBal: sendingBankFinalBal);
+        sendingBankAcc.updated();
+
+        //Receiving party's bank account record
+        receivingBankAcc.setBankAccBalance(receivingBankFinalBal);
+        receivingBankAcc.updated();
+
+        //Post records to Data Access layer
+        try{
+            //Create transfer sending transaction
+            daStatusCode = transactionDA.dbBalanceTransfer_Create(transferSendingFinal);
+            if(daStatusCode != 0) throw new Exception();
+
+            //Create transfer receiving transaction record
+            daStatusCode = transactionDA.dbBalanceTransfer_Create(transferReceivingFinal);
+            if(daStatusCode != 0) throw new Exception();
+
+            //Create surcharge transaction record
+            if(overseasTransfer){
+                daStatusCode = transactionDA.dbBalanceChange_Create(surchargeTransactionFinal);
+                if(daStatusCode != 0) throw new Exception();
+            }
+
+            //Update receiving bank's record
+            daStatusCode = bankAccountDA.dBankAccounts_Update(receivingBankAcc);
+            if(daStatusCode != 0) throw new Exception();
+
+            //Update sending bank's record
+            daStatusCode = bankAccountDA.dBankAccounts_Update(sendingBankAcc);
+            if(daStatusCode != 0) throw new Exception();
+
+            //Update current session's bank account
+            MV_Global.sessionBankAcc = sendingBankAcc;
+        }
+        catch(Exception e){
+            return 3;
+        }
         return 0;
     }
     //  Check and fetch destination bank account details
@@ -407,6 +568,7 @@ public class MV_BankAccount{
         M_IBankAccount returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
         
         if(returnSearch == null) return "**INVALID**";
+        else if(destBankAccID.equals(MV_Global.sessionBankAcc.getBankAccID())) return "**INVALID**";
         else return returnSearch.getBankAccID();
     }
     //  Check if bank account is capable of trasacting transferAmt
@@ -423,7 +585,7 @@ public class MV_BankAccount{
             forecastedBal = bankAccBal - transferAmt;
 
         if(forecastedBal < 0) return 1;
-        else if(transferAmt > bankAccTxnLimit) return 2;
+        else if(bankAccTxnLimit != 0 && transferAmt > bankAccTxnLimit) return 2;
         else if(forecastedBal < bankAccMinBal) return 3;
         else return 0;
     }
