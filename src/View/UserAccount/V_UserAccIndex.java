@@ -23,7 +23,7 @@ public class V_UserAccIndex
 				" " + MV_Global.sessionUserAcc.getUserFirstName() + "\n");
 			
 			//Print available actions
-			System.out.println("Opt\tBank Account\t\tDescription");
+			System.out.println("Opt\tBank Account\t\t\tDescription");
 			System.out.println("---------------------------------------------------------------------");
 			for(int i = 0; i < bankAccs.length; i++){
 				String[] subData = bankAccs[i].split(("\\|"));

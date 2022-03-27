@@ -15,6 +15,7 @@ import Model.Transaction.M_IBalanceChange;
 import Model.Transaction.M_IBalanceTransfer;
 import Model.Transaction.M_ITransaction;
 import ModelView.MV_Global;
+import ModelView.BankAccount.MV_BankAccount;
 
 public class MV_Transaction 
 {
@@ -28,8 +29,9 @@ public class MV_Transaction
         DateTimeFormatter dTimeFormatter;
         Instant instant;
         String[] timeZones;
-        String atmTimeZone, atmLocality, dtFormatSettings, currency,
-            tnxTimeStr, tnxTypeStr, txnAmtStr;
+        String atmTimeZone, dtFormatSettings, 
+            atmLocality, bankAccLocality,
+            currency, tnxTimeStr, tnxTypeStr, txnAmtStr;
         double txnAmt;
         long txnCreatedTime;
         int firstRecord, lastRecord, pagingSize, maxPage, i;
@@ -52,8 +54,9 @@ public class MV_Transaction
         dTimeFormatter = DateTimeFormatter.ofPattern(dtFormatSettings);
 
         //Acquire curreny symbol from settings
+        bankAccLocality = new MV_BankAccount().getBankAccCountryCode();
         currency = Arrays.stream(MV_Global.getCurrencySymbols())
-            .filter(x -> x.split("-")[0].equals(atmLocality))
+            .filter(x -> x.split("-")[0].equals(bankAccLocality))
             .findFirst()
             .get()
             .split("-")[1];
@@ -83,6 +86,8 @@ public class MV_Transaction
 
         //Acquire max page number
         maxPage = MV_Global.cacheTxn.length / pagingSize;
+        if(maxPage == 0) maxPage = 1;
+        if(page == 0) page = 1;
         if((MV_Global.cacheTxn.length % pagingSize) > 0) maxPage++;
         if(page > maxPage) page = maxPage;
 
@@ -142,7 +147,10 @@ public class MV_Transaction
             //Append transaction description to current entry
             displayTxnTransformed[i] += displayTxn.get(i).getTransactionDescription();
         }
-        displayTxnTransformed[displayTxn.size()] = "Showing page " + page + " of " + maxPage + "|" + page;
+        
+        displayTxnTransformed[displayTxn.size()] = 
+            "Showing " + ((lastRecord - firstRecord) + 1) + " of " + MV_Global.cacheTxn.length + " records" +
+            "\nPage " + page + " of " + maxPage + "|" + page;
 
         return displayTxnTransformed;
     }

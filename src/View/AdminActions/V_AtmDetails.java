@@ -10,7 +10,7 @@ public class V_AtmDetails {
         if(MV_Global.sessionUserAcc.getUserType() <= 3) return;
 
         MV_BankAccount bankAccMV = new MV_BankAccount();
-        String currency = bankAccMV.getCurrencySymbol(bankAccMV.getBankAccCountryCode(MV_Global.sessionBankAcc.getBankAccID()));
+        String currency = bankAccMV.getCurrencySymbol(MV_Global.getAtmID().split("-")[1]);
         String adminInput; int adminInputInt = 0, targetDenom = 0;
         int[][] carryingNotes = MV_Global.availableNotes;
         double totalCarryAmt = 0;

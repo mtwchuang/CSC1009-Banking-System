@@ -38,7 +38,7 @@ public class DA_Transaction
 	//Fields for M_BalanceChange
 	//     12: executedOnAtm - boolean
 	//     13: AtmID - String
-	//     14: executedOnPurchase - boolean 
+	//     14: executedOnPurchase - boolean
 	//Fields for M_BalanceTransfer
 	//     15: transactionTargetBankAccID - String 
 	

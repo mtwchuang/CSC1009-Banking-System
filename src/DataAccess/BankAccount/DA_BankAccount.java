@@ -225,7 +225,7 @@ public class DA_BankAccount {
 		String line;
 		
 		//Prepare inputBankAcc entry string
-		String updatedEntry = ("\n" + 
+		String updatedEntry = (
 			inputBankAcc.getCreatedBy() + "|" +					//00: createdBy - String
 			inputBankAcc.getCreatedAt() + "|" +					//01: createdAt - long
 			inputBankAcc.getUpdatedBy() + "|" +					//02: updatedBy - String
@@ -259,9 +259,10 @@ public class DA_BankAccount {
 			line = br.readLine();
 			while(line != null){
 				dataSegments = line.split("\\|");
+
 				//Ignore record with the same bank acc id of inputBankAcc
 				if(!dataSegments[4].equals(inputBankAcc.getBankAccID())){
-					bw.write(line);
+					bw.write(line + "\n");
 				}
 				line = br.readLine();
 			}

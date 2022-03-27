@@ -7,11 +7,9 @@ import java.util.List;
 import DataAccess.DA_Settings;
 import DataAccess.BankAccount.DA_BankAccount;
 import DataAccess.Transaction.DA_Transaction;
-import Model.BankAccount.M_CorporateBankAcc;
 import Model.BankAccount.M_IBankAccount;
 import Model.BankAccount.M_ICorporateBankAcc;
 import Model.BankAccount.M_IJointBankAcc;
-import Model.BankAccount.M_JointBankAcc;
 import Model.Transaction.M_BalanceChange;
 import Model.Transaction.M_IBalanceChange;
 import ModelView.MV_Global;
@@ -44,39 +42,71 @@ public class MV_BankAccount{
     //  Dynamic acquisition of bank acc actions
     public String[] VBankAccIndex_getBankAccActions() throws Exception{
 		//Variable declaration
-        DA_Settings settings = new DA_Settings();
-        List<String> actions = new ArrayList<String>();
-        boolean owner = false;
+        DA_Settings settingsDA = new DA_Settings();
+        DA_BankAccount bankAccDA = new DA_BankAccount();
+        M_IJointBankAcc jacc = null;
+        M_ICorporateBankAcc cacc = null;
 
-        //Get withdraw options
-        switch(MV_Global.getAtmID().split("-")[1]){
-            case "02": //Japan
-                actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccWithdrawOptJP")));
-                break;
-            case "03": //US
-                actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccWithdrawOptUS")));
-                break;
-            default: //SG
-                actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccWithdrawOptSG")));
-                break;
+        List<String> actions = new ArrayList<String>();
+        boolean owner = false, transactOnly = false;
+
+        //Acquire special class bank account data
+        switch(MV_Global.sessionBankAcc.getBankAccType()){
+            case 1:
+                jacc = bankAccDA.dBankAccounts_GetByIDJoint(MV_Global.sessionBankAcc.getBankAccID());
+            case 2: //Corporate account
+                cacc = bankAccDA.dBankAccounts_GetByIDCorporate(MV_Global.sessionBankAcc.getBankAccID());
+            default: //Normal account & Joint account
+            break;
         }
 
-        //Get user action options
-        actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccActions")));
+        //Transaction only check
+        switch(MV_Global.sessionBankAcc.getBankAccType()){
+            case 2: //Corporate account
+                String[] transactionOnyIDs = cacc.getBankAccTransactOnlyIDs();
+                for(String ID: transactionOnyIDs){
+                    if(ID.equals(MV_Global.sessionUserAcc.getUserID())){
+                        transactOnly = true;
+                        break;
+                    }
+                }
+                break;
+            default: //Normal account & Joint account
+            break;
+        }
 
-        //Get deposit action; unavailable if bank account is overseas
-        if(!isBankAccOverseas()) actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccDeposit")));
+        //Get withdrawal options
+        if(!transactOnly){
+            //Get withdraw options
+            switch(MV_Global.getAtmID().split("-")[1]){
+                case "02": //Japan
+                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptJP")));
+                    break;
+                case "03": //US
+                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptUS")));
+                    break;
+                default: //SG
+                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptSG")));
+                    break;
+            }
+        }
+        
+        //Get user action options
+        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccActions")));
+
+        //Get actions only available for local access
+        //  - Deposit
+        //  - Transfer
+        if(!isBankAccOverseas()) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccLocalOnlyActions")));
 
         //Get bank account owner action options
         switch(MV_Global.sessionBankAcc.getBankAccType()){
             case 1: //Joint account
-                M_IJointBankAcc jacc = new M_JointBankAcc(); //Yet to implement data access layer function
                 if(jacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID()) ||
                 jacc.getBankAccSubHolderID().equals(MV_Global.sessionUserAcc.getUserID()))
                     owner = true;
                 break;
             case 2: //Corporate account
-                M_ICorporateBankAcc cacc = new M_CorporateBankAcc(); //Yet to implement data access layer function
                 if(cacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID())) owner = true;
                 else{
                     for(String subHolder: cacc.getBankAccSubHolderIDs()){
@@ -92,11 +122,11 @@ public class MV_BankAccount{
                 owner = true;
             break;
         }
-        if(owner) actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccOwnerActions")));
+        if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccOwnerActions")));
 
         //Admin actions
-        if(MV_Global.sessionUserAcc.getUserType() > 3) 
-            if(owner) actions.addAll(Arrays.asList(settings.dbSettings_GetByKey("BankAccAdminActions")));
+        if(MV_Global.sessionUserAcc.getUserType() > 3)
+            if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccAdminActions")));
 
         String[] temp = new String[actions.size()];
         for(int i = 0; i < actions.size(); i++)
@@ -359,6 +389,43 @@ public class MV_BankAccount{
             MV_Global.availableNotes[i][1] += notes[i];
     
         return 0;
+    }
+
+    //Logic functions for V_Transfer
+    // Transfer action
+    public short VTransfer_transfer(double transferAmt, String destBankAccID, boolean surchargeAcknowledgement) throws Exception{
+        //Status codes:
+        //  0 - Ok
+
+
+
+        return 0;
+    }
+    //  Check and fetch destination bank account details
+    public String VTransfer_checkDestBankAcc(String destBankAccID) throws Exception{
+        DA_BankAccount bankAccDA = new DA_BankAccount();
+        M_IBankAccount returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
+        
+        if(returnSearch == null) return "**INVALID**";
+        else return returnSearch.getBankAccID();
+    }
+    //  Check if bank account is capable of trasacting transferAmt
+    public short VTransfer_checkBankCapable(double transferAmt) throws Exception{
+        //Status codes:
+        //  0 - Ok
+        //  1 - Not enough balance
+        //  2 - Transaction limit triggered
+        //  3 - Minimum balance triggered
+        double 
+            bankAccBal = MV_Global.sessionBankAcc.getBankAccBalance(),
+            bankAccTxnLimit = MV_Global.sessionBankAcc.getBankAccTransactionLimit(),
+            bankAccMinBal = MV_Global.sessionBankAcc.getBankAccMinBalance(),
+            forecastedBal = bankAccBal - transferAmt;
+
+        if(forecastedBal < 0) return 1;
+        else if(transferAmt > bankAccTxnLimit) return 2;
+        else if(forecastedBal < bankAccMinBal) return 3;
+        else return 0;
     }
 
     //Logic functions for V_ChangeBal

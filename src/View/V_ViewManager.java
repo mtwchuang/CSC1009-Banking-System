@@ -30,6 +30,9 @@ public class V_ViewManager{
                 case "deposit": //Deposit page
                     new View.BankAccount.V_Deposit().run();
                     return false;
+                case "transfer": //Transfer page
+                    new View.BankAccount.V_Transfer().run();
+                    return false;
 
                 //Admin Function Pages
                 case "admin-atmdetails":

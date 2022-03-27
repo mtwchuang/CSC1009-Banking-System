@@ -3,12 +3,12 @@ PagingSize|20
 DateFormat|dd/MM/yyyy HH:mm:ss
 //
 //Bank Architecture Settings
-BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020201-Japan,Tokyo,Fushimi|020202-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
+BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020202-Japan,Tokyo,Fushimi|020203-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
 BankCountry|01-Singapore|02-Japan|03-US_NewYork
 TimeZone|01-Asia/Singapore|02-Asia/Tokyo|03-America/New_York
 //
 //ATM Settings
-AtmID|4206969-01
+AtmID|4206969-02
 AtmNotesQty|100|100|100|100|100|100|100
 //
 //Overseas Transaction Settings
@@ -22,10 +22,10 @@ NotesDenominationJP|1000|2000|5000|10000
 NotesDenominationUS|1|2|5|10|20|50|100
 //
 //Bank Account Actions
-BankAccWithdrawOptSG|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100
-BankAccWithdrawOptJP|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000
-BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100
-BankAccActions|b131-Withdraw Other Amounts|b133-View Transactions|b134-Transfer Balance
-BankAccDeposit|b132-Deposit Balance
+BankAccWithdrawOptSG|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100|b131-Withdraw Other Amounts
+BankAccWithdrawOptJP|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000|b131-Withdraw Other Amounts
+BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100|b131-Withdraw Other Amounts
+BankAccActions|b133-View Transactions
+BankAccLocalOnlyActions|b132-Deposit Balance|b134-Transfer Balance
 BankAccOwnerActions|c961-View Account Details
 BankAccAdminActions|z420-[ADMIN] Change Balance|z421-[ADMIN] View ATM Details|z422-[ADMIN] Transfer to Michael McDoesn'tExist [Local]|z423-[ADMIN] Transfer to Michael McDoesn'tExist [Overseas]|z312-[ADMIN] Terminate Program
