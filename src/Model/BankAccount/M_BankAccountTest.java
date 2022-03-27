@@ -1,9 +1,9 @@
 package Model.BankAccount;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
-
 import org.junit.Test;
 
+// unit testing for getter and setter methods in M_BankAccount
 public class M_BankAccountTest 
 {
     @Test
