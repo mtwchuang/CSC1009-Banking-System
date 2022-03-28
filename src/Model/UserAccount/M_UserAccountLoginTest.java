@@ -7,6 +7,7 @@ import org.junit.Test;
 // unit testing for M_UserAccountLoginTest
 public class M_UserAccountLoginTest 
 {
+    //test on setUserPassword to getUserPassword, new byte[] {1,2} = new byte[] {1,2}
     @Test
     public void testGetterSetterUserPassword()
     {
