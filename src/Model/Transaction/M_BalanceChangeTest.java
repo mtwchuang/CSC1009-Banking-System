@@ -3,7 +3,7 @@ package Model.Transaction;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.Test;
 
-public class M_BalanaceChangeTest {
+public class M_BalanceChangeTest {
     //test on setExecutedOnAtm to isExecutedOnAtm, outcome is true = true
     @Test
     public void testExecutedOnAtm(){
