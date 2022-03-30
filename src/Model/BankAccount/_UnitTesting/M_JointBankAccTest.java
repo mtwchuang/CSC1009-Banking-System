@@ -1,7 +1,9 @@
-package Model.BankAccount;
+package Model.BankAccount._UnitTesting;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.jupiter.api.Test;
+
+import Model.BankAccount.M_JointBankAcc;
 
 // Unit testing for methods in M_JointBankAcc
 public class M_JointBankAccTest 

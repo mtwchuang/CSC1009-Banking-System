@@ -10,8 +10,8 @@ import DataAccess.UserAccount.DA_UserAccount;
 
 public class MV_UserAccount {
 
-    //Logic functions for V_Login
-	//	Login function
+    //View Layer Access Functions
+    //	V_Login: Logic for login function
 	public short VLogin_checkAcc(String userName, String userPassword) throws Exception{
 		//Status csodes:
 		//  0: Ok
@@ -46,9 +46,7 @@ public class MV_UserAccount {
 		//Successful login, return status code 0
 		return 0;
 	}
-	
-	//Logic fucmtions for V_UserAccIndex
-	//	Change password function
+	//	V_UserAccIndex: Logic for changing of password function
 	public short VUserAccIndex_changePassword(String userPassword) throws Exception{
 		//Status codes:
 		//	0: Ok
@@ -76,7 +74,8 @@ public class MV_UserAccount {
 		return 0;
 	}
 
-	//Double layered hashing
+    //Internal Functions
+	//	Logic for hashing password
 	private byte[] passwordHashing(String userPassword)
 	{
 		byte[] hashedPassword = null;

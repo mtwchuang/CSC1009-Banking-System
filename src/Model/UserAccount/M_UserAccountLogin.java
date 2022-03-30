@@ -2,6 +2,11 @@ package Model.UserAccount;
 
 import java.io.Serializable;
 
+/* Model:
+M_UserAccountLogin [Serializable StandAlone]
+    00: userPassword - byte[]
+*/
+
 public class M_UserAccountLogin implements Serializable{
     private byte[] userPassword;
 

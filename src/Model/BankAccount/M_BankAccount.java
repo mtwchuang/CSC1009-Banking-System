@@ -7,6 +7,27 @@ import java.util.UUID;
 
 import ModelView.MV_Global;
 
+/* Model:
+M_BankAccount [Parent]
+	00: createdBy - String
+	01: createdAt - long
+	02: updatedBy - String
+	03: updatedAt - long
+	04: bankAccID - String
+	05: bankAccHolderID - String
+	06: bankAccType - short
+		Case 00: Normal bank acc
+		Case 01: Joint bank acc
+		Case 02: Corperate bank acc
+	07: bankAccDescription - String
+	08: bankAccStatus - short
+		Case 00: Normal
+		Case 01: Closed
+	09: bankAccBalance - double
+	10: bankAccTransactionLimit - double
+	11: bankAccMinBalance - double
+*/
+
 public class M_BankAccount implements M_IBankAccount{
 	private String createdBy;
 	private long createdAt;

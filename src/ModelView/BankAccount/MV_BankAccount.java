@@ -17,8 +17,8 @@ import Model.Transaction.M_IBalanceTransfer;
 import ModelView.MV_Global;
 
 public class MV_BankAccount{
-    //Logic functions for V_UserAccIndex
-    //  Dynamic acquisition of user bank accs
+    //View Layer Access Functions
+    //  V_UserAccIndexDynamic: Acquisition of user bank accs
     public String[] VUserAccIndex_getUserBankAccs() throws Exception{
         //Authentication; A user must be logged on to access this function
 		if(MV_Global.sessionUserAcc == null) throw new Exception("No user logged in");
@@ -39,9 +39,7 @@ public class MV_BankAccount{
         }
         return returnValue.toArray(new String[returnValue.size()]);
     }
-    
-    //Logic functions for V_BankAccIndex
-    //  Dynamic acquisition of bank acc actions
+    //  V_BankAccIndex: Dynamic acquisition of bank acc actions
     public String[] VBankAccIndex_getBankAccActions() throws Exception{
 		//Variable declaration
         DA_Settings settingsDA = new DA_Settings();
@@ -136,9 +134,7 @@ public class MV_BankAccount{
     
         return temp;
     }
-    
-    //Logic functions for V_Withdraw
-    //  Withdraw action
+    //  V_Withdraw: Logic for withdraw action
     public int[] VWithdraw_withdraw(double withdrawAmt) throws Exception{
         //Return data:
         //  [0]: Status code
@@ -320,9 +316,7 @@ public class MV_BankAccount{
         returnVal[0] = 0;
         return returnVal;
     }
-
-    //Logic functions for V_Deposit
-    //  Deposit action1
+    //  V_Deposit: Logic for deposit action
     public short VDeposit_deposit(double depositAmt) throws Exception{
         //Status code:
         //  0: Ok
@@ -396,9 +390,7 @@ public class MV_BankAccount{
     
         return 0;
     }
-
-    //Logic functions for V_Transfer
-    // Transfer action
+    //  V_Transfer: Logic for transfer action
     public short VTransfer_transfer(double transferAmt, String destBankAccID, boolean surchargeAcknowledgement) throws Exception{
         //Status codes:
         //  0 - Ok
@@ -562,7 +554,7 @@ public class MV_BankAccount{
         }
         return 0;
     }
-    //  Check and fetch destination bank account details
+    //  V_Transfer: Logic to heck and fetch destination bank account details
     public String VTransfer_checkDestBankAcc(String destBankAccID) throws Exception{
         DA_BankAccount bankAccDA = new DA_BankAccount();
         M_IBankAccount returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
@@ -571,7 +563,7 @@ public class MV_BankAccount{
         else if(destBankAccID.equals(MV_Global.sessionBankAcc.getBankAccID())) return "**INVALID**";
         else return returnSearch.getBankAccID();
     }
-    //  Check if bank account is capable of trasacting transferAmt
+    //  V_Transfer: Logic to check if bank account is capable of trasacting transferAmt
     public short VTransfer_checkBankCapable(double transferAmt) throws Exception{
         //Status codes:
         //  0 - Ok
@@ -589,9 +581,34 @@ public class MV_BankAccount{
         else if(forecastedBal < bankAccMinBal) return 3;
         else return 0;
     }
+    //  V_ViewDetails: Logic to allow user to change bank acc settings
+    public short VViewDetails_updateBankAcc(String desc, double txnLimit, double minBal) throws Exception{
+        short status = 0;
+        DA_BankAccount bankAccDA = new DA_BankAccount();
 
-    //Logic functions for V_ChangeBal
-    //  [ADMIN] Change balance
+        //Bank account updated record
+        M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
+        currentBankAcc.setBankAccDescription(desc);
+        currentBankAcc.setBankAccTransactionLimit(txnLimit);
+        currentBankAcc.setBankAccMinBalance(minBal);
+
+        //Put new transactions to Data Access layer
+        try{
+            //Update bank acc record
+            status = bankAccDA.dBankAccounts_Update(currentBankAcc);
+        }
+        catch(Exception e){
+            return -2;
+        }
+
+        //Set session bank acc to updated values
+        if(status == 0) MV_Global.sessionBankAcc = currentBankAcc;
+
+        return status;
+    }
+
+    //[ADMIN] View Layer Access Functions
+    //  V_ChangeBal: Logic for balance change
     public short VChangeBal_changeBal(double inputAmt) throws Exception{
         //Authorization; Lvl Admin
         if(MV_Global.sessionUserAcc.getUserType() <= 3) return -1;
@@ -618,34 +635,8 @@ public class MV_BankAccount{
         return 0;
     }
 
-    //Logic functions for V_ViewDetails
-    //  User custom change for bank acc settings
-    public short VViewDetails_updateBankAcc(String desc, double txnLimit, double minBal) throws Exception{
-        short status = 0;
-        DA_BankAccount bankAccDA = new DA_BankAccount();
-
-        //Bank account updated record
-        M_IBankAccount currentBankAcc = MV_Global.sessionBankAcc;
-        currentBankAcc.setBankAccDescription(desc);
-        currentBankAcc.setBankAccTransactionLimit(txnLimit);
-        currentBankAcc.setBankAccMinBalance(minBal);
-
-        //Put new transactions to Data Access layer
-        try{
-            //Update bank acc record
-            status = bankAccDA.dBankAccounts_Update(currentBankAcc);
-        }
-        catch(Exception e){
-            return -2;
-        }
-
-        //Set session bank acc to updated values
-        if(status == 0) MV_Global.sessionBankAcc = currentBankAcc;
-
-        return status;
-    }
-
-    //Load bankAccID into session
+    //Inter-Package Functions
+    //  Load bankAccID into session
     public void loadBankAccIntoSession(String bankAccID) throws Exception{
         //Authentication; A user must be logged on to access this function
 		if(MV_Global.sessionUserAcc == null) throw new Exception("No session user found.");
@@ -662,7 +653,6 @@ public class MV_BankAccount{
         //Load bank account into session
         MV_Global.sessionBankAcc = targetAcc;
     }
-
     //Acquire bank acc country code
     public String getBankAccCountryCode(){
         return getBankAccCountryCode("%SESSION%");
@@ -672,8 +662,7 @@ public class MV_BankAccount{
             return MV_Global.sessionBankAcc.getBankAccID().split("-")[1].substring(0,2);
         return bankAccID.split("-")[1].substring(0,2);
     }
-
-    //Check if bank acc and ATM are in different countries
+    //  Check if bank acc and ATM are in different countries
     public boolean isBankAccOverseas(){
         return isBankAccOverseas("%SESSION%");
     }
@@ -682,8 +671,7 @@ public class MV_BankAccount{
             return !getBankAccCountryCode().equals(MV_Global.getAtmID().split("-")[1]);
         return !getBankAccCountryCode(bankAccID).equals(MV_Global.getAtmID().split("-")[1]);
     }
-
-    //Get currency symbol
+    //  Get currency symbol
     public String getCurrencySymbol(String currencyCode){
         for(String datum: MV_Global.getCurrencySymbols()){
             if(currencyCode.equals(datum.split("-")[0])){
@@ -692,8 +680,7 @@ public class MV_BankAccount{
         }
         return "";
     }
-
-    //Get locality country name
+    //  Get locality country name
     public String getLocalityName(String countryCode){
         DA_Settings settings = new DA_Settings();
         try{
@@ -710,31 +697,7 @@ public class MV_BankAccount{
         }
         return "--";
     }
-
-    //Convert to base currency; X to SGD
-    public double convertToBaseCurrency(double targetAmt, String countryCode) throws Exception{
-        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
-
-        for(String conversionRate: conversionRates){
-            if(conversionRate.split("-")[0].equals(countryCode)){
-                return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
-            }
-        }
-        return 0;
-    }
-    //Convert from base currency; SGD to X
-    public double convertFromBaseCurrency(double targetAmt, String countryCode) throws Exception{
-        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
-
-        for(String conversionRate: conversionRates){
-            if(conversionRate.split("-")[0].equals(countryCode)){
-                return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
-            }
-        }
-        return 0;
-    }
-
-    //Calculate number of denomination notes for specified amount
+    //  Calculate number of denomination notes for specified amount
     public int[] denominationCal(double amount, boolean getNearestNotes){
         //noteCount1 remainingAmt1
         //  Checks if ATM has enough notes to meet withdraw amount
@@ -777,5 +740,29 @@ public class MV_BankAccount{
         else if(remainingAmt1 != 0 && !getNearestNotes) Arrays.fill(notes1, -2);
         
         return (getNearestNotes)? notes2: notes1;
+    }
+
+    //Intra-Package Functions
+    //  Convert to base currency; X to SGD
+    protected double convertToBaseCurrency(double targetAmt, String countryCode) throws Exception{
+        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+
+        for(String conversionRate: conversionRates){
+            if(conversionRate.split("-")[0].equals(countryCode)){
+                return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
+            }
+        }
+        return 0;
+    }
+    //  Convert from base currency; SGD to X
+    protected double convertFromBaseCurrency(double targetAmt, String countryCode) throws Exception{
+        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+
+        for(String conversionRate: conversionRates){
+            if(conversionRate.split("-")[0].equals(countryCode)){
+                return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
+            }
+        }
+        return 0;
     }
 }

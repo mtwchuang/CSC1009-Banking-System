@@ -10,39 +10,37 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
-import Model.BankAccount.M_BankAccount;
-import Model.BankAccount.M_CorporateBankAcc;
-import Model.BankAccount.M_IBankAccount;
-import Model.BankAccount.M_ICorporateBankAcc;
-import Model.BankAccount.M_IJointBankAcc;
-import Model.BankAccount.M_JointBankAcc;
+import Model.BankAccount.*;
 import ModelView.MV_Global;
 
 public class DA_BankAccount {
-	//M_BankAccount
-	//	00: createdBy - String
-	//	01: createdAt - long
-	//	02: updatedBy - String
-	//	03: updatedAt - long
-	//	04: bankAccID - String
-	//	05: bankAccHolderID - String
-	//	06: bankAccType - short
-	//		Case 00: Normal bank acc
-	//		Case 01: Joint bank acc
-	//		Case 02: Corperate bank acc
-	//	07: bankAccDescription - String
-	//	08: bankAccStatus - short
-	//		Case 00: Normal
-	//		Case 01: Closed
-	//	09: bankAccBalance - double
-	//	10: bankAccTransactionLimit - double
-	//	11: bankAccMinBalance - double
-	//M_JointBankAcc
-	//	12: bankAccSubHolderIDs - String[]
-	//M_CorperateBankAcc
-	//	13: bankAccTransactOnlyIDs - String[]
+	/* Model:
+	M_BankAccount [Parent]
+		00: createdBy - String
+		01: createdAt - long
+		02: updatedBy - String
+		03: updatedAt - long
+		04: bankAccID - String
+		05: bankAccHolderID - String
+		06: bankAccType - short
+			Case 00: Normal bank acc
+			Case 01: Joint bank acc
+			Case 02: Corperate bank acc
+		07: bankAccDescription - String
+		08: bankAccStatus - short
+			Case 00: Normal
+			Case 01: Closed
+		09: bankAccBalance - double
+		10: bankAccTransactionLimit - double
+		11: bankAccMinBalance - double
+	M_JointBankAcc [Extends Parent]
+		12: bankAccSubHolderIDs - String[]
+	M_CorperateBankAcc [Extends Parent]
+		13: bankAccTransactOnlyIDs - String[]
+	*/
 
-	//GET Methods
+	//GET Methods for M_IBankAccount
+	//	Main GET function for acquiring 1 record of M_IBankAccount
 	private M_IBankAccount dBankAccounts_GetOne(int inputCase, String input) throws Exception{
 		String line;
 		String[] dataSegments;
@@ -95,10 +93,13 @@ public class DA_BankAccount {
 		}
 		return targetAccount;
 	}
+	//	GET function for acquiring 1 record of M_IBankAccount by 04: bankAccID
 	public M_IBankAccount dBankAccounts_GetByID(String bankAccID) throws Exception{
 		return dBankAccounts_GetOne(1, bankAccID);
 	}
-
+	
+	//GET Methods for M_ICorporateBankAcc
+	//	Main GET function for acquiring 1 record of M_ICorporateBankAcc
 	private M_ICorporateBankAcc dBankAccounts_GetOneCorporate(int inputCase, String input) throws Exception{
 		String line;
 		String[] dataSegments;
@@ -154,10 +155,13 @@ public class DA_BankAccount {
 		}
 		return targetAccount;
 	}
+	//	GET function for acquiring 1 record of M_ICorporateBankAcc by 04: bankAccID
 	public M_ICorporateBankAcc dBankAccounts_GetByIDCorporate(String bankAccID) throws Exception{
 		return dBankAccounts_GetOneCorporate(1, bankAccID);
 	}
-
+	
+	//GET Methods for M_IJointBankAcc
+	//	Main GET function for acquiring 1 record of M_IJointBankAcc
 	private M_IJointBankAcc dBankAccounts_GetOneJoint(int inputCase, String input) throws Exception{
 		String line;
 		String[] dataSegments;
@@ -212,12 +216,13 @@ public class DA_BankAccount {
 		}
 		return targetAccount;
 	}
+	//	GET function for acquiring 1 record of M_IJointBankAcc by 04: bankAccID
 	public M_IJointBankAcc dBankAccounts_GetByIDJoint(String bankAccID) throws Exception{
 		return dBankAccounts_GetOneJoint(1, bankAccID);
 	}
 
 	//POST Methods (Update)
-	// Update function for M_IBankAccount
+	// POST function for updating 1 record of M_IBankAccount
 	public short dBankAccounts_Update(M_IBankAccount inputBankAcc) throws Exception
 	{
 		//Variable initialization
@@ -318,7 +323,7 @@ public class DA_BankAccount {
 
 		return 0;
 	}
-	// Update function for M_IJointBankAcc
+	// POST function for updating 1 record of M_IJointBankAcc
 	public short dBankAccounts_Update(M_IJointBankAcc inputJointAcc) throws Exception
 	{
 		//Variable initialization
@@ -383,6 +388,7 @@ public class DA_BankAccount {
 		}
 		return 0;
 	}
+	// POST function for updating 1 record of M_ICorporateBankAcc
 	public short dBankAccounts_Update(M_ICorporateBankAcc inputCorporateAcc) throws Exception
 	{
 		//Variable initialization
@@ -447,11 +453,10 @@ public class DA_BankAccount {
 		}
 		return 0;
 	}
-
-
-	//DEL Methods
-	//	Feature not required in solution
-
+	
 	//PUT Methods (Create)
-	//	Feature not required in solution
+	//	Feature not required in solution; not implemented
+	
+	//DEL Methods
+	//	Feature not required in solution; not implemented
 }

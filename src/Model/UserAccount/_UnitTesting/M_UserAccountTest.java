@@ -1,8 +1,10 @@
-package Model.UserAccount;
+package Model.UserAccount._UnitTesting;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import org.junit.Test;
+
+import Model.UserAccount.M_UserAccount;
 
 public class M_UserAccountTest {
     @Test

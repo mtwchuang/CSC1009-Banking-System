@@ -5,19 +5,36 @@ import java.time.ZoneId;
 import java.time.ZonedDateTime;
 import java.util.UUID;
 import ModelView.MV_Global;
-/*	Changes logs
-	Removed fields and relevant methods for executedBy and executedAt
-	Added set methods for fields related to audit checking, transactionID and 
-	transactionExecuted
+
+/* Model:
+M_Transaction [Abstract Parent]
+	00: createdBy - String
+	01: createdAt - long
+	02: updatedBy - String
+	03: updatedAt - long
+	04: transactionID - String
+		Case 00: Withdrawals
+		Case 01: Deposits
+		Case 02: Charges/Purchases
+		Case 03: Transfer Sending
+		Case 04: Transfer Receiving
+	05: transactionType - short
+	06: transactionAmount - double
+	07: transactionDescription - String
+	08: transactionOverseas - boolean
+	09: transactionBankAccID - String
+	10: transactionBankAccInitialAmount - double
+	11: transactionBankAccFinalAmount - double
 */
+
 public abstract class M_Transaction implements M_ITransaction
 {
-	// fields for audit checking
+	//Fields for meta-data
 	private String createdBy;
 	private long createdAt;
 	private String updatedBy;
 	private long updatedAt;
-	// fields for general transaction
+	//Fields for general data
 	private String transactionID;
 	private short transactionType;
 	private double transactionAmount;
@@ -27,6 +44,7 @@ public abstract class M_Transaction implements M_ITransaction
 	private double transactionBankAccInitialAmount;
 	private double transactionBankAccFinalAmount;
 
+	//Constructor
 	public M_Transaction(boolean creatingNew)
 	{
 		// asks if this is a new transaction that is being created
@@ -46,7 +64,7 @@ public abstract class M_Transaction implements M_ITransaction
 		}
 	}
 
-	//getters methods for audits
+	//Getters for meta-data fields
 	public String getCreatedBy(){
 		return createdBy;
 	}
@@ -59,7 +77,7 @@ public abstract class M_Transaction implements M_ITransaction
 	public long getUpdatedAt(){
 		return updatedAt;
 	}
-	// getter methods for transaction details
+	//Getters for general data fields
 	public String getTransactionID(){
 		return transactionID;
 	}
@@ -85,7 +103,7 @@ public abstract class M_Transaction implements M_ITransaction
 		return transactionBankAccFinalAmount;
 	}
 
-	// setter methods for audits
+	//Setters for meta-data fields
 	public void setCreatedBy(String createdBy){
         this.createdBy = createdBy;
     }
@@ -98,9 +116,8 @@ public abstract class M_Transaction implements M_ITransaction
     public void setUpdatedAt(long updatedAt){
         this.updatedAt = updatedAt;
     }
-	// setter methods for transaction details
-	public void setTransactionID(String transactionID)
-	{
+	//Setters for general data fields
+	public void setTransactionID(String transactionID){
 		this.transactionID = transactionID;
 	}
 	public void setTransactionType(short transactionType){
@@ -125,6 +142,7 @@ public abstract class M_Transaction implements M_ITransaction
 		this.transactionBankAccFinalAmount = transactionBankAccFinalAmount;
 	}
 
+	//Function to meta-data fields
 	public void updated(){
 		LocalDateTime now = LocalDateTime.now();
 		ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());

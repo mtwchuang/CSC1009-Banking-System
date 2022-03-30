@@ -18,70 +18,27 @@ import Model.UserAccount.M_UserAccountLogin;
 import ModelView.MV_Global;
 
 public class DA_UserAccount {
-	//M_UserAccount
-	//  00: createdBy - String
-	//  01: createdAt - long
-	//  02: updatedBy - String
-	//  03: updatedAt - long
-	
-	//  04: userID - String
-	//  05: userType - short
-	//  06: userName - String
-	//  07: userFirstName - String
-	//  08: userLastName - String
-	//  09: userAddress - String
-	//  10: userPhoneNumber - long
-	//	11: userBankAccounts - Collection
+	/* Model:
+	M_UserAccount [StandAlone]
+		00: createdBy - String
+		01: createdAt - long
+		02: updatedBy - String
+		03: updatedAt - long
+		04: userID - String
+		05: userType - short
+			Case 01: Normal User
+			Case 02: Staff User [Feature not required in solution; not implemented]
+			Default: Admin
+		06: userName - String
+		07: userFirstName - String
+		08: userLastName - String
+		09: userAddress - String
+		10: userPhoneNumber - long
+		11: userBankAccounts - String[]
+	*/
 
-	public M_IUserAccount[] dbUserAccounts_GetAll() throws Exception{
-		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
-
-		String line;
-		String[] dataSegments;
-		BufferedReader br = null;
-		try{
-			br = new BufferedReader(new FileReader(MV_Global.dbUserAccounts));
-			//Skip first line; header line
-			br.readLine();
-
-			line = br.readLine();
-			while(line != null){
-				dataSegments = line.split("\\|");
-
-				//Data mapping
-				M_UserAccount currentAccount = new M_UserAccount();
-
-				currentAccount.setCreatedBy(dataSegments[0]);
-				currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
-				currentAccount.setUpdatedBy(dataSegments[2]);
-				currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
-				
-				currentAccount.setUserID(dataSegments[4]);
-				currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
-				currentAccount.setUserName(dataSegments[6]);
-				currentAccount.setUserFirstName(dataSegments[7]);
-				currentAccount.setUserLastName(dataSegments[8]);
-				currentAccount.setUserAddress(dataSegments[9]);
-				currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
-
-				currentAccount.setUserBankAccounts(dataSegments[11].split("&"));
-
-				currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
-
-				userAccounts.add((M_IUserAccount)currentAccount);
-			}
-			line = br.readLine();
-		}
-		finally{
-			br.close();
-		}
-		
-		M_IUserAccount[] userAccountsArr = new M_IUserAccount[userAccounts.size()];
-		for(int i = 0; i < userAccountsArr.length; i++)
-			userAccountsArr[i] = userAccounts.get(i);
-		return userAccountsArr;
-	}
-
+	//GET Methods for M_IUserAccount
+	//	Main GET function for acquiring 1 record of M_IUserAccount
 	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
 		String line;
 		String[] dataSegments;
@@ -141,13 +98,66 @@ public class DA_UserAccount {
 		}
 		return targetAccount;
 	}
+	//	GET function for acquiring 1 record of M_IUserAccount by 04: userID
 	public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws Exception{
 		return dbUserAccounts_GetOne(1, userID);
 	}
+	//	GET function for acquiring 1 record of M_IUserAccount by 06: userName
 	public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws Exception{
 		return dbUserAccounts_GetOne(2, userName);
 	}
+	//	GET function to acquire all records of M_IUserAccount
+	public M_IUserAccount[] dbUserAccounts_GetAll() throws Exception{
+		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
+		String line;
+		String[] dataSegments;
+		BufferedReader br = null;
+		try{
+			br = new BufferedReader(new FileReader(MV_Global.dbUserAccounts));
+			//Skip first line; header line
+			br.readLine();
+
+			line = br.readLine();
+			while(line != null){
+				dataSegments = line.split("\\|");
+
+				//Data mapping
+				M_UserAccount currentAccount = new M_UserAccount();
+
+				currentAccount.setCreatedBy(dataSegments[0]);
+				currentAccount.setCreatedAt(Long.parseLong(dataSegments[1]));
+				currentAccount.setUpdatedBy(dataSegments[2]);
+				currentAccount.setUpdatedAt(Long.parseLong(dataSegments[3]));
+				
+				currentAccount.setUserID(dataSegments[4]);
+				currentAccount.setUserAccType(Short.parseShort(dataSegments[5]));
+				currentAccount.setUserName(dataSegments[6]);
+				currentAccount.setUserFirstName(dataSegments[7]);
+				currentAccount.setUserLastName(dataSegments[8]);
+				currentAccount.setUserAddress(dataSegments[9]);
+				currentAccount.setUserPhoneNumber(Long.parseLong(dataSegments[10]));
+
+				currentAccount.setUserBankAccounts(dataSegments[11].split("&"));
+
+				currentAccount.setUserPassword(dbUserAccounts_GetUserPassword(dataSegments[4]));
+
+				userAccounts.add((M_IUserAccount)currentAccount);
+			}
+			line = br.readLine();
+		}
+		finally{
+			br.close();
+		}
+		
+		M_IUserAccount[] userAccountsArr = new M_IUserAccount[userAccounts.size()];
+		for(int i = 0; i < userAccountsArr.length; i++)
+			userAccountsArr[i] = userAccounts.get(i);
+		return userAccountsArr;
+	}
+
+	//GET Methods for M_UserAccountLogin
+	//	GET function for acquiring password of 1 record of M_UserAccountLogin
 	private byte[] dbUserAccounts_GetUserPassword(String userID) throws Exception{
 		byte[] password = null;
 
@@ -170,6 +180,12 @@ public class DA_UserAccount {
 		return password;
 	}
 
+	//POST Methods (Update) for M_IUserAccount
+	//	POST function for updating 1 record of M_IUserAccount
+	//NOTE TO SELF: IMPLEMENT THIS
+
+	//POST Methods (Update) for M_UserAccountLogin
+	//	POST function for updating 1 record of M_UserAccountLogin
 	public short dbUserAccounts_UpdateUserPassword(String password) throws Exception{
 		try{
 			byte[] hashedPassword;
@@ -192,4 +208,10 @@ public class DA_UserAccount {
 		}
 		return 0;
 	}
+
+	//PUT Methods (Create)
+	//	Feature not required in solution; not implemented
+	
+	//DEL Methods
+	//	Feature not required in solution; not implemented
 }

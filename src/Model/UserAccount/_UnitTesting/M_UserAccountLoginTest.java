@@ -1,8 +1,10 @@
-package Model.UserAccount;
+package Model.UserAccount._UnitTesting;
 
 import static org.junit.Assert.assertArrayEquals;
 
 import org.junit.Test;
+
+import Model.UserAccount.M_UserAccountLogin;
 
 // unit testing for M_UserAccountLoginTest
 public class M_UserAccountLoginTest 

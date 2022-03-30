@@ -9,12 +9,32 @@ import java.util.UUID;
 
 import ModelView.MV_Global;
 
+/* Model:
+M_UserAccount [StandAlone]
+    00: createdBy - String
+    01: createdAt - long
+    02: updatedBy - String
+    03: updatedAt - long
+    04: userID - String
+    05: userType - short
+        Case 01: Normal User
+        Case 02: Staff User [Feature not required in solution; not implemented]
+        Default: Admin
+    06: userName - String
+    07: userFirstName - String
+    08: userLastName - String
+    09: userAddress - String
+    10: userPhoneNumber - long
+    11: userBankAccounts - String[]
+*/
+
 public class M_UserAccount implements M_IUserAccount{
+	//Fields for meta-data
     private String createdBy;
     private long createdAt;
     private String updatedBy;
     private long updatedAt;
-
+	//Fields for general data
     private String userID;
     private short userType;
     private String userName;
@@ -23,9 +43,10 @@ public class M_UserAccount implements M_IUserAccount{
     private String userLastName;
     private String userAddress;
     private long userPhoneNumber;
-
+	//Fields for compound data
     private String[] userBankAccounts;
 
+	//Constructor
     public M_UserAccount(){
     }
     public M_UserAccount(boolean creatingNew){
@@ -41,6 +62,7 @@ public class M_UserAccount implements M_IUserAccount{
         }
     }
 
+	//Getters for meta-data fields
     public String getCreatedBy(){
         return createdBy;
     }
@@ -53,7 +75,7 @@ public class M_UserAccount implements M_IUserAccount{
     public long getUpdatedAt(){
         return updatedAt;
     }
-
+	//Getters for general data fields
     public String getUserID(){
         return userID;
     }
@@ -78,11 +100,12 @@ public class M_UserAccount implements M_IUserAccount{
     public long getUserPhoneNumber(){
         return userPhoneNumber;
     }
-    
+	//Getters for compound data fields
     public String[] getUserBankAccounts(){
         return this.userBankAccounts;
     }
 
+	//Setters for meta-data fields
     public void setCreatedBy(String createdBy){
         this.createdBy = createdBy;
     }
@@ -95,7 +118,7 @@ public class M_UserAccount implements M_IUserAccount{
     public void setUpdatedAt(long updatedAt){
         this.updatedAt = updatedAt;
     }
-
+	//Setters for general data fields
     public void setUserID(String userID){
         this.userID = userID;
     }
@@ -120,10 +143,12 @@ public class M_UserAccount implements M_IUserAccount{
     public void setUserPhoneNumber(long userPhoneNumber){
         this.userPhoneNumber = userPhoneNumber;
     }
+	//Setters for compound data fields
     public void setUserBankAccounts(String[] userBankAccounts){
         this.userBankAccounts = userBankAccounts;
     }
 
+	//Function to meta-data fields
     public void updated(){
         LocalDateTime now = LocalDateTime.now();
 		ZonedDateTime zonedDateTime = now.atZone(ZoneId.systemDefault());

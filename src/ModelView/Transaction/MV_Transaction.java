@@ -17,9 +17,9 @@ import Model.Transaction.M_ITransaction;
 import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
 
-public class MV_Transaction 
-{
-    //Acquire transaction data for V_TransactionIndex
+public class MV_Transaction{
+    //View Layer Access Functions
+    //  V_TransactionIndex: Acquisition of all transactions
     public String[] VTransactionIndex_getAllTxn(int cacheInstance, int page) throws Exception{
         //Variable initialization
         List<M_ITransaction> displayTxn = new ArrayList<M_ITransaction>();
@@ -155,6 +155,8 @@ public class MV_Transaction
         return displayTxnTransformed;
     }
 
+    //Internal Functions
+    //  Merge two transactions of different models
     private M_ITransaction[] mergeTxns(M_IBalanceChange[] balanceChanges, M_IBalanceTransfer[] balanceTransfers){
         M_ITransaction[] returnData = new M_ITransaction[balanceChanges.length + balanceTransfers.length];
 
