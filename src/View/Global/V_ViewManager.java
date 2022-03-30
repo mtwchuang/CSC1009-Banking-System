@@ -1,4 +1,4 @@
-package View;
+package View.Global;
 
 public class V_ViewManager{
     public static boolean redirect(String page, String... params){
@@ -47,7 +47,7 @@ public class V_ViewManager{
             }
         }
         catch(Exception e){
-            return new View.V_Error().run(e);
+            return new View.Global.V_Error().run(e);
         }
     }
 

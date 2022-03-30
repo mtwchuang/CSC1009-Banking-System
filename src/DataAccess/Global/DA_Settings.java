@@ -1,10 +1,11 @@
-package DataAccess;
+package DataAccess.Global;
 
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.util.Arrays;
 
-import ModelView.MV_Global;
+import Model.Global.M_DataAccessException;
+import ModelView.Global.MV_Global;
 
 public class DA_Settings{
     //Settings Record
@@ -15,7 +16,7 @@ public class DA_Settings{
 
 	//GET Methods
 	//	GET function for settings by 00: Key
-    public String[] dbSettings_GetByKey(String key) throws Exception{
+    public String[] dbSettings_GetByKey(String key) throws M_DataAccessException{
         String line;
         String[] dataSegments = null;
         BufferedReader br = null;
@@ -32,9 +33,17 @@ public class DA_Settings{
                 line = br.readLine();
             }
         }
+        catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
         finally{
-            br.close();
-        }
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
+		}
         return  Arrays.copyOfRange(dataSegments, 1, dataSegments.length);
     }
 

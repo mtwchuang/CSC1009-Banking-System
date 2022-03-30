@@ -1,6 +1,6 @@
 package Model.Transaction;
 
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 /* Model:
 M_Transaction [Abstract Parent]

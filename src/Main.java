@@ -1,5 +1,5 @@
-import ModelView.MV_Global;
-import View.V_ViewManager;
+import ModelView.Global.MV_Global;
+import View.Global.V_ViewManager;
 
 public class Main {
 	public static void main(String[] args){

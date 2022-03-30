@@ -1,4 +1,4 @@
-package View;
+package View.Global;
 
 public class V_Error {
     public boolean run(Exception e){

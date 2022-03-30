@@ -7,7 +7,7 @@ import java.util.Calendar;
 import java.util.TimeZone;
 import java.util.UUID;
 
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 /* Model:
 M_UserAccount [StandAlone]

@@ -1,6 +1,6 @@
 package View.Login;
 
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 public class V_Logout {
     public void run() throws Exception{

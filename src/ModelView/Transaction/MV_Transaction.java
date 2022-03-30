@@ -9,13 +9,13 @@ import java.util.Arrays;
 import java.util.Comparator;
 import java.util.List;
 
-import DataAccess.DA_Settings;
+import DataAccess.Global.DA_Settings;
 import DataAccess.Transaction.DA_Transaction;
 import Model.Transaction.M_IBalanceChange;
 import Model.Transaction.M_IBalanceTransfer;
 import Model.Transaction.M_ITransaction;
-import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
+import ModelView.Global.MV_Global;
 
 public class MV_Transaction{
     //View Layer Access Functions

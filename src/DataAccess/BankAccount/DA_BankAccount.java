@@ -11,7 +11,8 @@ import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
 
 import Model.BankAccount.*;
-import ModelView.MV_Global;
+import Model.Global.M_DataAccessException;
+import ModelView.Global.MV_Global;
 
 public class DA_BankAccount {
 	/* Model:
@@ -41,7 +42,7 @@ public class DA_BankAccount {
 
 	//GET Methods for M_IBankAccount
 	//	Main GET function for acquiring 1 record of M_IBankAccount
-	private M_IBankAccount dBankAccounts_GetOne(int inputCase, String input) throws Exception{
+	private M_IBankAccount dBankAccounts_GetOne(int inputCase, String input) throws M_DataAccessException{
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
@@ -88,19 +89,27 @@ public class DA_BankAccount {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetAccount;
 	}
 	//	GET function for acquiring 1 record of M_IBankAccount by 04: bankAccID
-	public M_IBankAccount dBankAccounts_GetByID(String bankAccID) throws Exception{
+	public M_IBankAccount dBankAccounts_GetByID(String bankAccID) throws M_DataAccessException{
 		return dBankAccounts_GetOne(1, bankAccID);
 	}
 	
 	//GET Methods for M_ICorporateBankAcc
 	//	Main GET function for acquiring 1 record of M_ICorporateBankAcc
-	private M_ICorporateBankAcc dBankAccounts_GetOneCorporate(int inputCase, String input) throws Exception{
+	private M_ICorporateBankAcc dBankAccounts_GetOneCorporate(int inputCase, String input) throws M_DataAccessException{
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
@@ -150,19 +159,27 @@ public class DA_BankAccount {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetAccount;
 	}
 	//	GET function for acquiring 1 record of M_ICorporateBankAcc by 04: bankAccID
-	public M_ICorporateBankAcc dBankAccounts_GetByIDCorporate(String bankAccID) throws Exception{
+	public M_ICorporateBankAcc dBankAccounts_GetByIDCorporate(String bankAccID) throws M_DataAccessException{
 		return dBankAccounts_GetOneCorporate(1, bankAccID);
 	}
 	
 	//GET Methods for M_IJointBankAcc
 	//	Main GET function for acquiring 1 record of M_IJointBankAcc
-	private M_IJointBankAcc dBankAccounts_GetOneJoint(int inputCase, String input) throws Exception{
+	private M_IJointBankAcc dBankAccounts_GetOneJoint(int inputCase, String input) throws M_DataAccessException{
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
@@ -211,19 +228,27 @@ public class DA_BankAccount {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetAccount;
 	}
 	//	GET function for acquiring 1 record of M_IJointBankAcc by 04: bankAccID
-	public M_IJointBankAcc dBankAccounts_GetByIDJoint(String bankAccID) throws Exception{
+	public M_IJointBankAcc dBankAccounts_GetByIDJoint(String bankAccID) throws M_DataAccessException{
 		return dBankAccounts_GetOneJoint(1, bankAccID);
 	}
 
 	//POST Methods (Update)
 	// POST function for updating 1 record of M_IBankAccount
-	public short dBankAccounts_Update(M_IBankAccount inputBankAcc) throws Exception
+	public short dBankAccounts_Update(M_IBankAccount inputBankAcc) throws M_DataAccessException
 	{
 		//Variable initialization
 		BufferedWriter bw = null; BufferedReader br = null;
@@ -244,8 +269,16 @@ public class DA_BankAccount {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 
 		try{
@@ -307,24 +340,33 @@ public class DA_BankAccount {
 			//Write in updated entry of inputJointAcc
 			bw.write(updatedEntry);
 		}
-		catch(Exception e)
-		{
+		catch(Exception e){
 			return -1;
 		}
-		finally
-		{
-			bw.close();
-			br.close();
+		finally{
+			try{
+				bw.close();
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 
 		Path from = Paths.get(MV_Global.dbTemp); //convert from File to Path
 		Path to = Paths.get(MV_Global.dbBankAccounts); //convert from String to Path
-		Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+
+		try{
+			Files.copy(from, to, StandardCopyOption.REPLACE_EXISTING);
+		}
+		catch(Exception e){
+			return -1;
+		}
 
 		return 0;
 	}
 	// POST function for updating 1 record of M_IJointBankAcc
-	public short dBankAccounts_Update(M_IJointBankAcc inputJointAcc) throws Exception
+	public short dBankAccounts_Update(M_IJointBankAcc inputJointAcc) throws M_DataAccessException
 	{
 		//Variable initialization
 		BufferedWriter bw = null; BufferedReader br = null;
@@ -383,13 +425,18 @@ public class DA_BankAccount {
 		}
 		finally
 		{
-			bw.close();
-			br.close();
+			try{
+				bw.close();
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}
 	// POST function for updating 1 record of M_ICorporateBankAcc
-	public short dBankAccounts_Update(M_ICorporateBankAcc inputCorporateAcc) throws Exception
+	public short dBankAccounts_Update(M_ICorporateBankAcc inputCorporateAcc) throws M_DataAccessException
 	{
 		//Variable initialization
 		BufferedWriter bw = null; BufferedReader br = null;
@@ -448,8 +495,13 @@ public class DA_BankAccount {
 		}
 		finally
 		{
-			bw.close();
-			br.close();
+			try{
+				bw.close();
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}

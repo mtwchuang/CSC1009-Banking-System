@@ -5,7 +5,7 @@ import java.security.MessageDigest;
 import java.util.Arrays;
 
 import Model.UserAccount.M_IUserAccount;
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 import DataAccess.UserAccount.DA_UserAccount;
 
 public class MV_UserAccount {

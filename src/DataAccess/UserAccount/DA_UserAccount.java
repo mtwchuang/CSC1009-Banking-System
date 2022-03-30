@@ -12,10 +12,11 @@ import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Global.M_DataAccessException;
 import Model.UserAccount.M_IUserAccount;
 import Model.UserAccount.M_UserAccount;
 import Model.UserAccount.M_UserAccountLogin;
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 public class DA_UserAccount {
 	/* Model:
@@ -39,7 +40,7 @@ public class DA_UserAccount {
 
 	//GET Methods for M_IUserAccount
 	//	Main GET function for acquiring 1 record of M_IUserAccount
-	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws Exception{
+	private M_IUserAccount dbUserAccounts_GetOne(int inputCase, String input) throws M_DataAccessException{
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
@@ -93,21 +94,29 @@ public class DA_UserAccount {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetAccount;
 	}
 	//	GET function for acquiring 1 record of M_IUserAccount by 04: userID
-	public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws Exception{
+	public M_IUserAccount dbUserAccounts_GetByUserID(String userID) throws M_DataAccessException{
 		return dbUserAccounts_GetOne(1, userID);
 	}
 	//	GET function for acquiring 1 record of M_IUserAccount by 06: userName
-	public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws Exception{
+	public M_IUserAccount dbUserAccounts_GetByUserName(String userName) throws M_DataAccessException{
 		return dbUserAccounts_GetOne(2, userName);
 	}
 	//	GET function to acquire all records of M_IUserAccount
-	public M_IUserAccount[] dbUserAccounts_GetAll() throws Exception{
+	public M_IUserAccount[] dbUserAccounts_GetAll() throws M_DataAccessException{
 		List<M_IUserAccount> userAccounts = new ArrayList<M_IUserAccount>();
 
 		String line;
@@ -146,8 +155,16 @@ public class DA_UserAccount {
 			}
 			line = br.readLine();
 		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
 		finally{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		
 		M_IUserAccount[] userAccountsArr = new M_IUserAccount[userAccounts.size()];
@@ -158,22 +175,34 @@ public class DA_UserAccount {
 
 	//GET Methods for M_UserAccountLogin
 	//	GET function for acquiring password of 1 record of M_UserAccountLogin
-	private byte[] dbUserAccounts_GetUserPassword(String userID) throws Exception{
+	private byte[] dbUserAccounts_GetUserPassword(String userID) throws M_DataAccessException{
 		byte[] password = null;
+		ObjectInputStream objectInputStream = null;
 
 		File dbAccountLogins = new File(MV_Global.dbUserAccountLogins);
 		String[] accountLogins = dbAccountLogins.list();
 
 		for(String loginEntry : accountLogins){
 			if(loginEntry.equals(userID)){
-				FileInputStream fileInputStream = new FileInputStream(
+				try{
+					FileInputStream fileInputStream = new FileInputStream(
 					MV_Global.dbUserAccountLogins + "\\" + loginEntry);
-				ObjectInputStream objectInputStream = new ObjectInputStream(
-					fileInputStream);
-					
-				M_UserAccountLogin targetLogin = (M_UserAccountLogin) objectInputStream.readObject();
-				password = targetLogin.getUserPassword();
-				objectInputStream.close();
+					objectInputStream = new ObjectInputStream(fileInputStream);
+						
+					M_UserAccountLogin targetLogin = (M_UserAccountLogin) objectInputStream.readObject();
+					password = targetLogin.getUserPassword();
+				}
+				catch(Exception e){
+					throw new M_DataAccessException(e);
+				}
+				finally{
+					try{
+						objectInputStream.close();
+					}
+					catch(Exception e){
+						throw new M_DataAccessException(e);
+					}
+				}
 				break;
 			}
 		}
@@ -186,7 +215,7 @@ public class DA_UserAccount {
 
 	//POST Methods (Update) for M_UserAccountLogin
 	//	POST function for updating 1 record of M_UserAccountLogin
-	public short dbUserAccounts_UpdateUserPassword(String password) throws Exception{
+	public short dbUserAccounts_UpdateUserPassword(String password){
 		try{
 			byte[] hashedPassword;
 			MessageDigest sha265Hash = MessageDigest.getInstance("SHA-256");
