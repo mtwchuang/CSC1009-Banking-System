@@ -1,7 +1,7 @@
 package View.BankAccount;
 
-import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
+import ModelView.Global.MV_Global;
 
 public class V_Deposit {
     public void run() throws Exception{

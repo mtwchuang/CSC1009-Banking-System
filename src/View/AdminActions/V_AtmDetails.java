@@ -1,8 +1,8 @@
 package View.AdminActions;
 
-import ModelView.MV_Global;
 import ModelView.BankAccount.MV_BankAccount;
-import View.V_ViewManager;
+import ModelView.Global.MV_Global;
+import View.Global.V_ViewManager;
 
 public class V_AtmDetails {
     public void run() throws Exception{

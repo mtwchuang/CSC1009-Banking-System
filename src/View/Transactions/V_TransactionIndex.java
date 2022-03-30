@@ -1,8 +1,8 @@
 package View.Transactions;
 
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 import ModelView.Transaction.MV_Transaction;
-import View.V_ViewManager;
+import View.Global.V_ViewManager;
 
 public class V_TransactionIndex{
     public void run() throws Exception{

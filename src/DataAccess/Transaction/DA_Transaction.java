@@ -9,8 +9,9 @@ import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.List;
 
+import Model.Global.M_DataAccessException;
 import Model.Transaction.*;
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 public class DA_Transaction {
 	/* Model:
@@ -42,16 +43,14 @@ public class DA_Transaction {
 	
 	//GET Methods for M_IBalanceTransfer
 	//	Main GET function for acquiring 1 record of M_IBalanceTransfer
-	private M_IBalanceTransfer dbBalanceTransfer_GetOne(int inputcase, String input) throws Exception
-	{
+	private M_IBalanceTransfer dbBalanceTransfer_GetOne(int inputcase, String input) throws M_DataAccessException{
 		// instantiate buffer reader, data line, dataSegments, targetBalanceTransfer
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
 		M_IBalanceTransfer targetBalanceTransfer = null;
 		boolean targetFound = false;
-		try
-		{
+		try{
 			br = new BufferedReader(new FileReader(MV_Global.dbBalanceTransfers));
 			//Skip first line; header line
 			br.readLine();
@@ -103,55 +102,52 @@ public class DA_Transaction {
 				line = br.readLine();
 			}
 		}
-		finally
-		{
-			br.close();
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
+        finally{
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetBalanceTransfer;
 	}
 	//	GET function for acquiring 1 record of M_IBalanceTransfer by 04:transactionID
-	public M_IBalanceTransfer dbBalanceTransfer_GetByTxnID(String transID) throws Exception
-	{
+	public M_IBalanceTransfer dbBalanceTransfer_GetByTxnID(String transID) throws M_DataAccessException{
 		return dbBalanceTransfer_GetOne(4, transID);
 	}
 	//	Main GET function for acquiring multiple records of M_IBalanceTransfer
-	private M_IBalanceTransfer[] dbBalanceTransfer_GetMultiple(int inputcase, String input) throws Exception
-	{
+	private M_IBalanceTransfer[] dbBalanceTransfer_GetMultiple(int inputcase, String input) throws M_DataAccessException{
 		// create a temporary collection list that can stores values dynamically
 		List<M_IBalanceTransfer> tempBalanceTransfers = new ArrayList<M_IBalanceTransfer>();
 		String line;
 		String[] dataSegments;
 		boolean matchFound = false;
 		BufferedReader br = null;
-		try
-		{
+		try{
 			br = new BufferedReader(new FileReader(MV_Global.dbBalanceTransfers));
 			//Skip first line; header line
 			br.readLine();
 			line = br.readLine();
 			// transverse through balance transfer file while current line is not empty
-			while(line!=null)
-			{
+			while(line!=null){
 				// split into records based on delimiter
 				dataSegments = line.split("\\|");
 				// determine if match is found according to inputcase and sets matchFound accordinly
-				switch(inputcase)
-				{
+				switch(inputcase){
 					// search by createdBy
 					case(0):
-					{
 						matchFound = (dataSegments[0].equals(input));
 						break;
-					}
 					// search by bankid
 					case(9):
-					{
 						matchFound = (dataSegments[9].equals(input));
 						break;
-					}
 				}
-				if(matchFound)
-				{
+				if(matchFound){
 					// instantiate object in model layer, temporary object so parameter false
 					M_BalanceTransfer currentBalanceTransfer = new M_BalanceTransfer(false);
 					// call methods to insert data into object
@@ -177,11 +173,18 @@ public class DA_Transaction {
 					matchFound = false;
 				}
 				line = br.readLine();
-			}            
-		}   
-		finally
-		{
-			br.close();
+			}
+		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
+        finally{
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		// instantiate a balance change array 
 		M_IBalanceTransfer[] balanceTransfers = new M_IBalanceTransfer[tempBalanceTransfers.size()];
@@ -193,32 +196,29 @@ public class DA_Transaction {
 		return balanceTransfers;
 	}
 	//	GET function for acquiring multiple records of M_IBalanceTransfer by 00: createdBy
-	public M_IBalanceTransfer[] dbBalanceTransfer_GetByUserID(String userID) throws Exception
+	public M_IBalanceTransfer[] dbBalanceTransfer_GetByUserID(String userID) throws M_DataAccessException
 	{
 		return dbBalanceTransfer_GetMultiple(0, userID);
 	}
 	//	GET function for acquiring multiple records of M_IBalanceTransfer by 09: transactionBankAccID
-	public M_IBalanceTransfer[] dbBalanceTransfer_GetByBankID(String bankID) throws Exception
+	public M_IBalanceTransfer[] dbBalanceTransfer_GetByBankID(String bankID) throws M_DataAccessException
 	{
 		return dbBalanceTransfer_GetMultiple(9, bankID);
 	}    
 	//	GET function to acquire all records of M_IBalanceTransfer
-	public M_IBalanceTransfer[] dbBalanceTransfer_GetAll() throws Exception
-	{
+	public M_IBalanceTransfer[] dbBalanceTransfer_GetAll() throws M_DataAccessException{
 		// create a temporary collection list that can stores values dynamically
 		List<M_IBalanceTransfer> tempBalanceTransfers = new ArrayList<M_IBalanceTransfer>();
 		String line;
 		String[] dataSegments;
 		BufferedReader br = null;
-		try
-		{
+		try{
 			br = new BufferedReader(new FileReader(MV_Global.dbBalanceTransfers));
 			//Skip first line; header line
 			br.readLine();
 			line = br.readLine();
 			// transverse through balance transfer file while current line is not empty
-			while(line!=null)
-			{
+			while(line!=null){
 				// split into records based on delimiter
 				dataSegments = line.split("\\|");
 				// instantiate object in model layer, temporary object so parameter false
@@ -244,25 +244,30 @@ public class DA_Transaction {
 				// add current balance change record to arraylist tempBalanceTransfer
 				tempBalanceTransfers.add((M_IBalanceTransfer) currentBalanceTransfer);
 				line = br.readLine();
-			}            
-		}   
-		finally
-		{
-			br.close();
+			}
+		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
+        finally{
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		// instantiate a balance change array 
 		M_IBalanceTransfer[] balanceTransfers = new M_IBalanceTransfer[tempBalanceTransfers.size()];
 		// convert collections arraylist back into an array for M_IBalanceTransfer
 		for(int i = 0; i<tempBalanceTransfers.size(); i++)
-		{
 			balanceTransfers[i] = tempBalanceTransfers.get(i);
-		}
 		return balanceTransfers;
 	}
 
 	//GET Methods for M_IBalanceChange
 	//	Main GET function for acquiring 1 record of M_IBalanceChange
-	private M_IBalanceChange dbBalanceChange_GetOne(int inputcase, String input) throws Exception
+	private M_IBalanceChange dbBalanceChange_GetOne(int inputcase, String input) throws M_DataAccessException
 	{
 		// instantiate buffer reader, data line, dataSegments, targetBalanceChange
 		String line;
@@ -270,20 +275,17 @@ public class DA_Transaction {
 		BufferedReader br = null;
 		M_IBalanceChange targetBalanceChange = null;
 		boolean targetFound = false;
-		try
-		{
+		try{
 			br = new BufferedReader(new FileReader(MV_Global.dbBalanceChanges));
 			//Skip first line; header line
 			br.readLine();
 			line = br.readLine();
 			// transverse through balance change file while current line is not empty
-			while(line!=null)
-			{
+			while(line!=null){
 				// split into records based on delimiter
 				dataSegments = line.split("\\|");
 				// determine if target is found and sets targetFound accordingly
-				switch(inputcase)
-				{
+				switch(inputcase){
 					// search by transaction id
 					case(4):
 					{
@@ -293,8 +295,7 @@ public class DA_Transaction {
 					// any future search implementations if any
 				}
 				// if transaction id is found,
-				if(targetFound)
-				{
+				if(targetFound){
 					// instantiate object in model layer, temporary object so parameter false
 					M_BalanceChange currentBalanceChange = new M_BalanceChange(false);
 					// call methods to insert data into object
@@ -325,19 +326,26 @@ public class DA_Transaction {
 				line = br.readLine();
 			}
 		}
-		finally
-		{
-			br.close();
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
+        finally{
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return targetBalanceChange;
 	}
 	//	GET function for acquiring 1 record of M_IBalanceChange by 04:transactionID
-	public M_IBalanceChange dbBalanceChange_GetByTxnID(String transID) throws Exception
+	public M_IBalanceChange dbBalanceChange_GetByTxnID(String transID) throws M_DataAccessException
 	{
 		return dbBalanceChange_GetOne(4, transID);
 	}
 	//	Main GET function for acquiring multiple records of M_IBalanceChange
-	private M_IBalanceChange[] dbBalanceChange_GetMultiple(int inputcase, String input) throws Exception
+	private M_IBalanceChange[] dbBalanceChange_GetMultiple(int inputcase, String input) throws M_DataAccessException
 	{
 		// create a temporary collection list that can stores values dynamically
 		List<M_IBalanceChange> tempBalanceChanges = new ArrayList<M_IBalanceChange>();
@@ -401,11 +409,18 @@ public class DA_Transaction {
 					matchFound = false;
 				}
 				line = br.readLine();
-			}            
-		}   
-		finally
-		{
-			br.close();
+			}
+		}
+		catch(Exception e){
+			throw new M_DataAccessException(e);
+		}
+        finally{
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		// instantiate a balance change array 
 		M_IBalanceChange[] balanceChanges = new M_IBalanceChange[tempBalanceChanges.size()];
@@ -417,17 +432,17 @@ public class DA_Transaction {
 		return balanceChanges;
 	}
 	//	GET function for acquiring multiple records of M_IBalanceChange by 00: createdBy
-	public M_IBalanceChange[] dbBalanceChange_GetByUserID(String userID) throws Exception
+	public M_IBalanceChange[] dbBalanceChange_GetByUserID(String userID) throws M_DataAccessException
 	{
 		return dbBalanceChange_GetMultiple(0, userID);
 	}
 	//	GET function for acquiring multiple records of M_IBalanceChange by 09: transactionBankAccID
-	public M_IBalanceChange[] dbBalanceChange_GetByBankID(String bankID) throws Exception
+	public M_IBalanceChange[] dbBalanceChange_GetByBankID(String bankID) throws M_DataAccessException
 	{
 		return dbBalanceChange_GetMultiple(9, bankID);
 	}
 	//	GET function to acquire all records of M_IBalanceChange
-	public M_IBalanceChange[] dbBalanceChange_GetAll() throws Exception
+	public M_IBalanceChange[] dbBalanceChange_GetAll() throws M_DataAccessException
 	{
 		// create a temporary collection list that can stores values dynamically
 		List<M_IBalanceChange> tempBalanceChanges = new ArrayList<M_IBalanceChange>();
@@ -471,9 +486,18 @@ public class DA_Transaction {
 				line = br.readLine();
 			}
 		}
+		catch(Exception e)
+		{
+			throw new M_DataAccessException(e);
+		}
 		finally
 		{
-			br.close();
+			try{
+				br.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		// instantiate a balance change array 
 		M_IBalanceChange[] balanceChanges = new M_IBalanceChange[tempBalanceChanges.size()];
@@ -487,7 +511,7 @@ public class DA_Transaction {
 	
 	//POST Methods (Update)
 	//	POST function for updating 1 record of M_IBalanceChange
-	public short dbBalanceChange_Update(M_IBalanceChange inputBalChange) throws Exception
+	public short dbBalanceChange_Update(M_IBalanceChange inputBalChange) throws M_DataAccessException
 	{
 		String line = null;
 		BufferedReader br = null;
@@ -533,16 +557,20 @@ public class DA_Transaction {
 		{
 			return -1; // not sure if this is correct
 		}
-		finally
-		{
-			br.close();
-			writer.flush();
-			writer.close();
+		finally{
+			try{
+				br.close();
+				writer.flush();
+				writer.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}
 	//	POST function for updating 1 record of M_IBalanceTransfer
-	public short dbBalanceTransfer_Update(M_IBalanceTransfer inputBalTransfer) throws Exception
+	public short dbBalanceTransfer_Update(M_IBalanceTransfer inputBalTransfer) throws M_DataAccessException
 	{
 		String line = null;
 		BufferedReader br = null;
@@ -589,18 +617,22 @@ public class DA_Transaction {
 		{
 			return -1; // not sure if this is correct
 		}
-		finally
-		{
-			br.close();
-			writer.flush();
-			writer.close();
+        finally{
+			try{
+				br.close();
+				writer.flush();
+				writer.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}
 	
 	//PUT Methods (Create)
 	//	PUT function for creating 1 record of M_IBalanceChange
-	public short dbBalanceChange_Create(M_IBalanceChange inputBalChange) throws Exception
+	public short dbBalanceChange_Create(M_IBalanceChange inputBalChange) throws M_DataAccessException
 	{
 		//Variable initialization
 		BufferedWriter bw = null;
@@ -639,14 +671,18 @@ public class DA_Transaction {
 		{
 			return -1;
 		}
-		finally
-		{
-			bw.close();
+        finally{
+			try{
+				bw.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}
 	//	PUT function for creating 1 record of M_IBalanceTransfer
-	public short dbBalanceTransfer_Create(M_IBalanceTransfer inputBalTransfer) throws Exception
+	public short dbBalanceTransfer_Create(M_IBalanceTransfer inputBalTransfer) throws M_DataAccessException
 	{
 		//Variable initialization
 		BufferedWriter bw = null;
@@ -685,9 +721,13 @@ public class DA_Transaction {
 		{
 			return -1;
 		}
-		finally
-		{
-			bw.close();
+        finally{
+			try{
+				bw.close();
+			}
+			catch(Exception e){
+				throw new M_DataAccessException(e);
+			}
 		}
 		return 0;
 	}

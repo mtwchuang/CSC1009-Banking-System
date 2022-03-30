@@ -1,4 +1,4 @@
-package ModelView;
+package ModelView.Global;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
-import DataAccess.DA_Settings;
+import DataAccess.Global.DA_Settings;
 import Model.BankAccount.M_IBankAccount;
 import Model.Transaction.M_ITransaction;
 import Model.UserAccount.M_IUserAccount;
@@ -79,7 +79,7 @@ public class MV_Global {
         int currentDenomination, currentDenominationCount;
         String[] notesDenominations = null, notesCount = null;
         List<int[]> availableNotesList = new ArrayList<int[]>();
-		DA_Settings settingsDA = new DataAccess.DA_Settings();
+		DA_Settings settingsDA = new DataAccess.Global.DA_Settings();
 
         //Fetch settings from settings file
         try{

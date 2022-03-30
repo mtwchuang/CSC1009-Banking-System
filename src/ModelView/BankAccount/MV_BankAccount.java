@@ -4,24 +4,27 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import DataAccess.DA_Settings;
 import DataAccess.BankAccount.DA_BankAccount;
+import DataAccess.Global.DA_Settings;
 import DataAccess.Transaction.DA_Transaction;
 import Model.BankAccount.M_IBankAccount;
 import Model.BankAccount.M_ICorporateBankAcc;
 import Model.BankAccount.M_IJointBankAcc;
+import Model.Global.M_DataAccessException;
+import Model.Global.M_ModelViewException;
 import Model.Transaction.M_BalanceChange;
 import Model.Transaction.M_BalanceTransfer;
 import Model.Transaction.M_IBalanceChange;
 import Model.Transaction.M_IBalanceTransfer;
-import ModelView.MV_Global;
+import ModelView.Global.MV_Global;
 
 public class MV_BankAccount{
     //View Layer Access Functions
     //  V_UserAccIndexDynamic: Acquisition of user bank accs
-    public String[] VUserAccIndex_getUserBankAccs() throws Exception{
+    public String[] VUserAccIndex_getUserBankAccs() throws M_ModelViewException{
         //Authentication; A user must be logged on to access this function
-		if(MV_Global.sessionUserAcc == null) throw new Exception("No user logged in");
+        //  Throw fatal error is failed authentication
+		if(MV_Global.sessionUserAcc == null) throw new M_ModelViewException("No user logged in.", true);
 
 		//Variable declaration
         DA_BankAccount bankAccDA = new DA_BankAccount();
@@ -33,14 +36,20 @@ public class MV_BankAccount{
         userBankAccs = MV_Global.sessionUserAcc.getUserBankAccounts();
         
         //Get all bank accounts' ID and description
-        for(String userBankAcc: userBankAccs){
-            currentAcc = bankAccDA.dBankAccounts_GetByID(userBankAcc);
-            returnValue.add(currentAcc.getBankAccID() + "|" + currentAcc.getBankAccDescription());
+        try{
+            for(String userBankAcc: userBankAccs){
+                currentAcc = bankAccDA.dBankAccounts_GetByID(userBankAcc);
+                returnValue.add(currentAcc.getBankAccID() + "|" + currentAcc.getBankAccDescription());
+            }
+        }
+        catch(M_DataAccessException DAe){
+            //Suppress Data Access layer exception
+            throw new M_ModelViewException("Data Access layer unable to fetch data.");
         }
         return returnValue.toArray(new String[returnValue.size()]);
     }
     //  V_BankAccIndex: Dynamic acquisition of bank acc actions
-    public String[] VBankAccIndex_getBankAccActions() throws Exception{
+    public String[] VBankAccIndex_getBankAccActions() throws M_ModelViewException{
 		//Variable declaration
         DA_Settings settingsDA = new DA_Settings();
         DA_BankAccount bankAccDA = new DA_BankAccount();
@@ -50,92 +59,97 @@ public class MV_BankAccount{
         List<String> actions = new ArrayList<String>();
         boolean owner = false, transactOnly = false;
 
-        //Acquire special class bank account data
-        switch(MV_Global.sessionBankAcc.getBankAccType()){
-            case 1:
-                jacc = bankAccDA.dBankAccounts_GetByIDJoint(MV_Global.sessionBankAcc.getBankAccID());
-            case 2: //Corporate account
-                cacc = bankAccDA.dBankAccounts_GetByIDCorporate(MV_Global.sessionBankAcc.getBankAccID());
-            default: //Normal account & Joint account
-            break;
-        }
-
-        //Transaction only check
-        switch(MV_Global.sessionBankAcc.getBankAccType()){
-            case 2: //Corporate account
-                String[] transactionOnyIDs = cacc.getBankAccTransactOnlyIDs();
-                for(String ID: transactionOnyIDs){
-                    if(ID.equals(MV_Global.sessionUserAcc.getUserID())){
-                        transactOnly = true;
-                        break;
-                    }
-                }
+        try{
+            //Acquire special class bank account data
+            switch(MV_Global.sessionBankAcc.getBankAccType()){
+                case 1:
+                    jacc = bankAccDA.dBankAccounts_GetByIDJoint(MV_Global.sessionBankAcc.getBankAccID());
+                case 2: //Corporate account
+                    cacc = bankAccDA.dBankAccounts_GetByIDCorporate(MV_Global.sessionBankAcc.getBankAccID());
+                default: //Normal account & Joint account
                 break;
-            default: //Normal account & Joint account
-            break;
-        }
-
-        //Get withdrawal options
-        if(!transactOnly){
-            //Get withdraw options
-            switch(MV_Global.getAtmID().split("-")[1]){
-                case "02": //Japan
-                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptJP")));
-                    break;
-                case "03": //US
-                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptUS")));
-                    break;
-                default: //SG
-                    actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptSG")));
-                    break;
             }
-        }
-        
-        //Get user action options
-        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccActions")));
 
-        //Get actions only available for local access
-        //  - Deposit
-        //  - Transfer
-        if(!isBankAccOverseas()) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccLocalOnlyActions")));
-
-        //Get bank account owner action options
-        switch(MV_Global.sessionBankAcc.getBankAccType()){
-            case 1: //Joint account
-                if(jacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID()) ||
-                jacc.getBankAccSubHolderID().equals(MV_Global.sessionUserAcc.getUserID()))
-                    owner = true;
-                break;
-            case 2: //Corporate account
-                if(cacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID())) owner = true;
-                else{
-                    for(String subHolder: cacc.getBankAccSubHolderIDs()){
-                        if(subHolder.equals(MV_Global.sessionUserAcc.getUserID())){
-                            owner = true;
+            //Transaction only check
+            switch(MV_Global.sessionBankAcc.getBankAccType()){
+                case 2: //Corporate account
+                    String[] transactionOnyIDs = cacc.getBankAccTransactOnlyIDs();
+                    for(String ID: transactionOnyIDs){
+                        if(ID.equals(MV_Global.sessionUserAcc.getUserID())){
+                            transactOnly = true;
                             break;
                         }
                     }
-                }
+                    break;
+                default: //Normal account & Joint account
                 break;
-            default: //Normal account
-            if(MV_Global.sessionBankAcc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID()))
-                owner = true;
-            break;
-        }
-        if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccOwnerActions")));
+            }
 
-        //Admin actions
-        if(MV_Global.sessionUserAcc.getUserType() > 3)
-            if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccAdminActions")));
+            //Get withdrawal options
+            if(!transactOnly){
+                //Get withdraw options
+                switch(MV_Global.getAtmID().split("-")[1]){
+                    case "02": //Japan
+                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptJP")));
+                        break;
+                    case "03": //US
+                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptUS")));
+                        break;
+                    default: //SG
+                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptSG")));
+                        break;
+                }
+            }
+            
+            //Get user action options
+            actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccActions")));
+
+            //Get actions only available for local access
+            //  - Deposit
+            //  - Transfer
+            if(!isBankAccOverseas()) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccLocalOnlyActions")));
+
+            //Get bank account owner action options
+            switch(MV_Global.sessionBankAcc.getBankAccType()){
+                case 1: //Joint account
+                    if(jacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID()) ||
+                    jacc.getBankAccSubHolderID().equals(MV_Global.sessionUserAcc.getUserID()))
+                        owner = true;
+                    break;
+                case 2: //Corporate account
+                    if(cacc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID())) owner = true;
+                    else{
+                        for(String subHolder: cacc.getBankAccSubHolderIDs()){
+                            if(subHolder.equals(MV_Global.sessionUserAcc.getUserID())){
+                                owner = true;
+                                break;
+                            }
+                        }
+                    }
+                    break;
+                default: //Normal account
+                if(MV_Global.sessionBankAcc.getBankAccHolderID().equals(MV_Global.sessionUserAcc.getUserID()))
+                    owner = true;
+                break;
+            }
+            if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccOwnerActions")));
+
+            //Admin actions
+            if(MV_Global.sessionUserAcc.getUserType() > 3)
+                if(owner) actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccAdminActions")));
+        }
+        catch(M_DataAccessException DAe){
+            //Invalid configuration of Settings.txt; fatal exception
+            throw new M_ModelViewException("Invalid settings file.", true);
+        }
 
         String[] temp = new String[actions.size()];
         for(int i = 0; i < actions.size(); i++)
             temp[i] = actions.get(i);
-    
         return temp;
     }
     //  V_Withdraw: Logic for withdraw action
-    public int[] VWithdraw_withdraw(double withdrawAmt) throws Exception{
+    public int[] VWithdraw_withdraw(double withdrawAmt) throws M_ModelViewException{
         //Return data:
         //  [0]: Status code
 		//      0: Ok
@@ -317,7 +331,7 @@ public class MV_BankAccount{
         return returnVal;
     }
     //  V_Deposit: Logic for deposit action
-    public short VDeposit_deposit(double depositAmt) throws Exception{
+    public short VDeposit_deposit(double depositAmt){
         //Status code:
         //  0: Ok
         //  1: Data access layer withdrawal transaction error
@@ -391,7 +405,7 @@ public class MV_BankAccount{
         return 0;
     }
     //  V_Transfer: Logic for transfer action
-    public short VTransfer_transfer(double transferAmt, String destBankAccID, boolean surchargeAcknowledgement) throws Exception{
+    public short VTransfer_transfer(double transferAmt, String destBankAccID, boolean surchargeAcknowledgement) throws M_ModelViewException{
         //Status codes:
         //  0 - Ok
         //  1 - Requires surcharge acknowledgement
@@ -425,7 +439,12 @@ public class MV_BankAccount{
         sendingBankAcc = MV_Global.sessionBankAcc;
 
         //Acquire receiving party bank account data
-        receivingBankAcc = bankAccountDA.dBankAccounts_GetByID(destBankAccID);
+        try{
+            receivingBankAcc = bankAccountDA.dBankAccounts_GetByID(destBankAccID);
+        }
+        catch(M_DataAccessException DAe){
+            return 3;
+        }
         receivingBankLocality = getBankAccCountryCode(destBankAccID);
 
         //Check currencies
@@ -526,45 +545,51 @@ public class MV_BankAccount{
         try{
             //Create transfer sending transaction
             daStatusCode = transactionDA.dbBalanceTransfer_Create(transferSendingFinal);
-            if(daStatusCode != 0) throw new Exception();
+            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
 
             //Create transfer receiving transaction record
             daStatusCode = transactionDA.dbBalanceTransfer_Create(transferReceivingFinal);
-            if(daStatusCode != 0) throw new Exception();
+            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
 
             //Create surcharge transaction record
             if(overseasTransfer){
                 daStatusCode = transactionDA.dbBalanceChange_Create(surchargeTransactionFinal);
-                if(daStatusCode != 0) throw new Exception();
+                if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
             }
 
             //Update receiving bank's record
             daStatusCode = bankAccountDA.dBankAccounts_Update(receivingBankAcc);
-            if(daStatusCode != 0) throw new Exception();
+            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
 
             //Update sending bank's record
             daStatusCode = bankAccountDA.dBankAccounts_Update(sendingBankAcc);
-            if(daStatusCode != 0) throw new Exception();
+            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
 
             //Update current session's bank account
             MV_Global.sessionBankAcc = sendingBankAcc;
         }
-        catch(Exception e){
+        catch(M_DataAccessException DAe){
             return 3;
         }
         return 0;
     }
-    //  V_Transfer: Logic to check and fetch destination bank account details
-    public String VTransfer_checkDestBankAcc(String destBankAccID) throws Exception{
+    //  V_Transfer: Logic to heck and fetch destination bank account details
+    public String VTransfer_checkDestBankAcc(String destBankAccID) throws M_ModelViewException{
         DA_BankAccount bankAccDA = new DA_BankAccount();
-        M_IBankAccount returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
+        M_IBankAccount returnSearch = null;
+        try{
+            returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
+        }
+        catch(M_DataAccessException DAe){
+            throw new M_ModelViewException(DAe);
+        }
         
         if(returnSearch == null) return "**INVALID**";
         else if(destBankAccID.equals(MV_Global.sessionBankAcc.getBankAccID())) return "**INVALID**";
         else return returnSearch.getBankAccID();
     }
     //  V_Transfer: Logic to check if bank account is capable of trasacting transferAmt
-    public short VTransfer_checkBankCapable(double transferAmt) throws Exception{
+    public short VTransfer_checkBankCapable(double transferAmt) throws M_ModelViewException{
         //Status codes:
         //  0 - Ok
         //  1 - Not enough balance
@@ -609,7 +634,7 @@ public class MV_BankAccount{
 
     //[ADMIN] View Layer Access Functions
     //  V_ChangeBal: Logic for balance change
-    public short VChangeBal_changeBal(double inputAmt) throws Exception{
+    public short VChangeBal_changeBal(double inputAmt){
         //Authorization; Lvl Admin
         if(MV_Global.sessionUserAcc.getUserType() <= 3) return -1;
 
@@ -625,7 +650,7 @@ public class MV_BankAccount{
             short daStatusCode = bankAccountDA.dBankAccounts_Update(currentBankAcc);
             if(daStatusCode != 0) return daStatusCode;
         }
-        catch(Exception e){
+        catch(M_DataAccessException DAe){
             return 1;
         }
 
@@ -637,18 +662,22 @@ public class MV_BankAccount{
 
     //Inter-Package Functions
     //  Load bankAccID into session
-    public void loadBankAccIntoSession(String bankAccID) throws Exception{
+    public void loadBankAccIntoSession(String bankAccID) throws M_ModelViewException{
         //Authentication; A user must be logged on to access this function
-		if(MV_Global.sessionUserAcc == null) throw new Exception("No session user found.");
+		if(MV_Global.sessionUserAcc == null) throw new M_ModelViewException("No session user found.");
 
 		//Variable declaration
         M_IBankAccount targetAcc;
         
         //Acquire bank account from DataAccess layer
-        targetAcc = new DA_BankAccount().dBankAccounts_GetByID(bankAccID);
-
-        //Code safety validation; ensure DataAccess layer returned something
-		if(targetAcc == null) throw new Exception("No data returned from DataAccess layer.");
+        try{
+            targetAcc = new DA_BankAccount().dBankAccounts_GetByID(bankAccID);
+            //Code safety validation; ensure DataAccess layer returned something
+		    if(targetAcc == null) throw new M_ModelViewException("No data returned from DataAccess layer.");
+        }
+        catch(M_DataAccessException DAe){
+            throw new M_ModelViewException("No data returned from DataAccess layer.");
+        }
 
         //Load bank account into session
         MV_Global.sessionBankAcc = targetAcc;
@@ -744,25 +773,35 @@ public class MV_BankAccount{
 
     //Intra-Package Functions
     //  Convert to base currency; X to SGD
-    protected double convertToBaseCurrency(double targetAmt, String countryCode) throws Exception{
-        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+    protected double convertToBaseCurrency(double targetAmt, String countryCode) throws M_ModelViewException{
+        try{
+            String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
 
-        for(String conversionRate: conversionRates){
-            if(conversionRate.split("-")[0].equals(countryCode)){
-                return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
+            for(String conversionRate: conversionRates){
+                if(conversionRate.split("-")[0].equals(countryCode)){
+                    return targetAmt / (Double.parseDouble(conversionRate.split("-")[1]));
+                }
             }
+            return 0;
         }
-        return 0;
+        catch(M_DataAccessException DAe){
+            throw new M_ModelViewException(DAe);
+        }
     }
     //  Convert from base currency; SGD to X
-    protected double convertFromBaseCurrency(double targetAmt, String countryCode) throws Exception{
-        String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
+    protected double convertFromBaseCurrency(double targetAmt, String countryCode) throws M_ModelViewException{
+        try{
+            String[] conversionRates = new DA_Settings().dbSettings_GetByKey("CurrencyRate");
 
-        for(String conversionRate: conversionRates){
-            if(conversionRate.split("-")[0].equals(countryCode)){
-                return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
+            for(String conversionRate: conversionRates){
+                if(conversionRate.split("-")[0].equals(countryCode)){
+                    return targetAmt * (Double.parseDouble(conversionRate.split("-")[1]));
+                }
             }
+            return 0;
         }
-        return 0;
+        catch(M_DataAccessException DAe){
+            throw new M_ModelViewException(DAe);
+        }
     }
 }
