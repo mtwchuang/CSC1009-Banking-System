@@ -554,7 +554,7 @@ public class MV_BankAccount{
         }
         return 0;
     }
-    //  V_Transfer: Logic to heck and fetch destination bank account details
+    //  V_Transfer: Logic to check and fetch destination bank account details
     public String VTransfer_checkDestBankAcc(String destBankAccID) throws Exception{
         DA_BankAccount bankAccDA = new DA_BankAccount();
         M_IBankAccount returnSearch = bankAccDA.dBankAccounts_GetByID(destBankAccID);
