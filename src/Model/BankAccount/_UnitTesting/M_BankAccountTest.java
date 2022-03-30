@@ -8,14 +8,15 @@ import Model.BankAccount.M_BankAccount;
 // unit testing for getter and setter methods in M_BankAccount
 public class M_BankAccountTest 
 {
+    //test on setCreatedby to getCreatedby, "Test123" = "Tester123"
     @Test
-    // testing method for CreatedBy
     public void testGetterSetterCreatedBy()
     {
         M_BankAccount ba = new M_BankAccount();
         ba.setCreatedBy("Tester123");
         assertEquals("Tester123", ba.getCreatedBy());
     }
+    //test on setCreatedAt to getCreatedAt, 999999 = 999999
     @Test
     public void testGetterSetterCreatedAt()
     {
@@ -23,6 +24,7 @@ public class M_BankAccountTest
         ba.setCreatedAt(999999);
         assertEquals(999999, ba.getCreatedAt());
     }
+    //test on setUpdatedAt to getUpdatedAt, 999999 = 999999
     @Test
     public void testGetterSetterUpdatedAt()
     {
@@ -30,13 +32,15 @@ public class M_BankAccountTest
         ba.setUpdatedAt(999999);
         assertEquals(999999, ba.getUpdatedAt());
     }
+     //test on setUpdatedBy to getUpdatedBy, "Test123" = "Tester123"
     @Test
     public void testGetterSetterUpdatedBy()
     {
         M_BankAccount ba = new M_BankAccount();
         ba.setUpdatedBy("Tester123");
         assertEquals("Tester123", ba.getUpdatedBy());
-    } 
+    }
+    //test on setBankAccID to getBankAccID, "Tester123" = "Tester123"
     @Test
     public void testGetterSetterBankAccID()
     {
@@ -44,6 +48,7 @@ public class M_BankAccountTest
         ba.setBankAccID("Tester123");
         assertEquals("Tester123", ba.getBankAccID());
     }
+    //test on setBankAccHolderID to getBankAccHolderID, "Tester123" = "Tester123"
     @Test
     public void testGetterSetterBankAccHolderID()
     {
@@ -51,6 +56,7 @@ public class M_BankAccountTest
         ba.setBankAccHolderID("Tester123");
         assertEquals("Tester123", ba.getBankAccHolderID());        
     }
+    //test on setBankAccType to getBankAccType, (short) 777 = (short) 777
     @Test
     public void testGetterSetterBankAccType()
     {
@@ -58,6 +64,7 @@ public class M_BankAccountTest
         ba.setBankAccType((short) 777);
         assertEquals((short) 777, ba.getBankAccType());
     }
+    //test on setBankAccDescription to getBankAccDescription, "Tester123" = "Tester123"
     @Test
     public void testGetterSetterBankAccDescription()
     {
@@ -65,6 +72,7 @@ public class M_BankAccountTest
         ba.setBankAccDescription("Tester123");
         assertEquals("Tester123", ba.getBankAccDescription());               
     }
+    //test on setBankAccStatus to getBankAccStatus, (short) 777 = (short) 777
     @Test
     public void testGetterSetterBankAccStatus()
     {
@@ -72,6 +80,7 @@ public class M_BankAccountTest
         ba.setBankAccStatus((short) 777);
         assertEquals((short) 777, ba.getBankAccStatus());        
     }
+    //test on setBankAccBalance to getBankAccBalance, 25.0 = 25.0
     @Test
     public void testGetterSetterBankAccBalance()
     {
@@ -79,6 +88,7 @@ public class M_BankAccountTest
         ba.setBankAccBalance(25.0);
         assertEquals(25.0, ba.getBankAccBalance());
     }
+    //test on setBankAccTransactionLimit to getBankAccTransactionLimit, 1000.0 to 1000.0
     @Test
     public void testGetterSetterBankAccTransactionLimits()
     {
@@ -86,6 +96,7 @@ public class M_BankAccountTest
         ba.setBankAccTransactionLimit(1000.0);
         assertEquals(1000.0, ba.getBankAccTransactionLimit());
     }
+    //test on setBankAccMinBalance to getBankAccMinBalance, 1000.0 = 1000.0
     @Test
     public void testGetterSetterBankAccMinBalance()
     {
