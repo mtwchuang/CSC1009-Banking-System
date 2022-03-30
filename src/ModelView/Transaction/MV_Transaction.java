@@ -88,7 +88,7 @@ public class MV_Transaction{
         maxPage = MV_Global.cacheTxn.length / pagingSize;
         if(maxPage == 0) maxPage = 1;
         if(page == 0) page = 1;
-        if((MV_Global.cacheTxn.length % pagingSize) > 0) maxPage++;
+        if(((MV_Global.cacheTxn.length - (maxPage * pagingSize)) % pagingSize) > 0) maxPage++;
         if(page > maxPage) page = maxPage;
 
         //Calculate page's first record's index

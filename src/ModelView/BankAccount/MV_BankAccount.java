@@ -417,7 +417,6 @@ public class MV_BankAccount{
 
         //Variable initialization
         M_IBankAccount sendingBankAcc, receivingBankAcc;
-        DA_Transaction transactionDA = new DA_Transaction();
         DA_BankAccount bankAccountDA = new DA_BankAccount();
         M_BalanceChange surchargeTransaction;
         M_BalanceTransfer transferSending, transferReceiving;
@@ -489,7 +488,7 @@ public class MV_BankAccount{
         sendingBankFinalBal /= 100;
         receivingBankFinalBal = Math.round(receivingBankFinalBal * 100);
         receivingBankFinalBal /= 100;
-        if(overseasTransfer) {
+        if(overseasTransfer){
             sendingBankFinalWithSurchargeBal = Math.round(sendingBankFinalWithSurchargeBal * 100);
             sendingBankFinalWithSurchargeBal /= 100;
         }
@@ -541,22 +540,17 @@ public class MV_BankAccount{
         receivingBankAcc.setBankAccBalance(receivingBankFinalBal);
         receivingBankAcc.updated();
 
+        VTransfer_updateTransaction updateTxn = new VTransfer_updateTransaction(
+            transferSendingFinal,
+            transferReceivingFinal,
+            surchargeTransactionFinal,
+            overseasTransfer
+        );
+        Thread thread = new Thread(updateTxn);
+        thread.start();
+
         //Post records to Data Access layer
         try{
-            //Create transfer sending transaction
-            daStatusCode = transactionDA.dbBalanceTransfer_Create(transferSendingFinal);
-            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
-
-            //Create transfer receiving transaction record
-            daStatusCode = transactionDA.dbBalanceTransfer_Create(transferReceivingFinal);
-            if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
-
-            //Create surcharge transaction record
-            if(overseasTransfer){
-                daStatusCode = transactionDA.dbBalanceChange_Create(surchargeTransactionFinal);
-                if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
-            }
-
             //Update receiving bank's record
             daStatusCode = bankAccountDA.dBankAccounts_Update(receivingBankAcc);
             if(daStatusCode != 0) throw new M_ModelViewException("DataAccess layer failed");
@@ -571,7 +565,69 @@ public class MV_BankAccount{
         catch(M_DataAccessException DAe){
             return 3;
         }
+        catch(M_ModelViewException MVe){
+            return 3;
+        }
+
+        try{
+            thread.join();
+            if(updateTxn.getValue() != 0) throw new M_ModelViewException("DataAccess layer failed");
+        }
+        catch(InterruptedException ie){
+            return 3;
+        }
+        catch(M_ModelViewException MVe){
+            return 3;
+        }
         return 0;
+    }
+    //  V_Transfer: Isolated transaction update function for enabling async processing
+    class VTransfer_updateTransaction implements Runnable{
+        M_IBalanceTransfer sendingTxn, receivingTxn;
+        M_IBalanceChange surcharge;
+        boolean isOverseas;
+
+        private volatile int status;
+
+        VTransfer_updateTransaction(
+            M_IBalanceTransfer sendingTxn, 
+            M_IBalanceTransfer receivingTxn, 
+            M_IBalanceChange surcharge, 
+            boolean isOverseas){
+                this.sendingTxn = sendingTxn;
+                this.receivingTxn = receivingTxn;
+                this.surcharge = surcharge;
+                this.isOverseas = isOverseas;
+        }
+
+        @Override
+        public void run() {
+            DA_Transaction transactionDA = new DA_Transaction();
+            short daStatusCode = 0;
+            
+            try{
+                daStatusCode = transactionDA.dbBalanceTransfer_Create(sendingTxn);
+                if(daStatusCode != 0) status = 1;
+
+                //Create transfer receiving transaction record
+                daStatusCode = transactionDA.dbBalanceTransfer_Create(receivingTxn);
+                if(daStatusCode != 0) status = 1;
+
+                //Create surcharge transaction record
+                if(isOverseas){
+                    daStatusCode = transactionDA.dbBalanceChange_Create(surcharge);
+                    if(daStatusCode != 0) status = 1;
+                }
+            }
+            catch(M_DataAccessException DAe){
+                status = 2;
+            }
+            status = 0;
+        }
+
+        public int getValue() {
+            return status;
+        }
     }
     //  V_Transfer: Logic to heck and fetch destination bank account details
     public String VTransfer_checkDestBankAcc(String destBankAccID) throws M_ModelViewException{
@@ -588,7 +644,7 @@ public class MV_BankAccount{
         else if(destBankAccID.equals(MV_Global.sessionBankAcc.getBankAccID())) return "**INVALID**";
         else return returnSearch.getBankAccID();
     }
-    //  V_Transfer: Logic to check if bank account is capable of trasacting transferAmt
+    //  V_Transfer: Logic to check if bank account is capable of transacting transferAmt
     public short VTransfer_checkBankCapable(double transferAmt) throws M_ModelViewException{
         //Status codes:
         //  0 - Ok

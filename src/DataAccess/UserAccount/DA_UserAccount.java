@@ -209,10 +209,6 @@ public class DA_UserAccount {
 		return password;
 	}
 
-	//POST Methods (Update) for M_IUserAccount
-	//	POST function for updating 1 record of M_IUserAccount
-	//NOTE TO SELF: IMPLEMENT THIS
-
 	//POST Methods (Update) for M_UserAccountLogin
 	//	POST function for updating 1 record of M_UserAccountLogin
 	public short dbUserAccounts_UpdateUserPassword(String password){
