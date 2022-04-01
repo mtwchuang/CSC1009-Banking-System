@@ -41,7 +41,7 @@ public class V_AtmDetails {
                 try{
                     adminInputInt = Integer.parseInt(adminInput);
                     if(adminInputInt < 0 || adminInputInt >= carryingNotes.length)
-                        throw new Exception("Pendejo");
+                        throw new Exception("Error Detacted");
                     targetDenom = adminInputInt;
                     toppingUp = true;
                 }
@@ -63,7 +63,7 @@ public class V_AtmDetails {
                         MV_Global.availableNotes[targetDenom][1] = 0;
                 }
                 catch(Exception e){
-                    System.out.println("Enter a valid integer cabrone.");
+                    System.out.println("Enter a valid integer.");
                     MV_Global.waitError();
                 }
                 toppingUp = !toppingUp;

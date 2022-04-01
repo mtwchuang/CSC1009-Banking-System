@@ -37,7 +37,7 @@ public class V_ChangeBalance {
                 }
             }
             catch(Exception e){
-                System.out.println("Qué pendejo");
+                System.out.println("Error detected");
             }
         }
     }

@@ -1,7 +1,9 @@
-package Model.Transaction;
+package Model.Transaction._UnitTesting;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import org.junit.Test;
+
+import Model.Transaction.M_BalanceTransfer;
 
 public class M_BalanceTransferTest {
     //test on setCreatedby to getCreatedby, "Test123" = "Tester123"
