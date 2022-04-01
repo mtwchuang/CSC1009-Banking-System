@@ -52,7 +52,7 @@ public class V_TransactionIndex{
                 }
 
                 userInputInt = Integer.parseInt(userInput);
-                if(userInputInt < 1) throw new Exception();
+                if(userInputInt < 1) throw new Exception("Error Detected");
                 else{
                     System.out.println("\nFetching data...");
                     currentPage = userInputInt;

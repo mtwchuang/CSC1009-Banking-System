@@ -68,7 +68,7 @@ public class V_ViewDetails {
                 userInputInt = Integer.parseInt(userInput);
 
                 if(userInputInt < 0 || userInputInt >= actionList.length)
-                    throw new Exception();
+                    throw new Exception("Error Detected");
                 
                 executeAction = true;
             }
@@ -160,7 +160,7 @@ public class V_ViewDetails {
                 userInputInt = Integer.parseInt(userInput);
 
                 if(userInputInt < 0 || userInputInt >= 5)
-                    throw new Exception();
+                    throw new Exception("Error Detected");
                 
                 switch(userInputInt){
                     case 0: //Change Account Description

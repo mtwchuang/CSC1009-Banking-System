@@ -129,7 +129,5 @@ public class MV_Global {
             temp[i][1] = availableNotesList.get(i)[1];
         }
         availableNotes = temp;
-
-
     }
 }

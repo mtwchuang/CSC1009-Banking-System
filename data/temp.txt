@@ -1,4 +1,5 @@
 ﻿createdBy|createdAt|updatedBy|updatedAt|bankAccID|bankAccHolderID|bankAccType|backAccDescription|bankAccStatus|bankAccBalance|bankAccTransactionLimit|bankAccMinBalance|bankAccSubHolderIDs|bankAccTransactOnlyIDs
+<<<<<<< Updated upstream
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9937779055-010103|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-SG] Singapore, Jurong Bank Acc|0|1000.0|0.0|200.0||
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|3161493979-020202|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-JP] Tokyo, Fushimi Bank Acc|0|89901.33|0.0|17980.27||
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|2362494972-020203|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-JP] Tokyo, Kita Bank Acc|0|89901.33|0.0|17980.27||
@@ -6,6 +7,13 @@
 084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|1648357925390|084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|1648357925390|6981991562-010101|084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|1|Mato Family Joint Acc|0|10000.00|500.0|10000.00|fe3b2b20-70c5-4d48-a19b-32e6cabb21db|
 084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|1648357925390|084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|1648357925390|4703401376-010101|084dbe90-a6af-4d18-b5cc-f026ddf1fb1e|2|Money Laundering Inc. Pte Ltd|0|1000000.00|50000.0|1000000.00|fe3b2b20-70c5-4d48-a19b-32e6cabb21db|d84c3857-9d5b-42cd-97fd-5ef3a01d4d7e
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648384649704|4556779096-010102|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-SG] Singapore, Bishan Bank Acc|0|1100.0|0.0|200.0||
-9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648385222010|8595081096-020101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-JP] Tokyo, Saitama Bank Acc|0|93381.9|0.0|17980.27||
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648385599627|7549318946-030102|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-US] New York, Queens Bank Acc|0|751.12|0.0|147.26||
+<<<<<<< HEAD
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648357925390|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648641685197|8595081096-020101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|[OG-JP] Tokyo, Saitama Bank Acc|0|94252.8|0.0|17980.27||
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648641685197|0093109751-010101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|Main OG Bank Account|0|389.8|0.0|200.0||
+=======
 9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1648637572762|0093109751-010101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|Main OG Bank Account|0|400.1|0.0|200.0||
+=======
+9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1646100535898|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|1647921717325|0093109751-010101|9a4b83a1-aabf-4fa7-9653-b31acc3ca3f7|0|New account|0|1000.0|0.0|200.0||
+>>>>>>> Stashed changes
+>>>>>>> 4eb388839ad20c9b0665ee92ab67aef0b512cd11
