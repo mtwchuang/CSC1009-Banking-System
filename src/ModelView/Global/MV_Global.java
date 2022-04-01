@@ -72,6 +72,9 @@ public class MV_Global {
         //Clear cache
         cacheInstance = -1;
         cacheTxn = null;
+
+        //Stop moozik
+        ambianceRunning.set(false);
 	}
 
 	//Load Atm config into MV_Global
