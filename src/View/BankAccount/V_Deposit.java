@@ -29,7 +29,7 @@ public class V_Deposit {
 			System.out.println("\nProcessing...\n");
             try{
                 inputAmount = Double.parseDouble(userInput);
-                if(inputAmount <= 0) throw new Exception();
+                if(inputAmount <= 0) throw new Exception("Error Detacted");
 
                 inputAmount = Math.round((inputAmount * 100));
                 inputAmount /= 100;

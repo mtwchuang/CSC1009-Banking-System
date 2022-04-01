@@ -45,8 +45,7 @@ public class V_UserAccIndex
 
 				//Out of selection values' range
 				if(inputBankAccSelectionInt < 0 || inputBankAccSelectionInt > (bankAccs.length + 1))
-					throw new Exception("Hijo de puta");
-				//
+					throw new Exception("Error Detacted")
 				else if(inputBankAccSelectionInt == bankAccs.length){
 					this.changePassword();
 					V_ViewManager.clearPage();
