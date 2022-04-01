@@ -41,7 +41,7 @@ public class V_AtmDetails {
                 try{
                     adminInputInt = Integer.parseInt(adminInput);
                     if(adminInputInt < 0 || adminInputInt >= carryingNotes.length)
-                        throw new Exception("Error Detacted");
+                        throw new Exception("Error Detected");
                     targetDenom = adminInputInt;
                     toppingUp = true;
                 }
