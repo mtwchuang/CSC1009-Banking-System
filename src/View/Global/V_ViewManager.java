@@ -41,6 +41,9 @@ public class V_ViewManager{
                 case "admin-changebal": //Change balance
                     new View.AdminActions.V_ChangeBalance().run();
                     return false;
+                case "admin-funkytown": //Funky Town
+                    new View.AdminActions.V_Ambiance().run();
+                    return false;
 
                 default:
                     throw new Exception("Navigation invalid page");

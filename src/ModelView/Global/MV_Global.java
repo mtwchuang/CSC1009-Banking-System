@@ -130,4 +130,8 @@ public class MV_Global {
         }
         availableNotes = temp;
     }
+
+    //Ambiance Thread
+    public static Thread ambiance;
+    public static boolean ambiancePlaying;
 }

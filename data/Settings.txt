@@ -28,4 +28,4 @@ BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw 
 BankAccActions|b133-View Transactions
 BankAccLocalOnlyActions|b132-Deposit Balance|b134-Transfer Balance
 BankAccOwnerActions|c961-View Account Details
-BankAccAdminActions|z420-[ADMIN] Change Balance|z421-[ADMIN] View ATM Details|z312-[ADMIN] Terminate Program
+BankAccAdminActions|z420-[ADMIN] Change Balance|z421-[ADMIN] View ATM Details|z312-[ADMIN] Terminate Program|z8008-[ADMIN] Start/Stop Funky Town

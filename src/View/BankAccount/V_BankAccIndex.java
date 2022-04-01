@@ -115,6 +115,9 @@ public class V_BankAccIndex{
 				break;
 			case "z312": //ADMIN Terminate Program
 				System.exit(0);
+			case "z8008": //ADMIN Funky Town
+				V_ViewManager.redirect("admin-funkytown");
+				break;
 
 			//Invalid action input
 			default:

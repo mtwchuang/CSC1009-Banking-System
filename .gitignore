@@ -1,0 +1,5 @@
+data/BankAccount/BankAccounts.txt
+data/Transaction/BalanceChanges.txt
+data/Transaction/BalanceTransfers.txt
+data/Transaction/UserAccounts.txt
+data/temp.txt
