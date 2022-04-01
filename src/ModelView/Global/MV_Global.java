@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 import DataAccess.Global.DA_Settings;
 import Model.BankAccount.M_IBankAccount;
@@ -133,5 +134,5 @@ public class MV_Global {
 
     //Ambiance Thread
     public static Thread ambiance;
-    public static boolean ambiancePlaying;
+    public static AtomicBoolean ambianceRunning = new AtomicBoolean(false);
 }
