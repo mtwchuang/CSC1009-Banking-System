@@ -27,6 +27,10 @@ public class V_TransactionIndex{
             
             V_ViewManager.clearPage();
 
+            //Page name
+            System.out.println(">> Bank Account >> Transactions\n");
+
+            //Page display
             System.out.println(
 				"User: " + MV_Global.sessionUserAcc.getUserLastName() + 
 				" " + MV_Global.sessionUserAcc.getUserFirstName());

@@ -12,6 +12,10 @@ public class V_ChangeBalance {
         short statusCode;
 
         while(true){
+            //Page name
+		    System.out.println(">> Bank Account >> [Admin] Change Balance\n");
+
+            //Page display
             System.out.print("Enter amount to add: ");
             try{
 			    targetAmt = Double.parseDouble(MV_Global.input.nextLine());

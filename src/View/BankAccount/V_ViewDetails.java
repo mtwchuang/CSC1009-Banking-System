@@ -39,6 +39,10 @@ public class V_ViewDetails {
         }
 
         while(true){
+            //Page name
+		    System.out.println(">> Bank Account >> Account Details\n");
+            
+            //Page display
             System.out.println(
                 "User: " + MV_Global.sessionUserAcc.getUserLastName() + 
                 " " + MV_Global.sessionUserAcc.getUserFirstName());
@@ -143,7 +147,11 @@ public class V_ViewDetails {
 
         while(true){
             V_ViewManager.clearPage();
+            
+            //Page name
+		    System.out.println(">> Bank Account >> Account Details >> Edit Details\n");
 
+            //Page Display
             System.out.println("\nOpt\tField\t\t\t\tField Data");
             System.out.println("---------------------------------------------------------------------");
             System.out.println("[-]\tAccount Type\t\t\t" + accountType);
@@ -162,6 +170,7 @@ public class V_ViewDetails {
                 if(userInputInt < 0 || userInputInt >= 5)
                     throw new Exception("Error Detected");
                 
+                //Change fields
                 switch(userInputInt){
                     case 0: //Change Account Description
                         System.out.print("Account Description [MaxChar 100]: ");
@@ -169,6 +178,10 @@ public class V_ViewDetails {
                         //Exceed character limit
                         if(userInput.trim().length() > 100){
                             System.out.println("Exceeded character count of 100...");
+                            MV_Global.waitError();
+                        }
+                        else if(userInput.contains("|")){
+                            System.out.println("Illegal character '|' detected...");
                             MV_Global.waitError();
                         }
                         //Valid input

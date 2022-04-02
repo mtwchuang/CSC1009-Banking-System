@@ -17,6 +17,10 @@ public class V_AtmDetails {
         boolean toppingUp = false;
 
         while(true){
+            //Page name
+		    System.out.println(">> Bank Account >> [Admin] ATM Details\n");
+
+            //Page display
             System.out.println("ATM General Info:");
             System.out.println("\tATM ID\t\t" + MV_Global.getAtmID());
             System.out.println("\tATM Locality\t" + bankAccMV.getLocalityName(MV_Global.getAtmID().split("-")[1]));

@@ -26,8 +26,10 @@ public class V_Transfer {
 
         //Lock page till process is done or cancelled
         while(true){
+            //Page name
+		    System.out.println(">> Bank Account >> Transfer\n");
             
-            //Display
+            //Page display
             System.out.println(
 				"User: " + MV_Global.sessionUserAcc.getUserLastName() + 
 				" " + MV_Global.sessionUserAcc.getUserFirstName());

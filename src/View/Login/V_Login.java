@@ -8,8 +8,6 @@ public class V_Login
 {
 	public void run() throws Exception
 	{
-		boolean ahShit = false;
-
 		boolean validationFlag;
 		short authenticationStatus = 0;
 		String inputUsername, inputPassword;
@@ -21,17 +19,18 @@ public class V_Login
 			//Clear screen
 			V_ViewManager.clearPage();
 
+			//Page name
+			System.out.println(">> Login\n");
+
 			//Print bank logo
 			this.logo();
 			
 			//Intake username
 			System.out.print("Username: ");
-			if(ahShit) inputUsername = "admin";
-			else inputUsername = MV_Global.input.nextLine();
+			inputUsername = MV_Global.input.nextLine();
 
 			//Intake password
-			if(ahShit) inputPassword = "000000";
-			else inputPassword = new String(System.console().readPassword("Password: "));
+			inputPassword = new String(System.console().readPassword("Password: "));
 			System.out.println("");
 
 			System.out.print("Loading... "); 

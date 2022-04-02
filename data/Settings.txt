@@ -1,5 +1,5 @@
 //Program Settings [This file will never be altered by runtime, only read]
-PagingSize|20
+PagingSize|10
 DateFormat|dd/MM/yyyy HH:mm:ss
 //
 //Bank Architecture Settings
@@ -17,14 +17,14 @@ CurrencySymbol|01-SGD|02-JPY|03-USD
 OverseasTransactionCharge|0.03
 //
 //Notes Denomination Settings
-NotesDenominationSG|2|5|10|50|100|500|1000
-NotesDenominationJP|1000|2000|5000|10000
-NotesDenominationUS|1|2|5|10|20|50|100
+NotesDenomination01|2|5|10|50|100|500|1000
+NotesDenomination02|1000|2000|5000|10000
+NotesDenomination03|1|2|5|10|20|50|100c
 //
 //Bank Account Actions
-BankAccWithdrawOptSG|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100|b131-Withdraw Other Amounts
-BankAccWithdrawOptJP|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000|b131-Withdraw Other Amounts
-BankAccWithdrawOptUS|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100|b131-Withdraw Other Amounts
+BankAccWithdrawOpt01|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100|b131-Withdraw Other Amounts
+BankAccWithdrawOpt02|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000|b131-Withdraw Other Amounts
+BankAccWithdrawOpt03|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100|b131-Withdraw Other Amounts
 BankAccActions|b133-View Transactions
 BankAccLocalOnlyActions|b132-Deposit Balance|b134-Transfer Balance
 BankAccOwnerActions|c961-View Account Details

@@ -15,6 +15,10 @@ public class V_Withdraw {
         if(withdrawAmt < 0){
             String userInput;
             while(true){
+                //Page name
+                System.out.println(">> Bank Account >> Withdraw\n");
+
+                //Page display
                 System.out.println(
                     "User: " + MV_Global.sessionUserAcc.getUserLastName() + 
                     " " + MV_Global.sessionUserAcc.getUserFirstName());

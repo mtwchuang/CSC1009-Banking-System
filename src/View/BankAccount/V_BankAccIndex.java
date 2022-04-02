@@ -16,6 +16,10 @@ public class V_BankAccIndex{
 
 		//Lock page prevent invalid input escapes; remain on page till nagivated out
 		while(true){
+			//Page name
+			System.out.println(">> Bank Account\n");
+
+			//Page display
 			System.out.println(
 				"User: " + MV_Global.sessionUserAcc.getUserLastName() + 
 				" " + MV_Global.sessionUserAcc.getUserFirstName());

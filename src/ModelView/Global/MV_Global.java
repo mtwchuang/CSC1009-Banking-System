@@ -79,7 +79,7 @@ public class MV_Global {
 
 	//Load Atm config into MV_Global
     public static void initailizeAtmConfig(){
-        String countryCode;
+        String countryCode, notesDenominationsCountry;
         int currentDenomination, currentDenominationCount;
         String[] notesDenominations = null, notesCount = null;
         List<int[]> availableNotesList = new ArrayList<int[]>();
@@ -95,18 +95,10 @@ public class MV_Global {
                 
             MV_Global.currencySymbols = settingsDA.dbSettings_GetByKey("CurrencySymbol");
 
-            switch(countryCode){
-                case "02":
-                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationJP");
-                    break;
-                case "03":
-                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationUS");
-                    break;
-                default:
-                    notesDenominations = settingsDA.dbSettings_GetByKey("NotesDenominationSG");
-                    break;
-            }
-            
+            //Get notes denominations based off country code
+            notesDenominationsCountry = "NotesDenomination" + countryCode;
+            notesDenominations = settingsDA.dbSettings_GetByKey(notesDenominationsCountry);
+        
             notesCount = settingsDA.dbSettings_GetByKey("AtmNotesQty");
         }
         //Invalid settings file

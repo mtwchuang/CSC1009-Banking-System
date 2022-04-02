@@ -15,6 +15,10 @@ public class V_Deposit {
         boolean withdraw = false;
 
         while(true){
+            //Page name
+		    System.out.println(">> Bank Account >> Deposit\n");
+            
+            //Page display
             System.out.println(
 				"User: " + MV_Global.sessionUserAcc.getUserLastName() + 
 				" " + MV_Global.sessionUserAcc.getUserFirstName());

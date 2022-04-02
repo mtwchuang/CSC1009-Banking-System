@@ -85,20 +85,10 @@ public class MV_BankAccount{
                 break;
             }
 
-            //Get withdrawal options
+            //Get withdrawal options based off country code
             if(!transactOnly){
-                //Get withdraw options
-                switch(MV_Global.getAtmID().split("-")[1]){
-                    case "02": //Japan
-                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptJP")));
-                        break;
-                    case "03": //US
-                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptUS")));
-                        break;
-                    default: //SG
-                        actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey("BankAccWithdrawOptSG")));
-                        break;
-                }
+                String withdrawOptCountry = "BankAccWithdrawOpt" + MV_Global.getAtmID().split("-")[1];
+                actions.addAll(Arrays.asList(settingsDA.dbSettings_GetByKey(withdrawOptCountry)));
             }
             
             //Get user action options

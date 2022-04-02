@@ -7,6 +7,9 @@ public class V_Logout {
         //Clear session data after logging out
         MV_Global.clearSession();
 
+        //Page name
+		System.out.println(">> Logout\n");
+
         System.out.println("\n===============================================================================");
         System.out.println("88888888888 888                        888                                     ");
         System.out.println("    888     888                        888                                     ");
