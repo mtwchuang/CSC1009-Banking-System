@@ -1,0 +1,31 @@
+//Program Settings [This file will never be altered by runtime, only read]
+PagingSize|10
+DateFormat|dd/MM/yyyy HH:mm:ss
+//
+//Bank Architecture Settings
+BankBranch|010101-Singapore,Singapore,CityHall|010102-Singapore,Singapore,Bishan|010103-Singapore,Singapore,Jurong|020101-Japan,Tokyo,Saitama|020202-Japan,Tokyo,Fushimi|020203-Japan,Tokyo,Kita|030101-US,New York,Manhattan|030102-US,New York,Queens
+BankCountry|01-Singapore|02-Japan|03-US_NewYork
+TimeZone|01-Asia/Singapore|02-Asia/Tokyo|03-America/New_York
+//
+//ATM Settings
+AtmID|4206969-01
+AtmNotesQty|100|100|100|100|100|100|100
+//
+//Overseas Transaction Settings
+CurrencyRate|01-1|02-87.09|03-0.74
+CurrencySymbol|01-SGD|02-JPY|03-USD
+OverseasTransactionCharge|0.03
+//
+//Notes Denomination Settings
+NotesDenomination01|2|5|10|50|100|500|1000
+NotesDenomination02|1000|2000|5000|10000
+NotesDenomination03|1|2|5|10|20|50|100c
+//
+//Bank Account Actions
+BankAccWithdrawOpt01|a0551-Withdraw SGD 10|a0552-Withdraw SGD 20|a0553-Withdraw SGD 50|a0554-Withdraw SGD 100|b131-Withdraw Other Amounts
+BankAccWithdrawOpt02|a0555-Withdraw JPY 1000|a0556-Withdraw JPY 2000|a0557-Withdraw JPY 5000|a0558-Withdraw JPY 10000|b131-Withdraw Other Amounts
+BankAccWithdrawOpt03|a0551-Withdraw USD 10|a0552-Withdraw USD 20|a0553-Withdraw USD 50|a0554-Withdraw USD 100|b131-Withdraw Other Amounts
+BankAccActions|b133-View Transactions
+BankAccLocalOnlyActions|b132-Deposit Balance|b134-Transfer Balance
+BankAccOwnerActions|c961-View Account Details
+BankAccAdminActions|z420-[ADMIN] Change Balance|z421-[ADMIN] View ATM Details|z312-[ADMIN] Terminate Program|z8008-[ADMIN] Start/Stop Funky Town
